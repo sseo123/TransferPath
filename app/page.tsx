@@ -27,7 +27,7 @@ export default function App() {
   };
 
   const handleSignIn = () => {
-    router.push("/login");
+    router.push("/signin");
   };
 
   return (
@@ -42,7 +42,11 @@ export default function App() {
             TransferPath
           </h1>
           <div className="flex items-center gap-8">
-            <button className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
+            {/* ADDED onClick HERE */}
+            <button
+              onClick={handleSignIn}
+              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+            >
               Sign in
             </button>
             <button
