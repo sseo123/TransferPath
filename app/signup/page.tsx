@@ -1,43 +1,22 @@
 "use client";
-
-import { useActionState } from "react";
-import { signup } from "./actions";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const [state, formAction, isPending] = useActionState(signup, { error: "" });
+  const router = useRouter();
 
   return (
-    <main className="p-8">
-      <h1 className="text-2xl font-semibold mb-4">Create an Account</h1>
-
-      <form action={formAction} className="flex flex-col gap-4 max-w-sm">
-        <input
-          name="username"
-          placeholder="Username"
-          required
-          autoComplete="username"
-          className="border p-2 rounded"
-        />
-
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          required
-          autoComplete="new-password"
-          className="border p-2 rounded"
-        />
-
-        {state?.error && <p className="text-red-500 text-sm">{state.error}</p>}
-
-        <button
-          type="submit"
-          disabled={isPending}
-          className="bg-blue-500 text-white p-2 rounded disabled:opacity-50"
-        >
-          {isPending ? "Creating account..." : "Sign Up"}
-        </button>
-      </form>
+    <main className="flex flex-col items-center justify-center min-h-screen p-8 text-center">
+      <h1 className="text-3xl font-bold mb-4">Start Your Plan</h1>
+      <p className="text-gray-600 mb-8 max-w-md">
+        To build an accurate schedule, we need to know your major and college
+        first.
+      </p>
+      <button
+        onClick={() => router.push("/onboarding")}
+        className="bg-[#303AB2] text-white px-10 py-4 rounded-xl font-bold shadow-lg"
+      >
+        Go to Onboarding
+      </button>
     </main>
   );
 }

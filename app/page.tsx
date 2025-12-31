@@ -23,7 +23,7 @@ export default function App() {
 
   // Navigation handler for all Get Started buttons
   const handleGetStarted = () => {
-    router.push("/signup");
+    router.push("/onboarding"); // Changed from /signup to /onboarding
   };
 
   const handleSignIn = () => {
