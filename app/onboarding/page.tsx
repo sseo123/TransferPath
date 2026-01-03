@@ -1,29 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight, Zap, Trophy, Heart } from "lucide-react";
-import { signup } from "../signup/actions"; // We'll update this action next
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [showSignupModal, setShowSignupModal] = useState(false);
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     college: "",
     major: "",
     dreamUni: "",
     edge: "",
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
   });
 
   const totalSteps = 4;
-  const progress = (step / (totalSteps + 1)) * 100;
+  const progress = (step / totalSteps) * 100;
 
   const isStepComplete = () => {
     if (step === 1) return formData.college !== "";
@@ -33,53 +24,21 @@ export default function OnboardingPage() {
     return false;
   };
 
-  const isSignupComplete = () => {
-    return (
-      formData.firstName.trim() !== "" &&
-      formData.lastName.trim() !== "" &&
-      formData.email.includes("@") &&
-      formData.password.length >= 6
-    );
-  };
-
   const handleNext = () => {
     if (isStepComplete()) {
-      if (step < totalSteps) setStep(step + 1);
-      else setShowSignupModal(true);
+      if (step < totalSteps) {
+        setStep(step + 1);
+      } else {
+        // Encode data and redirect to signup page
+        const queryData = btoa(JSON.stringify(formData));
+        router.push(`/signup?data=${queryData}`);
+      }
     }
-  };
-
-  const handleFinalSignup = async () => {
-    setIsPending(true);
-    setError("");
-
-    // Create standard FormData to reuse your existing signup action
-    const data = new FormData();
-    data.append("username", formData.email);
-    data.append("password", formData.password);
-    data.append("firstName", formData.firstName);
-    data.append("lastName", formData.lastName);
-    data.append("currentCollege", formData.college);
-    data.append("major", formData.major);
-    data.append("targetUni", formData.dreamUni);
-    data.append("transferEdge", formData.edge);
-
-    const result = await signup(null, data);
-    if (result?.error) {
-      setError(result.error);
-      setIsPending(false);
-    }
-    // Success will be handled by the 'redirect' inside signup action
   };
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col relative overflow-hidden">
-      {/* HEADER */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100 transition-all ${
-          showSignupModal ? "blur-sm opacity-50" : ""
-        }`}
-      >
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
         <div className="flex items-center justify-between px-8 py-5">
           <div
             className="text-xl font-bold text-[#303AB2] cursor-pointer"
@@ -88,7 +47,7 @@ export default function OnboardingPage() {
             TransferPath
           </div>
           <button
-            onClick={() => router.push("/login")}
+            onClick={() => router.push("/signin")}
             className="px-4 py-2 text-sm font-bold border border-gray-200 rounded-lg"
           >
             Sign in
@@ -102,14 +61,7 @@ export default function OnboardingPage() {
         </div>
       </header>
 
-      {/* QUESTIONS BACKGROUND */}
-      <main
-        className={`flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6 transition-all duration-700 ${
-          showSignupModal
-            ? "blur-md scale-[0.98] opacity-40 pointer-events-none"
-            : ""
-        }`}
-      >
+      <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6">
         <div className="w-full max-w-[500px] bg-white border border-gray-200 rounded-2xl p-10 shadow-sm">
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
@@ -167,6 +119,7 @@ export default function OnboardingPage() {
               </select>
             </div>
           )}
+          {/* Steps 2 and 3 omitted for brevity, identical to your original logic */}
           {step === 4 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
               <h2 className="text-2xl font-bold text-center">
@@ -192,87 +145,28 @@ export default function OnboardingPage() {
         </div>
       </main>
 
-      {/* SIGNUP WALL MODAL */}
-      {showSignupModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center animate-in fade-in duration-500">
-          <div className="absolute inset-0 bg-black/10" />
-          <div className="w-full max-w-[440px] bg-white rounded-3xl p-10 shadow-2xl relative animate-in zoom-in-95">
-            <h2 className="text-2xl font-bold text-center mb-6">
-              Create your account
-            </h2>
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  placeholder="First name"
-                  className="border w-full p-3 rounded-xl"
-                  onChange={(e) =>
-                    setFormData({ ...formData, firstName: e.target.value })
-                  }
-                />
-                <input
-                  placeholder="Last name"
-                  className="border w-full p-3 rounded-xl"
-                  onChange={(e) =>
-                    setFormData({ ...formData, lastName: e.target.value })
-                  }
-                />
-              </div>
-              <input
-                placeholder="Email"
-                type="email"
-                className="border w-full p-3 rounded-xl"
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-              <input
-                placeholder="Password"
-                type="password"
-                className="border w-full p-3 rounded-xl"
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
-              {error && (
-                <p className="text-red-500 text-sm text-center">{error}</p>
-              )}
-              <button
-                onClick={handleFinalSignup}
-                disabled={!isSignupComplete() || isPending}
-                className="w-full bg-[#303AB2] text-white font-bold py-4 rounded-xl disabled:opacity-50"
-              >
-                {isPending ? "Generating Plan..." : "Show My Path"}
-              </button>
-            </div>
-          </div>
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t p-6">
+        <div className="max-w-[500px] mx-auto flex justify-between">
+          <button
+            onClick={() => setStep(step - 1)}
+            disabled={step === 1}
+            className="px-8 py-3 border rounded-xl disabled:opacity-0"
+          >
+            Back
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={!isStepComplete()}
+            className={`px-8 py-3 font-bold rounded-xl ${
+              isStepComplete()
+                ? "bg-[#303AB2] text-white"
+                : "bg-gray-100 text-gray-400"
+            }`}
+          >
+            {step === totalSteps ? "Finish & Sign Up" : "Continue"}
+          </button>
         </div>
-      )}
-
-      {/* FOOTER ACTION BAR */}
-      {!showSignupModal && (
-        <footer className="fixed bottom-0 left-0 right-0 bg-white border-t p-6">
-          <div className="max-w-[500px] mx-auto flex justify-between">
-            <button
-              onClick={() => setStep(step - 1)}
-              disabled={step === 1}
-              className="px-8 py-3 border rounded-xl disabled:opacity-0"
-            >
-              Back
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={!isStepComplete()}
-              className={`px-8 py-3 font-bold rounded-xl ${
-                isStepComplete()
-                  ? "bg-[#303AB2] text-white"
-                  : "bg-gray-100 text-gray-400"
-              }`}
-            >
-              {step === totalSteps ? "Generate Plan" : "Continue"}
-            </button>
-          </div>
-        </footer>
-      )}
+      </footer>
     </div>
   );
 }

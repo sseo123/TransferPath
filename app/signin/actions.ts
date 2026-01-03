@@ -18,7 +18,7 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const { env } = await getCloudflareContext();
-  const db = drizzle((env as Env).DB);
+  const db = drizzle((env as any).DB);
 
   const existingUser = await db
     .select()
@@ -26,15 +26,11 @@ export async function login(prevState: any, formData: FormData) {
     .where(eq(userTable.username, username))
     .get();
 
-  if (!existingUser) {
-    return { error: "Incorrect username or password" };
-  }
-
-  const isValidPassword = await verifyPassword(
-    existingUser.passwordHash,
-    password
-  );
-  if (!isValidPassword) {
+  // Basic security: don't tell the user if the email or password was the specific fail point
+  if (
+    !existingUser ||
+    !(await verifyPassword(password, existingUser.passwordHash))
+  ) {
     return { error: "Incorrect username or password" };
   }
 

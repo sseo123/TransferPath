@@ -7,5 +7,15 @@ export async function hashPassword(password: string) {
 }
 
 export async function verifyPassword(password: string, hash: string) {
-  return await scrypt.verify(hash, password);
+  if (!password || !hash) {
+    console.error("Missing password or hash for verification");
+    return false;
+  }
+
+  try {
+    return await scrypt.verify(hash, password);
+  } catch (error) {
+    console.error("Password verification failed:", error);
+    return false;
+  }
 }
