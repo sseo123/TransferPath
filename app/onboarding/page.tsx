@@ -77,14 +77,14 @@ export default function OnboardingPage() {
               >
                 <option value="">Select a college</option>
                 <option value="dvc">Diablo Valley College</option>
-                <option value="smc">Santa Monica College</option>
+                {/* <option value="smc">Santa Monica College</option> */}
               </select>
             </div>
           )}
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
-                What&apos;s your intended major?
+                What&apos;s your field of study?
               </h2>
               <select
                 className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2]"
@@ -94,10 +94,8 @@ export default function OnboardingPage() {
                 value={formData.major}
               >
                 <option value="">Select a major</option>
-                <option value="eecs">EECS (B.S.)</option>
-                <option value="computer_science">
-                  Computer Science (B.A.)
-                </option>
+                <option value="computer_science">Computer Science</option>
+                <option value="business">Business</option>
               </select>
             </div>
           )}

@@ -1,18 +1,16 @@
 export type Season = "fall" | "spring" | "summer";
-
 export type TransferEdge = "speed" | "balance" | "gpa";
-
 export type CourseCategory =
   | "MATH"
   | "CS"
   | "PHYSICS"
   | "CHEMISTRY"
-  | "BREADTH"
-  | "ENGINEERING";
+  | "ENGLISH"
+  | "ENGINEERING"
+  | "HISTORY"
+  | "PREP";
 
-/**
- * Student's transfer intent and constraints
- */
+//Student's transfer intent and constraints
 export interface StudentIntent {
   firstName: string;
   major: string;
@@ -25,38 +23,30 @@ export interface StudentIntent {
   };
 }
 
-/**
- * A college course with local identifiers
- */
+// A college course with local identifiers
 export interface CollegeCourse {
   localCode: string;
   canonicalId: string;
   title: string;
   units: number;
   offerings: Season[];
+  prerequisites: string[];
 }
 
-/**
- * A university requirement expressed in canonical terms
- */
+// A university requirement expressed in canonical terms
 export interface RequirementNode {
   canonicalId: string;
   category: CourseCategory;
   isCritical: boolean;
-  prerequisites: string[];
 }
 
-/**
- * Category-based requirements (breadth, electives, etc.)
- */
+// Category-based requirements (breadth, electives, etc.)
 export interface CategoryRequirement {
   count: number;
   pool: string[];
 }
 
-/**
- * Complete university requirement graph
- */
+// Complete university requirement graph
 export interface RequirementGraph {
   requiredChains: RequirementNode[];
   categories: {
@@ -65,9 +55,7 @@ export interface RequirementGraph {
   };
 }
 
-/**
- * A planned course in a semester
- */
+// A planned course in a semester
 export interface PlannedCourse {
   localCode: string;
   canonicalId: string;
@@ -76,9 +64,7 @@ export interface PlannedCourse {
   isCritical: boolean;
 }
 
-/**
- * A semester in the transfer plan
- */
+// A semester in the transfer plan
 export interface Semester {
   name: string;
   season: Season;
@@ -87,9 +73,7 @@ export interface Semester {
   courses: PlannedCourse[];
 }
 
-/**
- * Diagnostic information about the plan
- */
+// Diagnostic information about the plan
 export interface PlanDiagnostics {
   onTrack: boolean;
   missingCanonicalCourses: string[];
@@ -100,9 +84,7 @@ export interface PlanDiagnostics {
   }[];
 }
 
-/**
- * The complete output of the planning engine
- */
+// The complete output of the planning engine
 export interface PlanningResult {
   semesters: Semester[];
   diagnostics: PlanDiagnostics;
