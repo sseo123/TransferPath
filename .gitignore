@@ -48,3 +48,6 @@ next-env.d.ts
 # Drizzle / SQLite local data
 *.sqlite
 *.sqlite-journal
+
+# Drizzle Config (contains sensitive DB credentials)
+drizzle.config.ts
