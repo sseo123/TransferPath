@@ -72,7 +72,7 @@ export default function LoginPage() {
         {/* Secondary Actions */}
         <div className="mt-8 pt-8 border-t border-slate-100">
           <p className="text-slate-500 text-sm font-medium">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/signup"
               className="text-[#303AB2] hover:underline decoration-2 underline-offset-4"

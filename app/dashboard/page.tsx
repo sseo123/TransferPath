@@ -16,9 +16,9 @@ export default async function Dashboard() {
   const { user } = await validateRequest();
   if (!user) redirect("/signin");
 
-  // 1. Get User Profile from DB
   const { env } = await getCloudflareContext();
-  const db = drizzle((env as any).DB);
+  const cfEnv = env as Env;
+  const db = drizzle(cfEnv.DB);
 
   const [dbUser] = await db
     .select()
@@ -27,8 +27,6 @@ export default async function Dashboard() {
 
   if (!dbUser) redirect("/onboarding");
 
-  // 2. Generate the Timeline
-  // We pass starting season, year, and a 15-unit cap
   const semesters = planningEngine(
     UCB_TEST_REQUIREMENTS,
     DVC_CATALOG,
@@ -38,104 +36,109 @@ export default async function Dashboard() {
   );
 
   return (
-    <div className="p-8 max-w-5xl mx-auto bg-gray-50 min-h-screen">
-      <header className="mb-10 flex justify-between items-center">
-        <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            Welcome, {dbUser.firstName}!
-          </h1>
-          <p className="text-lg text-gray-500 mt-1">
-            Path to{" "}
-            <span className="text-blue-600 font-semibold">
-              {dbUser.targetUni}
-            </span>{" "}
-            for {dbUser.major}
-          </p>
-        </div>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
+        <header className="mb-12 flex justify-between items-end border-b border-slate-100 pb-8">
+          <div>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+              Welcome, {dbUser.firstName}!
+            </h1>
+            <p className="text-slate-500 mt-2 text-lg font-medium">
+              Transferring to{" "}
+              <span className="text-indigo-600 font-bold">
+                {dbUser.targetUni}
+              </span>{" "}
+              for <span className="text-slate-900">{dbUser.major}</span>
+            </p>
+          </div>
 
-        <form action={logout}>
-          <button
-            type="submit"
-            className="px-5 py-2.5 bg-white border border-gray-200 text-gray-600 text-sm font-bold rounded-xl hover:bg-gray-50 hover:text-red-600 transition-all shadow-sm"
-          >
-            Sign Out
-          </button>
-        </form>
-      </header>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-white hover:bg-red-50 hover:text-red-600 border border-slate-200 text-slate-600 text-sm font-bold rounded-xl transition-all shadow-sm"
+            >
+              Sign Out
+            </button>
+          </form>
+        </header>
 
-      {/* 3. The Semester Timeline */}
-      <div className="space-y-12">
-        {semesters.map((semester) => {
-          const totalUnits = semester.courses.reduce(
-            (sum, c) => sum + c.units,
-            0
-          );
+        <div className="space-y-16">
+          {semesters.map((semester) => {
+            const totalUnits = semester.courses.reduce(
+              (sum, c) => sum + c.units,
+              0
+            );
 
-          return (
-            <section key={semester.name} className="relative">
-              {/* Visual Vertical Line for the Timeline */}
-              <div className="absolute left-[-20px] top-0 bottom-0 w-1 bg-blue-100 hidden md:block" />
-
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-4 w-4 rounded-full bg-blue-500 hidden md:block border-4 border-white shadow-sm" />
-                  <h2 className="text-2xl font-bold text-gray-800">
+            return (
+              <section key={semester.name}>
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="w-1.5 h-6 bg-indigo-600 rounded-full" />
+                  <h2 className="text-2xl font-black text-slate-900 flex items-center gap-4">
                     {semester.name}
+                    <span className="text-slate-300 text-lg font-medium">
+                      ·
+                    </span>
+                    <span className="text-slate-400 text-lg font-medium">
+                      {totalUnits} Units
+                    </span>
                   </h2>
                 </div>
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-black uppercase tracking-widest">
-                  {totalUnits} Units Total
-                </span>
-              </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {semester.courses.map((course) => (
-                  <div
-                    key={course.canonicalId}
-                    className="group p-5 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-blue-400 hover:shadow-md transition-all"
-                  >
-                    <div className="flex flex-col h-full justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className="text-[10px] font-black text-blue-600 tracking-tighter uppercase">
-                            {course.localCode}
-                          </span>
-                          {course.isCritical && (
-                            <span className="text-[9px] bg-red-50 text-red-500 px-2 py-0.5 rounded-md font-bold uppercase">
-                              Critical
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="font-bold text-gray-900 leading-tight group-hover:text-blue-700 transition-colors">
+                {/* Course Rows - Styled like Screenshot */}
+                <div className="space-y-3">
+                  {semester.courses.map((course) => (
+                    <div
+                      key={course.canonicalId}
+                      className="group relative flex items-center justify-between p-6 bg-white rounded-2xl border border-slate-200 hover:border-indigo-600/50 hover:shadow-md transition-all cursor-pointer"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <span className="text-sm font-black text-indigo-600 tracking-wide uppercase">
+                          {course.localCode}
+                        </span>
+                        <h3 className="text-lg font-bold text-slate-800 group-hover:text-indigo-700 transition-colors">
                           {course.title}
                         </h3>
                       </div>
 
-                      <div className="mt-4 flex items-center justify-between border-t border-gray-50 pt-3">
-                        <span className="text-[10px] text-gray-400 font-mono">
-                          {course.canonicalId}
-                        </span>
-                        <span className="text-sm font-black text-gray-700">
-                          {course.units} units
-                        </span>
+                      <div className="flex items-center gap-3">
+                        {/* Tags matching the pill style in your screenshot */}
+                        {course.isCritical && (
+                          <div className="px-4 py-1.5 bg-indigo-50 border border-indigo-100 rounded-full">
+                            <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">
+                              Required: {dbUser.targetUni}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Prereq logic placeholder tag */}
+                        <div className="px-4 py-1.5 bg-slate-50 border border-slate-100 rounded-full">
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                            {course.units} Units
+                          </span>
+                        </div>
+
+                        <svg
+                          className="w-5 h-5 text-slate-300 group-hover:text-indigo-600 transition-colors ml-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2.5}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* 4. Empty State Fallback */}
-      {semesters.length === 0 && (
-        <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-          <p className="text-gray-400 font-medium">
-            No courses scheduled. Check your requirements data.
-          </p>
+                  ))}
+                </div>
+              </section>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }

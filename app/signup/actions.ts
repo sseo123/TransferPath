@@ -28,7 +28,8 @@ export async function signup(prevState: SignupState, formData: FormData) {
   if (!password || password.length < 6) return { error: "Password too short" };
 
   const { env } = await getCloudflareContext();
-  const db = drizzle((env as any).DB);
+  const cfEnv = env as Env;
+  const db = drizzle(cfEnv.DB);
 
   const existingUser = await db
     .select()

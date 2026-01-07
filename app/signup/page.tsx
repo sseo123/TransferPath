@@ -1,28 +1,40 @@
 "use client";
+
 import { useSearchParams, useRouter } from "next/navigation";
 import { signup } from "./actions";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useMemo } from "react";
 import { GraduationCap } from "lucide-react";
 import Link from "next/link";
+
+type OnboardingData = {
+  college: string;
+  major: string;
+  dreamUni: string;
+  edge: string;
+};
 
 export default function SignupPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [onboardingData, setOnboardingData] = useState<any>(null);
+
+  const onboardingData = useMemo<OnboardingData | null>(() => {
+    const rawData = searchParams.get("data");
+    if (!rawData) return null;
+
+    try {
+      return JSON.parse(atob(rawData));
+    } catch {
+      return null;
+    }
+  }, [searchParams]);
+
   const [state, formAction, isPending] = useActionState(signup, null);
 
   useEffect(() => {
-    const rawData = searchParams.get("data");
-    if (!rawData) {
-      router.push("/onboarding");
-      return;
-    }
-    try {
-      setOnboardingData(JSON.parse(atob(rawData)));
-    } catch (e) {
+    if (!onboardingData) {
       router.push("/onboarding");
     }
-  }, [searchParams, router]);
+  }, [onboardingData, router]);
 
   if (!onboardingData) return null;
 

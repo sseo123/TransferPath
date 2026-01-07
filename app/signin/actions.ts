@@ -9,7 +9,11 @@ import { drizzle } from "drizzle-orm/d1";
 import { userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-export async function login(prevState: any, formData: FormData) {
+type LoginState = {
+  error?: string;
+};
+
+export async function login(_prevState: LoginState, formData: FormData) {
   const username = (formData.get("username") as string)?.trim();
   const password = formData.get("password") as string;
 
@@ -18,7 +22,8 @@ export async function login(prevState: any, formData: FormData) {
   }
 
   const { env } = await getCloudflareContext();
-  const db = drizzle((env as any).DB);
+  const cfEnv = env as Env;
+  const db = drizzle(cfEnv.DB);
 
   const existingUser = await db
     .select()
@@ -26,7 +31,6 @@ export async function login(prevState: any, formData: FormData) {
     .where(eq(userTable.username, username))
     .get();
 
-  // Basic security: don't tell the user if the email or password was the specific fail point
   if (
     !existingUser ||
     !(await verifyPassword(password, existingUser.passwordHash))

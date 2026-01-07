@@ -19,10 +19,10 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "COMSC-220", canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, title: "Assembly Language Programming/Computer Organization", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
 
   // Physics
-  { localCode: "PHYS-129", canonicalId: CANONICAL_COURSES.PRE_PHYSICS, title: "Intro to Physics for Engineers", units: 5, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "PHYS-130", canonicalId: CANONICAL_COURSES.PHYSICS_1, title: "Physics for Engineers: Waves and Thermodynamics", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
-  { localCode: "PHYS-230", canonicalId: CANONICAL_COURSES.PHYSICS_2, title: "Physics for Engineers: Mechanics", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
-  { localCode: "PHYS-231", canonicalId: CANONICAL_COURSES.PHYSICS_3, title: "Physics for Engineers: Electricity and Magnetism", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
+  { localCode: "PHYS-129", canonicalId: CANONICAL_COURSES.PRE_PHYSICS, title: "Intro to Physics for Engineers", units: 4, offerings: ["fall", "spring"], prerequisites: []  },
+  { localCode: "PHYS-130", canonicalId: CANONICAL_COURSES.PHYSICS_1, title: "Physics for Engineers: Mechanics and Wave Motion", units: 4, offerings: ["fall", "spring"], prerequisites: [CANONICAL_COURSES.PRE_PHYSICS]  },
+  { localCode: "PHYS-230", canonicalId: CANONICAL_COURSES.PHYSICS_2, title: "Physics for Engineers: Heat and Electromagnetism", units: 4, offerings: ["fall", "spring"], prerequisites: [CANONICAL_COURSES.PHYSICS_1]  },
+  { localCode: "PHYS-231", canonicalId: CANONICAL_COURSES.PHYSICS_3, title: "Physics for Engineers: Optics and Modern Physics", units: 4, offerings: ["fall", "spring"], prerequisites: [CANONICAL_COURSES.PHYSICS_2]  },
 
   // Chemistry
   { localCode: "CHEM-120", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_1, title: "General Chemistry I", units: 5, offerings: ["fall", "spring", "summer"], prerequisites: []  },
