@@ -196,7 +196,7 @@ export default function App() {
       <section className="w-full bg-[#b7c0e8] py-32 border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-10 md:px-20">
           <h3 className="mb-20 text-center text-4xl font-extrabold text-gray-900">
-            Your Transfer Path in 5 Minutes
+            Mikala park and Shawn Seo
           </h3>
 
           <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:items-start md:gap-4 mb-20">

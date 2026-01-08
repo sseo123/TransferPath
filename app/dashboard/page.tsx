@@ -6,7 +6,7 @@ import { userTable, studentPlansTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
-import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_test";
+import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_cs";
 import DashboardClient from "./dashboardClient";
 import { Semester, Season, PlannedCourse } from "@/lib/planner/types";
 
@@ -79,12 +79,7 @@ export default async function Dashboard() {
       })
     );
   } else {
-    semesters = planningEngine(
-      UCB_TEST_REQUIREMENTS,
-      DVC_CATALOG,
-      "fall",
-      2025
-    );
+    semesters = planningEngine(UCB_CS_REQUIREMENTS, DVC_CATALOG, "fall", 2025);
   }
 
   return <DashboardClient initialSemesters={semesters} dbUser={dbUser} />;
