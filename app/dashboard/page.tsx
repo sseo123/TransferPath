@@ -8,7 +8,6 @@ import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { getRequirements, getUniversityCode, getAllUniversities, getMajorsForUniversity } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
-//testing
 import {
   Semester,
   Season,
