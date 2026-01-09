@@ -16,7 +16,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "COMSC-165", canonicalId: CANONICAL_COURSES.ADVANCED_CS, title: "Advanced Programming with C and C++", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.INTRO_CS] },
   { localCode: "COMSC-200", canonicalId: CANONICAL_COURSES.OBJECT_ORIENTED_PROGRAMMING, title: "Object Oriented Programming C++", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS] },
   { localCode: "COMSC-210", canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, title: "Program Design and Data Structures", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
-  { localCode: "COMSC-220", canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, title: "Assembly Language Programming/Computer Organization", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
+  { localCode: "COMSC-260", canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, title: "Assembly Language Programming/Computer Organization", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
 
   // Physics
   { localCode: "PHYS-129", canonicalId: CANONICAL_COURSES.PRE_PHYSICS, title: "Intro to Physics for Engineers", units: 4, offerings: ["fall", "spring"], prerequisites: []  },
@@ -29,8 +29,9 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "CHEM-121", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, title: "General Chemistry II", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
 
   // English
+  { localCode: "ENGL-C1000", canonicalId: CANONICAL_COURSES.ENGL_COMP_C1000, title: "Academic Reading and Writing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "ENGL-122", canonicalId: CANONICAL_COURSES.ENGL_COMP_1, title: "English Composition", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "ENGL-123", canonicalId: CANONICAL_COURSES.ENGL_COMP_2, title: "Critical Thinking and Composition", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "ENGL-123", canonicalId: CANONICAL_COURSES.ENGL_COMP_2, title: "Critical Thinking and Composition", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ENGL_COMP_1]  },
 
   //Ethnic Studies
   { localCode: "ETHNIC_STUDIES", canonicalId: CANONICAL_COURSES.ETHNIC_STUDIES, title: "Ethnic Studies", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },

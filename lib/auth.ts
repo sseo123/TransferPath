@@ -8,7 +8,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 
 export async function getLucia() {
-  const { env } = await getCloudflareContext();
+  const { env } = await getCloudflareContext({ async: true });
   const cfEnv = env as Env;
   const db = drizzle(cfEnv.DB);
   const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);

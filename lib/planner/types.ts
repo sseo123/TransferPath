@@ -33,11 +33,13 @@ export interface CollegeCourse {
   prerequisites: string[];
 }
 
+
 // A university requirement expressed in canonical terms
 export interface RequirementNode {
   canonicalId: string;
   category: CourseCategory;
   isCritical: boolean;
+  origin?: string; // e.g. "UCB", "UCLA"
 }
 
 // Category-based requirements (breadth, electives, etc.)
@@ -62,7 +64,9 @@ export interface PlannedCourse {
   title: string;
   units: number;
   isCritical: boolean;
+  requiredBy?: string[]; // List of university codes
 }
+
 
 // A semester in the transfer plan
 export interface Semester {

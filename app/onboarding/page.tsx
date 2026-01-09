@@ -10,9 +10,11 @@ export default function OnboardingPage() {
     college: "",
     major: "",
     dreamUni: "",
-    edge: "",
+    startSeason: "fall",
+    startYear: new Date().getFullYear(),
   });
 
+  // Updated to 4 steps since we removed the "Pace" question
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
@@ -20,7 +22,7 @@ export default function OnboardingPage() {
     if (step === 1) return formData.college !== "";
     if (step === 2) return formData.major !== "";
     if (step === 3) return formData.dreamUni !== "";
-    if (step === 4) return formData.edge !== "";
+    if (step === 4) return true; // Season and Year have defaults, always valid
     return false;
   };
 
@@ -63,13 +65,14 @@ export default function OnboardingPage() {
 
       <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6">
         <div className="w-full max-w-[500px] bg-white border border-gray-200 rounded-2xl p-10 shadow-sm">
+          {/* STEP 1: COLLEGE */}
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
                 Which Community College <br /> do you attend?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2]"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, college: e.target.value })
                 }
@@ -77,17 +80,18 @@ export default function OnboardingPage() {
               >
                 <option value="">Select a college</option>
                 <option value="dvc">Diablo Valley College</option>
-                {/* <option value="smc">Santa Monica College</option> */}
               </select>
             </div>
           )}
+
+          {/* STEP 2: MAJOR */}
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
                 What&apos;s your field of study?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2]"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, major: e.target.value })
                 }
@@ -99,13 +103,15 @@ export default function OnboardingPage() {
               </select>
             </div>
           )}
+
+          {/* STEP 3: TARGET UNI */}
           {step === 3 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
                 Where is your TARGET university?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2]"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, dreamUni: e.target.value })
                 }
@@ -117,26 +123,53 @@ export default function OnboardingPage() {
               </select>
             </div>
           )}
-          {/* Steps 2 and 3 omitted for brevity, identical to your original logic */}
+
+          {/* STEP 4: START DATE */}
           {step === 4 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
-                Select your transfer pace
+                When are you starting?
               </h2>
-              <div className="flex flex-col gap-3">
-                {["speed", "gpa", "balance"].map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => setFormData({ ...formData, edge: id })}
-                    className={`p-4 border-2 rounded-xl text-left ${
-                      formData.edge === id
-                        ? "border-[#303AB2] bg-blue-50"
-                        : "border-gray-100"
-                    }`}
+              <p className="text-slate-500 text-center -mt-4 text-sm">
+                We&apos;ll build your plan starting from your first semester.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">
+                    Season
+                  </label>
+                  <select
+                    value={formData.startSeason}
+                    onChange={(e) =>
+                      setFormData({ ...formData, startSeason: e.target.value })
+                    }
+                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#303AB2] bg-white"
                   >
-                    <span className="font-bold capitalize">{id}</span>
-                  </button>
-                ))}
+                    <option value="fall">Fall</option>
+                    <option value="spring">Spring</option>
+                    <option value="summer">Summer</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">
+                    Year
+                  </label>
+                  <input
+                    type="number"
+                    min={2020}
+                    max={2035}
+                    value={formData.startYear}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        startYear: parseInt(e.target.value),
+                      })
+                    }
+                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#303AB2]"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -148,17 +181,17 @@ export default function OnboardingPage() {
           <button
             onClick={() => setStep(step - 1)}
             disabled={step === 1}
-            className="px-8 py-3 border rounded-xl disabled:opacity-0"
+            className="px-8 py-3 border rounded-xl disabled:opacity-0 transition-opacity"
           >
             Back
           </button>
           <button
             onClick={handleNext}
             disabled={!isStepComplete()}
-            className={`px-8 py-3 font-bold rounded-xl ${
+            className={`px-8 py-3 font-bold rounded-xl transition-all ${
               isStepComplete()
                 ? "bg-[#303AB2] text-white"
-                : "bg-gray-100 text-gray-400"
+                : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
           >
             {step === totalSteps ? "Finish & Sign Up" : "Continue"}

@@ -9,7 +9,8 @@ export const userTable = sqliteTable("user", {
   currentCollege: text("current_college"),
   major: text("major"),
   targetUni: text("target_uni"),
-  transferEdge: text("transfer_edge"),
+  startSeason: text("start_season"), // "fall", "spring", "summer"
+  startYear: integer("start_year"),
 });
 
 // ADD THIS TABLE - Lucia requires it
@@ -21,10 +22,28 @@ export const sessionTable = sqliteTable("session", {
   expiresAt: integer("expires_at").notNull(),
 });
 
+export const requestTable = sqliteTable("request", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  body: text("body").notNull(),
+});
+
 export const studentPlansTable = sqliteTable("student_plans", {
   id: text("id").primaryKey(),
   userId: text("user_id").references(() => userTable.id),
   courseCode: text("course_code").notNull(),
   semesterName: text("semester_name").notNull(),
   order: integer("order"),
+});
+
+export const userTargetsTable = sqliteTable("user_targets", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").references(() => userTable.id),
+  university: text("university").notNull(), // e.g., "UC Berkeley"
+  major: text("major").notNull(), // e.g., "Computer Science"
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .defaultNow(),
 });
