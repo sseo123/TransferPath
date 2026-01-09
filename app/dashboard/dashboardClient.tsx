@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { logout, removeTargetCollege } from "./actions";
 import AddTargetModal from "./addTargetModal";
 import { ChevronDown, ChevronRight, Pencil, Plus, X } from "lucide-react";
-import { DVC_CATALOG } from "@/data/cc/dvc";
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
@@ -92,11 +91,6 @@ function SemesterAccordionItem({
 }
 
 function RowItem({ course }: { course: PlannedCourse }) {
-  const catalogData = DVC_CATALOG.find(
-    (c) => c.canonicalId === course.canonicalId
-  );
-  const prerequisites = catalogData?.prerequisites || [];
-
   // Helper to map university code to badge color/label
   const getBadgeStyle = (code: string) => {
     // Very basic mapping for now
@@ -118,7 +112,7 @@ function RowItem({ course }: { course: PlannedCourse }) {
       <div className="flex items-center gap-4">
         {/* Badges */}
         <div className="flex gap-2">
-          {course.isCritical ? (
+          {course.isCritical && (
             // Show specific university requirements
             course.requiredBy && course.requiredBy.length > 0 ? (
               course.requiredBy.map((uni) => (
@@ -136,17 +130,11 @@ function RowItem({ course }: { course: PlannedCourse }) {
                 Required
               </span>
             )
-          ) : (
-            <span className="px-3 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded-full border border-slate-200">
-              {course.units} Units
-            </span>
           )}
 
-          {prerequisites.length > 0 && (
-            <span className="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider rounded-full border border-slate-200">
-              PREREQ
-            </span>
-          )}
+          <span className="px-3 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded-full border border-slate-200">
+            {course.units} Units
+          </span>
         </div>
 
         <ChevronRight
@@ -292,3 +280,4 @@ export default function DashboardClient({
     </div>
   );
 }
+
