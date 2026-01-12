@@ -6,7 +6,12 @@ import { userTable, studentPlansTable, userTargetsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
-import { getRequirements, getUniversityCode, getAllUniversities, getMajorsForUniversity } from "@/data/registry";
+import {
+  getRequirements,
+  getUniversityCode,
+  getAllUniversities,
+  getMajorsForUniversity,
+} from "@/data/registry";
 import DashboardClient from "./dashboardClient";
 import {
   Semester,

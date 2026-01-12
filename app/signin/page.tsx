@@ -39,7 +39,7 @@ export default function LoginPage() {
               className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
             />
           </div>
-
+          
           <div className="space-y-1.5">
             <label className="text-sm font-semibold text-slate-700 ml-1">
               Password

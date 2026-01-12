@@ -24,7 +24,9 @@ export default function AddTargetModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get available majors for the selected university
-  const availableMajors = university ? (majorsByUniversity[university] || []) : [];
+  const availableMajors = university
+    ? majorsByUniversity[university] || []
+    : [];
 
   if (!isOpen) return null;
 
