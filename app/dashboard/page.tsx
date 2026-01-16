@@ -6,20 +6,9 @@ import { userTable, studentPlansTable, userTargetsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
-import {
-  getRequirements,
-  getUniversityCode,
-  getAllUniversities,
-  getMajorsForUniversity,
-} from "@/data/registry";
+import { getRequirements, getUniversityCode, getAllUniversities, getMajorsForUniversity, } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
-import {
-  Semester,
-  Season,
-  PlannedCourse,
-  RequirementGraph,
-  RequirementNode,
-} from "@/lib/planner/types";
+import { Semester, Season, PlannedCourse, RequirementGraph, RequirementNode, } from "@/lib/planner/types";
 import { CANONICAL_COURSES } from "@/data/courses/allCourses";
 
 // Define the type for the database row based on your schema
@@ -45,29 +34,6 @@ export default async function Dashboard() {
     .from(userTargetsTable)
     .where(eq(userTargetsTable.userId, user.id));
 
-  // If no targets but user has legacy data, migrate it
-  if (userTargets.length === 0 && dbUser.targetUni && dbUser.major) {
-    const newTargetId = crypto.randomUUID();
-    await db.insert(userTargetsTable).values({
-      id: newTargetId,
-      userId: user.id,
-      university: dbUser.targetUni,
-      major: dbUser.major,
-    });
-    console.log(`Migrated user ${user.id} to userTargetsTable`);
-
-    // Refresh targets
-    userTargets = [
-      {
-        id: newTargetId,
-        userId: user.id,
-        university: dbUser.targetUni,
-        major: dbUser.major,
-        createdAt: new Date(),
-      },
-    ];
-  }
-
   const savedPlanRows = await db
     .select()
     .from(studentPlansTable)
@@ -75,10 +41,7 @@ export default async function Dashboard() {
 
   let semesters: Semester[] = [];
 
-  // Construct Requirement Graphs for Planning Engine
-  // We attach "origin" to the requirements so we can track them
   const targetRequirementGraphs: RequirementGraph[] = userTargets.map((t) => {
-    // Use the centralized registry instead of hardcoded string matching
     const graph = getRequirements(t.university, t.major);
     const universityCode = getUniversityCode(t.university, t.major);
 
@@ -95,8 +58,8 @@ export default async function Dashboard() {
     return { requiredChains: [], categories: {} };
   });
 
+  // create a page that says "add universties" which has a button to university page
   if (targetRequirementGraphs.length === 0) {
-    // Fallback if no targets?
     targetRequirementGraphs.push({ requiredChains: [], categories: {} });
   }
 
@@ -122,68 +85,66 @@ export default async function Dashboard() {
   });
 
   if (savedPlanRows.length > 0) {
-    // Reconstruct plan from DB
-    const seasonOrder = { spring: 0, summer: 1, fall: 2 };
-
-    // Group by delivery semester
+    // 1. Group by semester name from DB
     const grouped = new Map<string, StudentPlanRow[]>();
     savedPlanRows.forEach((row) => {
       if (!grouped.has(row.semesterName)) grouped.set(row.semesterName, []);
       grouped.get(row.semesterName)!.push(row);
     });
 
+    // 2. Rebuild semester objects
     semesters = Array.from(grouped.entries()).map(([name, rows]) => {
-      const [seasonStr, yearStr] = name.split(" ");
-      const season = seasonStr.toLowerCase() as Season;
-      const year = parseInt(yearStr);
+      // Parse "Spring 2027" -> ["Spring", "2027"]
+      const parts = name.split(" ");
+      const seasonStr = parts[0]?.toLowerCase() || "fall";
+      const yearNum = parseInt(parts[1]) || 2025;
 
-      // Sort by order
+      // Sort courses within this specific semester by the saved 'order' index
       rows.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
-      const courses: PlannedCourse[] = rows
-        .map((row) => {
-          const catalogCourse = DVC_CATALOG.find(
-            (c) => c.localCode === row.courseCode
-          );
+      return {
+        name, // Keeps the display name e.g., "Spring 2027"
+        season: seasonStr as Season,
+        year: yearNum,
+        courses: rows.map((r) => {
+          const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
 
-          const reqData = catalogCourse
-            ? requirementsMap.get(catalogCourse.canonicalId)
+          // Re-hydrate requirement metadata (critical status, etc.)
+          const reqData = catalog
+            ? requirementsMap.get(catalog.canonicalId)
             : undefined;
 
           return {
-            localCode: row.courseCode,
-            canonicalId: catalogCourse?.canonicalId ?? "unknown",
-            title: catalogCourse?.title ?? "Unknown Course",
-            units: catalogCourse?.units ?? 0,
+            localCode: r.courseCode,
+            canonicalId: catalog?.canonicalId ?? "unknown",
+            title: catalog?.title ?? "Unknown",
+            units: catalog?.units ?? 0,
             isCritical: reqData?.isCritical ?? false,
             requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
           };
-        })
-        // FILTER: Remove stale courses that are likely auto-added GEs but no longer required
-        // Specifically targeting ETHNIC_STUDIES as requested
-        .filter((c) => {
-          if (
-            c.canonicalId === CANONICAL_COURSES.ETHNIC_STUDIES &&
-            !c.isCritical
-          ) {
-            return false;
-          }
-          return true;
-        });
-
-      return {
-        name,
-        season,
-        year,
-        maxUnits: season === "summer" ? 12 : 19,
-        courses,
+        }),
+        maxUnits: seasonStr === "summer" ? 12 : 19,
       };
     });
 
-    // Sort semesters chronologically
+    // 3. STRICT Chronological Sort for the Timeline
+    const seasonPriority: Record<string, number> = {
+      spring: 0,
+      summer: 1,
+      fall: 2,
+    };
+
     semesters.sort((a, b) => {
-      if (a.year !== b.year) return a.year - b.year;
-      return seasonOrder[a.season] - seasonOrder[b.season];
+      // First, compare years (e.g., 2026 comes before 2027)
+      if (a.year !== b.year) {
+        return a.year - b.year;
+      }
+
+      // If years are the same, compare by academic season priority
+      const priorityA = seasonPriority[a.season] ?? 0;
+      const priorityB = seasonPriority[b.season] ?? 0;
+
+      return priorityA - priorityB;
     });
   } else {
     const startSeason = (dbUser.startSeason as Season) || "fall";

@@ -6,33 +6,59 @@ import { Semester, PlannedCourse } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { saveStudentPlan } from "./actions";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-  DragStartEvent,
-  DragOverEvent,
-  useDroppable,
-  DragOverlay,
-  defaultDropAnimationSideEffects,
-  DropAnimation,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable,
-} from "@dnd-kit/sortable";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragStartEvent, DragOverEvent, useDroppable, DragOverlay, defaultDropAnimationSideEffects, DropAnimation, } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable, } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface PlanEditorProps {
   initialSemesters: Semester[];
   onExit: () => void;
+}
+
+function moveBetweenContainers(
+  semesters: Semester[],
+  unassigned: PlannedCourse[],
+  activeId: string,
+  overId: string,
+  activeContainer: string,
+  overContainer: string
+) {
+  // 1. Find the course object
+  let movedCourse: PlannedCourse | undefined;
+  
+  if (activeContainer === "sidebar") {
+    movedCourse = unassigned.find(c => c.canonicalId === activeId);
+  } else {
+    movedCourse = semesters
+      .find(s => s.name === activeContainer)
+      ?.courses.find(c => c.canonicalId === activeId);
+  }
+
+  if (!movedCourse) return { semesters, unassigned };
+
+  // 2. Remove from source
+  const newUnassigned = activeContainer === "sidebar" 
+    ? unassigned.filter(c => c.canonicalId !== activeId)
+    : [...unassigned];
+
+  const newSemesters = semesters.map(s => ({
+    ...s,
+    courses: s.name === activeContainer 
+      ? s.courses.filter(c => c.canonicalId !== activeId) 
+      : s.courses
+  }));
+
+  // 3. Add to destination
+  if (overContainer === "sidebar") {
+    newUnassigned.push(movedCourse);
+  } else {
+    const destIndex = newSemesters.findIndex(s => s.name === overContainer);
+    if (destIndex !== -1) {
+      newSemesters[destIndex].courses.push(movedCourse);
+    }
+  }
+
+  return { semesters: newSemesters, unassigned: newUnassigned };
 }
 
 function CourseCard({
@@ -88,26 +114,15 @@ function CourseCard({
   );
 }
 
-function SortableCourse({
-  course,
-  isValid,
-  missing,
-  isSidebar = false,
-}: {
+function SortableCourse({ course, isValid, missing, isSidebar = false, }: {
   course: PlannedCourse;
   isValid: boolean;
   missing: string[];
   isSidebar?: boolean;
 }) {
   const sortableData = useMemo(() => ({ course }), [course]);
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: course.canonicalId, data: sortableData });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging, } = useSortable(
+    { id: course.canonicalId, data: sortableData });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -251,6 +266,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
     data: droppableData,
   });
 
+
   const courseIds = useMemo(() => courses.map((c) => c.canonicalId), [courses]);
 
   return (
@@ -289,10 +305,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   );
 }
 
-export default function PlanEditor({
-  initialSemesters,
-  onExit,
-}: PlanEditorProps) {
+export default function PlanEditor({ initialSemesters, onExit, }: PlanEditorProps) {
   const [semesters, setSemesters] = useState<Semester[]>(initialSemesters);
   const [unassignedCourses, setUnassignedCourses] = useState<PlannedCourse[]>(
     []
@@ -391,78 +404,38 @@ export default function PlanEditor({
     setActiveCourse(course);
   };
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
+  
 
-    const activeId = active.id as string;
-    const overId = over.id as string;
+const handleDragOver = (event: DragOverEvent) => {
+  const { active, over } = event;
+  if (!over) return;
 
-    const activeContainer = findContainer(activeId);
-    const overContainer =
-      overId === "sidebar"
-        ? "sidebar"
-        : semesters.find((s) => s.name === overId)
-        ? overId
-        : findContainer(overId);
+  const activeId = active.id as string;
+  const overId = over.id as string;
 
-    if (
-      !activeContainer ||
-      !overContainer ||
-      activeContainer === overContainer
-    ) {
-      return;
-    }
+  const activeContainer = findContainer(activeId);
+  const overContainer = semesters.find((s) => s.name === overId)
+    ? overId
+    : findContainer(overId) || (overId === "sidebar" ? "sidebar" : null);
 
-    // Find the course in current state
-    let movedCourse: PlannedCourse | undefined;
-    if (activeContainer === "sidebar") {
-      movedCourse = unassignedCourses.find((c) => c.canonicalId === activeId);
-    } else {
-      const sourceSem = semesters.find((s) => s.name === activeContainer);
-      movedCourse = sourceSem?.courses.find((c) => c.canonicalId === activeId);
-    }
+  // THE GUARD: Stop if no container found or if containers are the same
+  if (!activeContainer || !overContainer || activeContainer === overContainer) {
+    return;
+  }
 
-    if (!movedCourse) movedCourse = activeCourse || undefined;
-    if (!movedCourse) return;
+  // Perform the move across both state variables
+  const result = moveBetweenContainers(
+    semesters,
+    unassignedCourses,
+    activeId,
+    overId,
+    activeContainer,
+    overContainer
+  );
 
-    // 1. Remove from source
-    if (activeContainer === "sidebar") {
-      setUnassignedCourses((prev) =>
-        prev.filter((c) => c.canonicalId !== activeId)
-      );
-    } else {
-      setSemesters((prev) =>
-        prev.map((s) => {
-          if (s.name === activeContainer) {
-            return {
-              ...s,
-              courses: s.courses.filter((c) => c.canonicalId !== activeId),
-            };
-          }
-          return s;
-        })
-      );
-    }
-
-    // 2. Add to target
-    if (overContainer === "sidebar") {
-      setUnassignedCourses((prev) => {
-        if (prev.some((c) => c.canonicalId === activeId)) return prev;
-        return [...prev, movedCourse!];
-      });
-    } else {
-      setSemesters((prev) =>
-        prev.map((s) => {
-          if (s.name === overContainer) {
-            if (s.courses.some((c) => c.canonicalId === activeId)) return s;
-            return { ...s, courses: [...s.courses, movedCourse!] };
-          }
-          return s;
-        })
-      );
-    }
-  };
+  setSemesters(result.semesters);
+  setUnassignedCourses(result.unassigned);
+};
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -625,3 +598,4 @@ export default function PlanEditor({
     </DndContext>
   );
 }
+

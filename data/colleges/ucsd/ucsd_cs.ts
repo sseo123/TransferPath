@@ -12,6 +12,7 @@ export const UCSD_CS_REQUIREMENTS: RequirementGraph = {
     { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: true },
     { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: true },
     { canonicalId: CANONICAL_COURSES.PHYSICS_1, category: "PHYSICS", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.ETHNIC_STUDIES, category: "HISTORY", isCritical: true },
   ],
   categories: {}, 
 };

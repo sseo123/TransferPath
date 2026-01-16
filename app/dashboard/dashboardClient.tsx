@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { logout, removeTargetCollege } from "./actions";
@@ -92,11 +93,7 @@ function SemesterAccordionItem({
 function RowItem({ course }: { course: PlannedCourse }) {
   // Helper to map university code to badge color/label
   const getBadgeStyle = (code: string) => {
-    // Very basic mapping for now
-    if (code === "UCB") return "bg-blue-100 text-blue-700 border-blue-200";
-    if (code === "UCLA")
-      return "bg-yellow-100 text-yellow-700 border-yellow-200";
-    return "bg-slate-100 text-slate-700 border-slate-200";
+      return "bg-blue-100 text-blue-700 border-blue-200";
   };
 
   return (
@@ -153,10 +150,12 @@ export default function DashboardClient({
 }: DashboardClientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isAddTargetOpen, setIsAddTargetOpen] = useState(false);
+  const router = useRouter();
 
   const handleRemoveTarget = async (id: string) => {
-    if (confirm("Are you sure you want to remove this target college?")) {
+    if (confirm("Are you sure you want to remove this target college? This will wipe all plan data and regenerate from the original requirements.")) {
       await removeTargetCollege(id);
+      router.refresh();
     }
   };
 

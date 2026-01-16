@@ -14,7 +14,6 @@ export default function OnboardingPage() {
     startYear: new Date().getFullYear(),
   });
 
-  // Updated to 4 steps since we removed the "Pace" question
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
