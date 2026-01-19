@@ -266,7 +266,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[500px] w-80 bg-white rounded-3xl border-2 p-5 transition-all ${isOver ? "border-[#303AB2] ring-4 ring-indigo-50" : "border-slate-200"}`}
+      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${isOver ? "border-[#303AB2] ring-4 ring-indigo-50" : "border-slate-200"}`}
     >
       <h3 className="font-black text-slate-800 text-lg mb-4">
         Required Courses
@@ -278,7 +278,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
         >
           {courses.length === 0 ? (
             <div className="border-2 border-dashed border-slate-100 rounded-2xl h-32 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-4">
-              Empty
+              Courses from deleted semesters will appear here
             </div>
           ) : (
             courses.map((course) => (
@@ -492,7 +492,7 @@ export default function PlanEditor({
               Course Planning
             </h1>
             <p className="text-slate-500 text-sm">
-              Draft your plan. Changes only save when you click "Save Changes".
+              Draft your plan. Changes only save when you click &quot;Save Changes&quot;.
             </p>
           </div>
           <div className="flex gap-3">
