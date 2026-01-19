@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Plus, GraduationCap } from "lucide-react";
+import { X, GraduationCap } from "lucide-react";
 import AddTargetModal from "./addTargetModal";
 import { removeTargetCollege } from "../actions";
 

@@ -8,6 +8,7 @@ import { getAllUniversities, getMajorsForUniversity } from "@/data/registry";
 import UniversitiesClient from "./universitiesClient";
 
 export default async function UniversitiesPage() {
+  
   const { user } = await validateRequest();
   if (!user) redirect("/signin");
 

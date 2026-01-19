@@ -84,7 +84,6 @@ function SemesterAccordionItem({
 }
 
 function RowItem({ course }: { course: PlannedCourse }) {
-  // Helper to map university code to badge color/label
   const getBadgeStyle = (code: string) => {
     return "bg-blue-100 text-blue-700 border-blue-200";
   };
@@ -240,66 +239,3 @@ return (
     </div>
   );
 }
-//   return (
-//     <div className="min-h-screen bg-white">
-//       <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
-//         {/* User Welcome Header */}
-//         <header className="mb-12 border-b border-slate-100 pb-8">
-//           {/* Header Top Section */}
-//           <div className="flex justify-between items-start mb-6">
-//             <div>
-//               <h1 className="text-4xl font-black text-slate-900 tracking-tight">
-//                 Welcome, {dbUser.firstName}!
-//               </h1>
-//               <p className="text-slate-500 mt-2 text-lg font-medium">
-//                 Here is your transfer plan
-//               </p>
-//             </div>
-
-//             <div className="flex items-center gap-4">
-//               <button
-//                 onClick={() => setIsEditing(true)}
-//                 className="px-6 py-2 bg-[#303AB2] hover:bg-[#252c8a] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
-//               >
-//                 Create your own plan
-//               </button>
-//               <form action={logout}>
-//                 <button
-//                   type="submit"
-//                   className="px-6 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-bold rounded-xl shadow-sm hover:bg-slate-50 transition-all"
-//                 >
-//                   Sign Out
-//                 </button>
-//               </form>
-//             </div>
-//           </div>
-//         </header>
-
-//         {/* Gray Background Timeline Section */}
-//         <div className="bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
-//           <div className="flex justify-between items-center mb-8 px-2">
-//             <h2 className="text-2xl font-bold text-slate-800">
-//               Your Strategic Timeline
-//             </h2>
-//             <button
-//               onClick={() => setIsEditing(true)}
-//               className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 text-[15px] font-semibold rounded-xl transition-all shadow-sm"
-//             >
-//               Add Term
-//             </button>
-//           </div>
-
-//           <div className="flex flex-col">
-//             {initialSemesters.map((semester) => (
-//               <SemesterAccordionItem
-//                 key={semester.name}
-//                 semester={semester}
-//                 onEdit={() => setIsEditing(true)}
-//               />
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
