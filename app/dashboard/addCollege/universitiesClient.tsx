@@ -60,7 +60,7 @@ export default function UniversitiesClient({
 
             <button
               onClick={() => setIsAddTargetOpen(true)}
-              className="px-6 py-2 bg-[#303AB2] hover:bg-[#252c8a] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
+              className="px-6 py-2 bg-[#82A7A6] hover:bg-[#6B8A89] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
             >
               + Add University
             </button>
@@ -70,8 +70,8 @@ export default function UniversitiesClient({
         {/* Target Schools Count Card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <GraduationCap size={24} className="text-indigo-600" />
+            <div className="w-12 h-12 bg-[#82a79d] rounded-xl flex items-center justify-center flex-shrink-0">
+              <GraduationCap size={24} className="text-white" />
             </div>
             <div>
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
@@ -101,8 +101,8 @@ export default function UniversitiesClient({
                 className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex items-center justify-between hover:border-slate-300 transition-colors group"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <GraduationCap size={24} className="text-indigo-600" />
+                  <div className="w-12 h-12 bg-[#82a79d] rounded-xl flex items-center justify-center flex-shrink-0">
+                    <GraduationCap size={24} className="text-white" />
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">

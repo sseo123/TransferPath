@@ -8,12 +8,7 @@ import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { getRequirements, getUniversityCode } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
-import {
-  Semester,
-  Season,
-  RequirementGraph,
-  RequirementNode,
-} from "@/lib/planner/types";
+import { Semester, Season, RequirementGraph, RequirementNode, } from "@/lib/planner/types";
 import { PlannedCourse } from "@/lib/planner/types";
 
 // Define the type for the database row based on your schema

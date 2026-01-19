@@ -31,13 +31,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans selection:bg-blue-100">
+    <div className="min-h-screen bg-white font-sans selection:bg-teal-100">
       {/* 1. FIXED NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-5">
           <h1
             onClick={() => router.push("/")}
-            className="text-xl font-bold text-[#303AB2] tracking-tight cursor-pointer"
+            className="text-xl font-bold text-[#82A7A6] tracking-tight cursor-pointer"
           >
             TransferPath
           </h1>
@@ -51,7 +51,7 @@ export default function App() {
             </button>
             <button
               onClick={handleGetStarted}
-              className="rounded-lg bg-[#303AB2] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
+              className="rounded-lg bg-[#82A7A6] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-105 active:scale-95"
             >
               Get started
             </button>
@@ -64,7 +64,7 @@ export default function App() {
         className="relative flex min-h-screen w-full items-center border-b border-gray-100"
         style={{
           background:
-            "linear-gradient(0deg, hsla(235, 26.50%, 44.30%, 0.30) 0%, rgba(255, 255, 255, 1) 50%)",
+            "linear-gradient(0deg, rgba(130, 167, 166, 0.30) 0%, rgba(255, 255, 255, 1) 50%)",
           backgroundColor: "white",
         }}
       >
@@ -89,18 +89,18 @@ export default function App() {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="flex-1 rounded-xl border border-gray-200 px-5 py-4 outline-none focus:ring-2 focus:ring-[#303AB2]/50 bg-white shadow-sm"
+                    className="flex-1 rounded-xl border border-gray-200 px-5 py-4 outline-none focus:ring-2 focus:ring-[#82A7A6]/50 bg-white shadow-sm"
                   />
                   <button
                     onClick={handleGetStarted}
-                    className="rounded-xl bg-[#303AB2] px-6 py-4 font-bold text-white shadow-lg hover:shadow-xl transition-all active:scale-95"
+                    className="rounded-xl bg-[#82A7A6] px-6 py-4 font-bold text-white transition-all hover:scale-105 active:scale-95 hover:shadow-xl"
                   >
                     Get started
                   </button>
                 </div>
               </div>
 
-              <button className="flex items-center gap-2 font-bold text-[#303AB2] hover:opacity-80 transition-opacity">
+              <button className="flex items-center gap-2 font-bold text-[#82A7A6] hover:opacity-80 transition-opacity">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-current pl-0.5 text-[10px]">
                   ▶
                 </span>
@@ -148,7 +148,7 @@ export default function App() {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-lg font-semibold text-gray-400 group-hover:text-[#303AB2] transition-colors duration-300 whitespace-nowrap">
+                <span className="text-lg font-semibold text-gray-400 group-hover:text-[#82A7A6] transition-colors duration-300 whitespace-nowrap">
                   {uni.name}
                 </span>
               </div>
@@ -179,7 +179,7 @@ export default function App() {
               </p>
               <button
                 onClick={handleGetStarted}
-                className="group flex items-center gap-2 text-lg font-bold text-[#303AB2] hover:opacity-70 transition-all"
+                className="group flex items-center gap-2 text-lg font-bold text-[#82A7A6] hover:opacity-70 transition-all"
               >
                 Try it out
                 <ChevronRight
@@ -193,7 +193,7 @@ export default function App() {
       </section>
 
       {/* 5. Process Section */}
-      <section className="w-full bg-[#b7c0e8] py-32 border-y border-gray-100">
+      <section className="w-full bg-[#B8D4D3] py-32 border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-10 md:px-20">
           <h3 className="mb-20 text-center text-4xl font-extrabold text-gray-900">
             Your Transfer Path in 5 Minutes
@@ -207,7 +207,7 @@ export default function App() {
             ].map((step, i) => (
               <React.Fragment key={i}>
                 <div className="flex flex-col items-center text-center group w-64">
-                  <div className="mb-8 flex h-28 w-28 items-center justify-center rounded-[2.5rem] border border-blue-100 bg-white text-[#303AB2] shadow-sm group-hover:shadow-md transition-all duration-300">
+                  <div className="mb-8 flex h-28 w-28 items-center justify-center rounded-[2.5rem] border border-teal-100 bg-white text-[#82A7A6] shadow-sm group-hover:shadow-md transition-all duration-300">
                     <span className="text-3xl font-black">{step.num}</span>
                   </div>
                   <p className="text-xl font-bold leading-tight text-gray-900 px-4">
@@ -231,7 +231,7 @@ export default function App() {
           <div className="flex justify-center">
             <button
               onClick={handleGetStarted}
-              className="rounded-xl bg-[#303AB2] px-12 py-5 text-lg font-bold text-white shadow-xl transition-all hover:scale-105 active:scale-95 hover:shadow-2xl"
+              className="rounded-xl bg-[#82A7A6] px-12 py-5 text-lg font-bold text-white shadow-xl transition-all hover:scale-105 active:scale-95 hover:shadow-2xl"
             >
               Get started
             </button>
@@ -244,19 +244,19 @@ export default function App() {
         <div className="mx-auto max-w-8xl px-10 md:px-20">
           <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-3">
             <div className="flex justify-center md:justify-start">
-              <h1 className="text-2xl font-bold text-[#303AB2]">
+              <h1 className="text-2xl font-bold text-[#82A7A6]">
                 TransferPath
               </h1>
             </div>
 
             <div className="flex justify-center gap-10 text-sm font-bold text-gray-400">
-              <a href="#" className="hover:text-[#303AB2] transition-colors">
+              <a href="#" className="hover:text-[#82A7A6] transition-colors">
                 Discord
               </a>
-              <a href="#" className="hover:text-[#303AB2] transition-colors">
+              <a href="#" className="hover:text-[#82A7A6] transition-colors">
                 Instagram
               </a>
-              <a href="#" className="hover:text-[#303AB2] transition-colors">
+              <a href="#" className="hover:text-[#82A7A6] transition-colors">
                 Twitter
               </a>
             </div>

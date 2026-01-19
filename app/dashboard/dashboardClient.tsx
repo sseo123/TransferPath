@@ -58,7 +58,7 @@ function SemesterAccordionItem({
             e.stopPropagation();
             onEdit();
           }}
-          className="text-slate-400 hover:text-indigo-600 p-2"
+          className="text-slate-400 hover:text-[#82A7A6] p-2"
         >
           <Pencil size={18} />
         </button>
@@ -86,7 +86,7 @@ function SemesterAccordionItem({
 
 function RowItem({ course }: { course: PlannedCourse }) {
   const getBadgeStyle = (code: string) => {
-    return "bg-blue-100 text-blue-700 border-blue-200";
+    return "bg-[#7ca1ad] text-white text-[10px] font-bold uppercase tracking-wider rounded-full";
   };
 
   return (
@@ -115,20 +115,15 @@ function RowItem({ course }: { course: PlannedCourse }) {
                 </span>
               ))
             ) : (
-              <span className="px-3 py-1 bg-purple-100 text-purple-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-purple-200">
+              <span className="px-3 py-1 bg-teal-100 text-teal-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-teal-200">
                 Required
               </span>
             ))}
 
-          <span className="px-3 py-1 bg-slate-50 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded-full border border-slate-200">
+          <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full">
             {course.units} Units
           </span>
         </div>
-
-        <ChevronRight
-          size={20}
-          className="text-slate-300 group-hover:text-slate-400 transition-colors"
-        />
       </div>
     </div>
   );
@@ -191,18 +186,19 @@ export default function DashboardClient({
             <div className="flex items-center gap-4">
               <button
                 onClick={handleAction}
-                className={`px-6 py-2 text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 ${
+                className={`px-4 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl ${
                   hasTargets
-                    ? "bg-[#303AB2] hover:bg-[#252c8a] text-white"
-                    : "bg-[#303AB2] hover:bg-[#252c8a] text-white"
+                    ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
+                    : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                 }`}
               >
                 {hasTargets
-                  ? "Create your own plan"
+                  ? "Edit Plan"
                   : "Add Universities to Start"}
               </button>
               <form action={logout}>
-                <button type="submit" className="...">
+                <button type="submit" 
+                className="px-4 py-3 text-sm font-bold text-black rounded-xl transition-all hover:scale-105 active:scale-95">
                   Sign Out
                 </button>
               </form>
@@ -232,8 +228,8 @@ export default function DashboardClient({
           {/* Progress Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
-                <span className="text-purple-600 text-xl">📈</span>
+              <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center">
+                <span className="text-teal-600 text-xl">📈</span>
               </div>
               <span className="text-2xl font-bold text-slate-900">27%</span>
             </div>
@@ -245,8 +241,8 @@ export default function DashboardClient({
           {/* Total Units Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                <span className="text-blue-600 text-xl">🎯</span>
+              <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center">
+                <span className="text-teal-600 text-xl">🎯</span>
               </div>
               {/* Dynamic Unit Total */}
               <span className="text-2xl font-bold text-slate-900">
@@ -260,8 +256,8 @@ export default function DashboardClient({
 
           {/* Quote Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
-            <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center mb-2">
-              <span className="text-indigo-600 text-xl">✨</span>
+            <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center mb-2">
+              <span className="text-teal-600 text-xl">✨</span>
             </div>
             <div>
               <p className="text-slate-800 italic text-sm leading-relaxed font-medium">
@@ -325,7 +321,7 @@ export default function DashboardClient({
                   </p>
                   <button
                     onClick={() => router.push("/dashboard/addCollege")}
-                    className="px-8 py-3 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+                    className="px-8 py-3 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
                   >
                     Go to Universities
                   </button>

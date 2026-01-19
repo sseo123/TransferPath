@@ -44,8 +44,8 @@ function SignupContent() {
   return (
     <div className="w-full max-w-[480px] bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-12 text-center">
       <div className="flex flex-col items-center mb-10">
-        <div className="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center mb-4">
-          <GraduationCap className="w-6 h-6 text-[#303AB2]" />
+        <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4">
+          <GraduationCap className="w-6 h-6 text-[#82A7A6]" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
           Create Account
@@ -84,7 +84,7 @@ function SignupContent() {
               name="firstName"
               placeholder="First"
               required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
             />
           </div>
           <div className="space-y-1.5">
@@ -95,7 +95,7 @@ function SignupContent() {
               name="lastName"
               placeholder="Last"
               required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ function SignupContent() {
             type="email"
             placeholder="Enter your email"
             required
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
           />
         </div>
 
@@ -122,7 +122,7 @@ function SignupContent() {
             type="password"
             placeholder="Min. 6 characters"
             required
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
           />
         </div>
 
@@ -135,7 +135,7 @@ function SignupContent() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full bg-[#303AB2] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#283199] active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 transition-all shadow-md shadow-indigo-100 mt-2"
+          className="w-full bg-[#82A7A6] text-white py-3.5 rounded-xl font-bold text-lg hover:bg-[#6B8A89] active:scale-[0.98] disabled:opacity-50 disabled:active:scale-100 transition-all shadow-md shadow-teal-100 mt-2"
         >
           {isPending ? "Generating Plan..." : "Generate My Plan"}
         </button>
@@ -146,7 +146,7 @@ function SignupContent() {
           Already have an account?{" "}
           <Link
             href="/signin"
-            className="text-[#303AB2] hover:underline decoration-2 underline-offset-4"
+            className="text-[#82A7A6] hover:underline decoration-2 underline-offset-4"
           >
             Sign in
           </Link>
@@ -268,7 +268,7 @@ export default function SignupPage() {
 //                 name="firstName"
 //                 placeholder="First"
 //                 required
-//                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+//                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
 //               />
 //             </div>
 //             <div className="space-y-1.5">
@@ -279,7 +279,7 @@ export default function SignupPage() {
 //                 name="lastName"
 //                 placeholder="Last"
 //                 required
-//                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#303AB2]/20 focus:border-[#303AB2] transition-all bg-white"
+//                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
 //               />
 //             </div>
 //           </div>

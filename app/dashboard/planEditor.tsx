@@ -194,11 +194,11 @@ function DroppableSemester({
   return (
     <div
       ref={setNodeRef}
-      className={`relative bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${isOver ? "border-[#303AB2] ring-4 ring-indigo-50" : isOverLimit ? "border-red-400 ring-4 ring-red-50" : "border-slate-200"}`}
+      className={`relative bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : isOverLimit ? "border-red-400 ring-4 ring-red-50" : "border-slate-200"}`}
     >
       {isOver && (
-        <div className="absolute inset-0 z-10 bg-indigo-50/40 flex items-center justify-center pointer-events-none">
-          <div className="bg-white px-4 py-2 rounded-full border-2 border-dashed border-[#303AB2] text-[#303AB2] font-bold text-sm shadow-sm">
+        <div className="absolute inset-0 z-10 bg-teal-50/40 flex items-center justify-center pointer-events-none">
+          <div className="bg-white px-4 py-2 rounded-full border-2 border-dashed border-[#82A7A6] text-[#82A7A6] font-bold text-sm shadow-sm">
             Drop Course Here
           </div>
         </div>
@@ -266,7 +266,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${isOver ? "border-[#303AB2] ring-4 ring-indigo-50" : "border-slate-200"}`}
+      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"}`}
     >
       <h3 className="font-black text-slate-800 text-lg mb-4">
         Required Courses
@@ -500,7 +500,7 @@ export default function PlanEditor({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-6 py-2 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 transition-all"
+                className="flex items-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all"
               >
                 <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
               </button>

@@ -92,7 +92,7 @@ export default function DashboardLayout({
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive
-                    ? "bg-[#303AB2] text-white shadow-sm"
+                    ? "bg-[#82A7A6] text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-50"
                 } ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
               >

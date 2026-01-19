@@ -74,7 +74,7 @@ export default function AddTargetModal({
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-              <School size={16} className="text-indigo-600" />
+              <School size={16} className="text-[#82A7A6]" />
               University
             </label>
             <select
@@ -83,7 +83,7 @@ export default function AddTargetModal({
                 setUniversity(e.target.value);
                 setMajor(""); // Reset major when university changes
               }}
-              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium text-slate-700 transition-all"
+              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] font-medium text-slate-700 transition-all"
               required
             >
               <option value="">Select University</option>
@@ -104,13 +104,13 @@ export default function AddTargetModal({
 
           <div className="space-y-2">
             <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
-              <BookOpen size={16} className="text-indigo-600" />
+              <BookOpen size={16} className="text-[#82A7A6]" />
               Major
             </label>
             <select
               value={major}
               onChange={(e) => setMajor(e.target.value)}
-              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 font-medium text-slate-700 transition-all"
+              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] font-medium text-slate-700 transition-all"
               required
               disabled={!university || availableMajors.length === 0}
             >
@@ -141,7 +141,7 @@ export default function AddTargetModal({
             <button
               type="submit"
               disabled={isSubmitting || !university || !major}
-              className="px-6 py-2.5 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 hover:shadow-indigo-500/40 disabled:opacity-50 disabled:shadow-none transition-all flex items-center gap-2"
+              className="px-6 py-2.5 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg shadow-[#82A7A6]/30 hover:bg-[#6B8A89] hover:shadow-[#82A7A6]/40 disabled:opacity-50 disabled:shadow-none transition-all flex items-center gap-2"
             >
               {isSubmitting ? (
                 "Adding..."

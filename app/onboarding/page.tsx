@@ -42,7 +42,7 @@ export default function OnboardingPage() {
       <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
         <div className="flex items-center justify-between px-8 py-5">
           <div
-            className="text-xl font-bold text-[#303AB2] cursor-pointer"
+            className="text-xl font-bold text-[#82A7A6] cursor-pointer"
             onClick={() => router.push("/")}
           >
             TransferPath
@@ -56,7 +56,7 @@ export default function OnboardingPage() {
         </div>
         <div className="w-full h-1 bg-gray-100">
           <div
-            className="h-full bg-[#303AB2] transition-all duration-500"
+            className="h-full bg-[#82A7A6] transition-all duration-500"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -71,7 +71,7 @@ export default function OnboardingPage() {
                 Which Community College <br /> do you attend?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, college: e.target.value })
                 }
@@ -90,7 +90,7 @@ export default function OnboardingPage() {
                 What&apos;s your field of study?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, major: e.target.value })
                 }
@@ -110,7 +110,7 @@ export default function OnboardingPage() {
                 Where is your TARGET university?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#303AB2] bg-white"
+                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
                 onChange={(e) =>
                   setFormData({ ...formData, dreamUni: e.target.value })
                 }
@@ -143,7 +143,7 @@ export default function OnboardingPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, startSeason: e.target.value })
                     }
-                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#303AB2] bg-white"
+                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#82A7A6] bg-white"
                   >
                     <option value="fall">Fall</option>
                     <option value="spring">Spring</option>
@@ -166,7 +166,7 @@ export default function OnboardingPage() {
                         startYear: parseInt(e.target.value),
                       })
                     }
-                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#303AB2]"
+                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#82A7A6]"
                   />
                 </div>
               </div>
@@ -189,7 +189,7 @@ export default function OnboardingPage() {
             disabled={!isStepComplete()}
             className={`px-8 py-3 font-bold rounded-xl transition-all ${
               isStepComplete()
-                ? "bg-[#303AB2] text-white"
+                ? "bg-[#82A7A6] text-white"
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
           >
