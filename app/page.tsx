@@ -45,7 +45,7 @@ export default function App() {
             {/* ADDED onClick HERE */}
             <button
               onClick={handleSignIn}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-transform hover:scale-105 active:scale-95"
             >
               Sign in
             </button>
