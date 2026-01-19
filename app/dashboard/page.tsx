@@ -6,10 +6,9 @@ import { userTable, studentPlansTable, userTargetsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
-import { getRequirements, getUniversityCode, getAllUniversities, getMajorsForUniversity, } from "@/data/registry";
+import { getRequirements, getUniversityCode } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
 import { Semester, Season, PlannedCourse, RequirementGraph, RequirementNode, } from "@/lib/planner/types";
-import { CANONICAL_COURSES } from "@/data/courses/allCourses";
 
 // Define the type for the database row based on your schema
 type StudentPlanRow = typeof studentPlansTable.$inferSelect;
@@ -29,7 +28,7 @@ export default async function Dashboard() {
 
   // --- Runtime Migration Logic ---
   // Check if we have targets in the new table
-  let userTargets = await db
+  const userTargets = await db
     .select()
     .from(userTargetsTable)
     .where(eq(userTargetsTable.userId, user.id));
@@ -156,29 +155,13 @@ export default async function Dashboard() {
       startYear
     );
   }
-
-  // Pass sanitized targets to client
-  const clientTargets = userTargets.map((t) => ({
-    id: t.id,
-    university: t.university,
-    major: t.major,
-  }));
-
-  // Get registry data for the UI
-  const availableUniversities = getAllUniversities();
-  // Pre-compute majors for each university (can't pass server functions to client components)
-  const majorsByUniversity: Record<string, string[]> = {};
-  availableUniversities.forEach((uni) => {
-    majorsByUniversity[uni] = getMajorsForUniversity(uni);
-  });
+  const targetCount = userTargets.length;
 
   return (
     <DashboardClient
       initialSemesters={semesters}
       dbUser={dbUser}
-      targets={clientTargets}
-      availableUniversities={availableUniversities}
-      majorsByUniversity={majorsByUniversity}
+      targetCount={targetCount}
     />
   );
 }

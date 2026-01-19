@@ -67,9 +67,8 @@ export function planningEngine(
   catalog: CollegeCourse[],
   startSeason: Season,
   startYear: number,
-  maxUnits: number = 15
+  maxUnits: number = 19
 ): Semester[] {
-  // Normalize to array
   const reqGraphs = Array.isArray(requirements) ? requirements : [requirements];
 
   // 1. Merge Requirements across all targets
@@ -105,7 +104,7 @@ export function planningEngine(
   // 2. Schedule until all resolved requirements are met
   while (   // We use a safety break of 12 semesters to prevent infinite loops
     scheduledCourses.size < totalRequiredNodes.length &&
-    semesters.length < 12
+    semesters.length < 16
   ) {
     const season = seasonCycle[currentSeasonIndex];
     const currentSemester: Semester = {

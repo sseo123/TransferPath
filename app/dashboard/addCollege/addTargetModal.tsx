@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { X, Plus, School, BookOpen } from "lucide-react";
-import { addTargetCollege } from "./actions";
+import { addTargetCollege } from "../actions";
 
 interface AddTargetModalProps {
   isOpen: boolean;
@@ -37,7 +37,7 @@ export default function AddTargetModal({
     // Prevent duplicate university (since we want simple logic for now: 1 major per uni)
     if (existingTargets.some((t) => t.university === university)) {
       alert(
-        "You have already added this university. To change major, please remove it first."
+        "You have already added this university. To change major, please remove it first.",
       );
       return;
     }
@@ -118,8 +118,8 @@ export default function AddTargetModal({
                 {!university
                   ? "Select University First"
                   : availableMajors.length === 0
-                  ? "No Majors Available"
-                  : "Select Major"}
+                    ? "No Majors Available"
+                    : "Select Major"}
               </option>
               {availableMajors.map((m) => (
                 <option key={m} value={m}>

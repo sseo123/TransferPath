@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
-import { logout, removeTargetCollege } from "./actions";
-import AddTargetModal from "./addTargetModal";
-import { ChevronDown, ChevronRight, Pencil, Plus, X } from "lucide-react";
+import { logout } from "./actions";
+import { ChevronDown, ChevronRight, Pencil, GraduationCap } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
@@ -18,13 +17,7 @@ interface DashboardClientProps {
     startSeason: string | null;
     startYear: number | null;
   };
-  targets: {
-    id: string;
-    university: string;
-    major: string;
-  }[];
-  availableUniversities: string[];
-  majorsByUniversity: Record<string, string[]>;
+  targetCount: number;
 }
 
 // --- Accordion Component ---
@@ -93,7 +86,7 @@ function SemesterAccordionItem({
 function RowItem({ course }: { course: PlannedCourse }) {
   // Helper to map university code to badge color/label
   const getBadgeStyle = (code: string) => {
-      return "bg-blue-100 text-blue-700 border-blue-200";
+    return "bg-blue-100 text-blue-700 border-blue-200";
   };
 
   return (
@@ -115,7 +108,7 @@ function RowItem({ course }: { course: PlannedCourse }) {
                 <span
                   key={uni}
                   className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full border ${getBadgeStyle(
-                    uni
+                    uni,
                   )}`}
                 >
                   {uni}
@@ -144,18 +137,18 @@ function RowItem({ course }: { course: PlannedCourse }) {
 export default function DashboardClient({
   initialSemesters,
   dbUser,
-  targets,
-  availableUniversities,
-  majorsByUniversity,
+  targetCount,
 }: DashboardClientProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [isAddTargetOpen, setIsAddTargetOpen] = useState(false);
   const router = useRouter();
 
-  const handleRemoveTarget = async (id: string) => {
-    if (confirm("Are you sure you want to remove this target college? This will wipe all plan data and regenerate from the original requirements.")) {
-      await removeTargetCollege(id);
-      router.refresh();
+  const hasTargets = targetCount > 0;
+
+  const handleAction = () => {
+    if (hasTargets) {
+      setIsEditing(true);
+    } else {
+      router.push("/dashboard/addCollege");
     }
   };
 
@@ -168,20 +161,10 @@ export default function DashboardClient({
     );
   }
 
-  return (
+return (
     <div className="min-h-screen bg-white">
-      <AddTargetModal
-        isOpen={isAddTargetOpen}
-        onClose={() => setIsAddTargetOpen(false)}
-        existingTargets={targets}
-        availableUniversities={availableUniversities}
-        majorsByUniversity={majorsByUniversity}
-      />
-
       <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
-        {/* User Welcome Header stays as is */}
         <header className="mb-12 border-b border-slate-100 pb-8">
-          {/* Header Top Section */}
           <div className="flex justify-between items-start mb-6">
             <div>
               <h1 className="text-4xl font-black text-slate-900 tracking-tight">
@@ -194,79 +177,129 @@ export default function DashboardClient({
 
             <div className="flex items-center gap-4">
               <button
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-2 bg-[#303AB2] hover:bg-[#252c8a] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
+                onClick={handleAction}
+                className={`px-6 py-2 text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 ${
+                  hasTargets 
+                    ? "bg-[#303AB2] hover:bg-[#252c8a] text-white" 
+                    : "bg-[#303AB2] hover:bg-[#252c8a] text-white"
+                }`}
               >
-                Create your own plan
+                {hasTargets ? "Create your own plan" : "Add Universities to Start"}
               </button>
               <form action={logout}>
-                <button
-                  type="submit"
-                  className="px-6 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-bold rounded-xl shadow-sm hover:bg-slate-50 transition-all"
-                >
-                  Sign Out
-                </button>
+                <button type="submit" className="...">Sign Out</button>
               </form>
             </div>
           </div>
-
-          {/* Target Colleges Section */}
-          <div className="flex flex-wrap gap-3 items-center">
-            {targets.map((target) => (
-              <div
-                key={target.id}
-                className="flex items-center gap-2 pl-4 pr-2 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:border-slate-300 transition-colors group"
-              >
-                <span className="font-bold text-slate-700 text-sm">
-                  {target.university}
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-500 text-sm">{target.major}</span>
-                <button
-                  onClick={() => handleRemoveTarget(target.id)}
-                  className="ml-2 p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
-                  aria-label="Remove target"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-
-            <button
-              onClick={() => setIsAddTargetOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-bold rounded-full border border-indigo-100 transition-all active:scale-95"
-            >
-              <Plus size={16} />
-              Add College
-            </button>
-          </div>
         </header>
 
-        {/* Gray Background Timeline Section */}
         <div className="bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
           <div className="flex justify-between items-center mb-8 px-2">
-            <h2 className="text-2xl font-bold text-slate-800">
-              Your Strategic Timeline
-            </h2>
+            <h2 className="text-2xl font-bold text-slate-800">Your Strategic Timeline</h2>
             <button
-              onClick={() => setIsEditing(true)}
-              className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 text-[15px] font-semibold rounded-xl transition-all shadow-sm"
+              onClick={handleAction}
+              className={`px-6 py-2.5 border transition-all shadow-sm text-[15px] font-semibold rounded-xl ${
+                hasTargets
+                  ? "bg-white border-slate-200 hover:bg-slate-50 text-slate-900"
+                  : "bg-white border-slate-200 hover:bg-slate-50 -text-slate-900"
+              }`}
             >
-              Add Term
+              {hasTargets ? "Add Term" : "Add University"}
             </button>
           </div>
 
           <div className="flex flex-col">
-            {initialSemesters.map((semester) => (
-              <SemesterAccordionItem
-                key={semester.name}
-                semester={semester}
-                onEdit={() => setIsEditing(true)}
-              />
-            ))}
+            {hasTargets ? (
+              initialSemesters.map((semester) => (
+                <SemesterAccordionItem
+                  key={semester.name}
+                  semester={semester}
+                  onEdit={handleAction}
+                />
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                  <GraduationCap size={32} />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">No universities targeted yet</h3>
+                <p className="text-slate-500 max-w-xs mt-2 mb-6">
+                  Select your target colleges so we can build your requirements.
+                </p>
+                <button
+                  onClick={() => router.push("/dashboard/addCollege")}
+                  className="px-8 py-3 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+                >
+                  Go to Universities
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+//   return (
+//     <div className="min-h-screen bg-white">
+//       <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
+//         {/* User Welcome Header */}
+//         <header className="mb-12 border-b border-slate-100 pb-8">
+//           {/* Header Top Section */}
+//           <div className="flex justify-between items-start mb-6">
+//             <div>
+//               <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+//                 Welcome, {dbUser.firstName}!
+//               </h1>
+//               <p className="text-slate-500 mt-2 text-lg font-medium">
+//                 Here is your transfer plan
+//               </p>
+//             </div>
+
+//             <div className="flex items-center gap-4">
+//               <button
+//                 onClick={() => setIsEditing(true)}
+//                 className="px-6 py-2 bg-[#303AB2] hover:bg-[#252c8a] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
+//               >
+//                 Create your own plan
+//               </button>
+//               <form action={logout}>
+//                 <button
+//                   type="submit"
+//                   className="px-6 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-bold rounded-xl shadow-sm hover:bg-slate-50 transition-all"
+//                 >
+//                   Sign Out
+//                 </button>
+//               </form>
+//             </div>
+//           </div>
+//         </header>
+
+//         {/* Gray Background Timeline Section */}
+//         <div className="bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
+//           <div className="flex justify-between items-center mb-8 px-2">
+//             <h2 className="text-2xl font-bold text-slate-800">
+//               Your Strategic Timeline
+//             </h2>
+//             <button
+//               onClick={() => setIsEditing(true)}
+//               className="px-6 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 text-[15px] font-semibold rounded-xl transition-all shadow-sm"
+//             >
+//               Add Term
+//             </button>
+//           </div>
+
+//           <div className="flex flex-col">
+//             {initialSemesters.map((semester) => (
+//               <SemesterAccordionItem
+//                 key={semester.name}
+//                 semester={semester}
+//                 onEdit={() => setIsEditing(true)}
+//               />
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
