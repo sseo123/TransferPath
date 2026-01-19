@@ -130,9 +130,9 @@ export default function DashboardLayout({
       </aside>
 
       <main
-        className={`flex-1 transition-all duration-300 min-w-0`}
+        className={`flex-1 transition-all duration-300 min-w-0 ${isCollapsed ? "ml-0 lg:ml-16" : "ml-64"}`}
       >
-        <div className={`p-8 lg:p-12 max-w-7xl mx-auto`}>
+        <div className={`p-8 ${isCollapsed ? "pt-24 lg:pt-8" : "pt-8"}`}>
           {children}
         </div>
       </main>
