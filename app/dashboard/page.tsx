@@ -8,7 +8,13 @@ import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { getRequirements, getUniversityCode } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
-import { Semester, Season, RequirementGraph, RequirementNode, } from "@/lib/planner/types";
+import {
+  Semester,
+  Season,
+  RequirementGraph,
+  RequirementNode,
+} from "@/lib/planner/types";
+import { PlannedCourse } from "@/lib/planner/types";
 
 // Define the type for the database row based on your schema
 type StudentPlanRow = typeof studentPlansTable.$inferSelect;
@@ -38,7 +44,16 @@ export default async function Dashboard() {
     .from(studentPlansTable)
     .where(eq(studentPlansTable.userId, user.id));
 
+  // Separate planned from unassigned rows
+  const plannedRows = savedPlanRows.filter(
+    (row) => row.semesterName !== "unassigned",
+  );
+  const unassignedRows = savedPlanRows.filter(
+    (row) => row.semesterName === "unassigned",
+  );
+
   let semesters: Semester[] = [];
+  let hydratedUnassigned: PlannedCourse[] = [];
 
   const targetRequirementGraphs: RequirementGraph[] = userTargets.map((t) => {
     const graph = getRequirements(t.university, t.major);
@@ -83,10 +98,28 @@ export default async function Dashboard() {
     });
   });
 
-  if (savedPlanRows.length > 0) {
+  // Hydrate unassigned courses with catalog data
+  hydratedUnassigned = unassignedRows
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((r) => {
+      const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
+      const reqData = catalog
+        ? requirementsMap.get(catalog.canonicalId)
+        : undefined;
+      return {
+        localCode: r.courseCode,
+        canonicalId: catalog?.canonicalId ?? "unknown",
+        title: catalog?.title ?? "Unknown",
+        units: catalog?.units ?? 0,
+        isCritical: reqData?.isCritical ?? false,
+        requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
+      };
+    });
+
+  if (plannedRows.length > 0) {
     // 1. Group by semester name from DB
     const grouped = new Map<string, StudentPlanRow[]>();
-    savedPlanRows.forEach((row) => {
+    plannedRows.forEach((row) => {
       if (!grouped.has(row.semesterName)) grouped.set(row.semesterName, []);
       grouped.get(row.semesterName)!.push(row);
     });
@@ -145,24 +178,27 @@ export default async function Dashboard() {
 
       return priorityA - priorityB;
     });
-  } else {
+  } else if (unassignedRows.length === 0) {
     const startSeason = (dbUser.startSeason as Season) || "fall";
     const startYear = dbUser.startYear || 2025;
     semesters = planningEngine(
       targetRequirementGraphs,
       DVC_CATALOG,
       startSeason,
-      startYear
+      startYear,
     );
+  } else {
+    // Keep semesters empty - courses will only appear in unassigned card
+    semesters = [];
   }
   const targetCount = userTargets.length;
 
   return (
     <DashboardClient
       initialSemesters={semesters}
+      initialUnassigned={hydratedUnassigned}
       dbUser={dbUser}
       targetCount={targetCount}
     />
   );
-
 }

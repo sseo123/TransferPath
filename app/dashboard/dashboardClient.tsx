@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
+  initialUnassigned: PlannedCourse[];
   dbUser: {
     id: string;
     username: string;
@@ -135,6 +136,7 @@ function RowItem({ course }: { course: PlannedCourse }) {
 
 export default function DashboardClient({
   initialSemesters,
+  initialUnassigned,
   dbUser,
   targetCount,
 }: DashboardClientProps) {
@@ -155,14 +157,26 @@ export default function DashboardClient({
     return (
       <PlanEditor
         initialSemesters={initialSemesters}
+        initialUnassigned={initialUnassigned}
         onExit={() => setIsEditing(false)}
       />
     );
   }
 
-return (
+  const totalUnits = initialSemesters.reduce((acc, semester) => {
+    return (
+      acc + semester.courses.reduce((sum, course) => sum + course.units, 0)
+    );
+  }, 0);
+
+  const completionSemester =
+    initialSemesters.length > 0
+      ? initialSemesters[initialSemesters.length - 1].name
+      : "TBD";
+
+  return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
+      <div className="max-w-7xl mx-auto p-8 font-sans text-slate-900">
         <header className="mb-12 border-b border-slate-100 pb-8">
           <div className="flex justify-between items-start mb-6">
             <div>
@@ -178,62 +192,178 @@ return (
               <button
                 onClick={handleAction}
                 className={`px-6 py-2 text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 ${
-                  hasTargets 
-                    ? "bg-[#303AB2] hover:bg-[#252c8a] text-white" 
+                  hasTargets
+                    ? "bg-[#303AB2] hover:bg-[#252c8a] text-white"
                     : "bg-[#303AB2] hover:bg-[#252c8a] text-white"
                 }`}
               >
-                {hasTargets ? "Create your own plan" : "Add Universities to Start"}
+                {hasTargets
+                  ? "Create your own plan"
+                  : "Add Universities to Start"}
               </button>
               <form action={logout}>
-                <button type="submit" className="...">Sign Out</button>
+                <button type="submit" className="...">
+                  Sign Out
+                </button>
               </form>
             </div>
           </div>
         </header>
-
-        <div className="bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
-          <div className="flex justify-between items-center mb-8 px-2">
-            <h2 className="text-2xl font-bold text-slate-800">Your Strategic Timeline</h2>
-            <button
-              onClick={handleAction}
-              className={`px-6 py-2.5 border transition-all shadow-sm text-[15px] font-semibold rounded-xl ${
-                hasTargets
-                  ? "bg-white border-slate-200 hover:bg-slate-50 text-slate-900"
-                  : "bg-white border-slate-200 hover:bg-slate-50 -text-slate-900"
-              }`}
-            >
-              {hasTargets ? "Add Term" : "Add University"}
-            </button>
-          </div>
-
-          <div className="flex flex-col">
-            {hasTargets ? (
-              initialSemesters.map((semester) => (
-                <SemesterAccordionItem
-                  key={semester.name}
-                  semester={semester}
-                  onEdit={handleAction}
-                />
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
-                  <GraduationCap size={32} />
-                </div>
-                <h3 className="text-lg font-bold text-slate-800">No universities targeted yet</h3>
-                <p className="text-slate-500 max-w-xs mt-2 mb-6">
-                  Select your target colleges so we can build your requirements.
-                </p>
-                <button
-                  onClick={() => router.push("/dashboard/addCollege")}
-                  className="px-8 py-3 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
-                >
-                  Go to Universities
-                </button>
+        {/* Summary Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          {/* Expected Completion Card */}
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+            <div className="flex justify-between items-start">
+              <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                <span className="text-orange-600 text-xl">📅</span>
               </div>
-            )}
+              {/* Dynamic Semester Name */}
+              <span className="text-2xl font-bold text-slate-900">
+                {completionSemester}
+              </span>
+            </div>
+            <div>
+              <p className="text-slate-500 text-sm font-medium">
+                Expected Completion
+              </p>
+            </div>
           </div>
+
+          {/* Progress Card */}
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+            <div className="flex justify-between items-start">
+              <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center">
+                <span className="text-purple-600 text-xl">📈</span>
+              </div>
+              <span className="text-2xl font-bold text-slate-900">27%</span>
+            </div>
+            <div>
+              <p className="text-slate-500 text-sm font-medium">Progress</p>
+            </div>
+          </div>
+
+          {/* Total Units Card */}
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+            <div className="flex justify-between items-start">
+              <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+                <span className="text-blue-600 text-xl">🎯</span>
+              </div>
+              {/* Dynamic Unit Total */}
+              <span className="text-2xl font-bold text-slate-900">
+                {totalUnits}
+              </span>
+            </div>
+            <div>
+              <p className="text-slate-500 text-sm font-medium">Total Units</p>
+            </div>
+          </div>
+
+          {/* Quote Card */}
+          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+            <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center mb-2">
+              <span className="text-indigo-600 text-xl">✨</span>
+            </div>
+            <div>
+              <p className="text-slate-800 italic text-sm leading-relaxed font-medium">
+                &quot;Success is not final, failure is not fatal: it is the
+                courage to continue that counts.&quot;
+              </p>
+              <p className="text-slate-400 text-xs mt-2">— Winston Churchill</p>
+            </div>
+          </div>
+        </div>
+        {/* Conditional Grid Container */}
+        <div
+          className={`${
+            initialUnassigned.length > 0
+              ? "flex flex-col lg:grid lg:grid-cols-12 gap-8"
+              : ""
+          }`}
+        >
+          {/* Strategic Timeline */}
+          <div
+            className={`bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner ${
+              initialUnassigned.length > 0 ? "lg:col-span-8" : ""
+            }`}
+          >
+            <div className="flex justify-between items-center mb-8 px-2">
+              <h2 className="text-2xl font-bold text-slate-800">
+                Your Strategic Timeline
+              </h2>
+              <button
+                onClick={handleAction}
+                className={`px-6 py-2.5 border transition-all shadow-sm text-[15px] font-semibold rounded-xl ${
+                  hasTargets
+                    ? "bg-white border-slate-200 hover:bg-slate-50 text-slate-900"
+                    : "bg-white border-slate-200 hover:bg-slate-50 -text-slate-900"
+                }`}
+              >
+                {hasTargets ? "Add Term" : "Add University"}
+              </button>
+            </div>
+
+            <div className="flex flex-col">
+              {hasTargets ? (
+                initialSemesters.map((semester) => (
+                  <SemesterAccordionItem
+                    key={semester.name}
+                    semester={semester}
+                    onEdit={handleAction}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                    <GraduationCap size={32} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-800">
+                    No universities targeted yet
+                  </h3>
+                  <p className="text-slate-500 max-w-xs mt-2 mb-6">
+                    Select your target colleges so we can build your
+                    requirements.
+                  </p>
+                  <button
+                    onClick={() => router.push("/dashboard/addCollege")}
+                    className="px-8 py-3 bg-[#303AB2] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+                  >
+                    Go to Universities
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Remaining Courses Card - Only shows if unassigned exists */}
+          {initialUnassigned.length > 0 && (
+            <div className="lg:col-span-4 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm lg:max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">⚠️</span>
+                <h3 className="font-bold text-slate-800 text-lg">
+                  Remaining Unscheduled Courses
+                </h3>
+              </div>
+              <p className="text-slate-500 text-sm mb-4">
+                {initialUnassigned.length} course
+                {initialUnassigned.length !== 1 ? "s" : ""} not yet scheduled
+              </p>
+              <div className="space-y-2">
+                {initialUnassigned.map((course) => (
+                  <div
+                    key={course.canonicalId}
+                    className="px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center hover:bg-slate-100 transition-colors"
+                  >
+                    <span className="font-semibold text-slate-800 text-sm">
+                      {course.localCode}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                      {course.units}u
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -10,11 +10,9 @@ import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { userTargetsTable } from "@/db/schema";
 
-
-
 export async function setStartTerm(
   season: "fall" | "spring" | "summer",
-  year: number
+  year: number,
 ) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
@@ -31,10 +29,10 @@ export async function setStartTerm(
   revalidatePath("/dashboard");
 }
 
-
-
-// SAVE BUTTON IN planEditor.tsx 
-export async function saveStudentPlan( planData: { semesterName: string; courseCode: string; order: number }[] ) {
+// SAVE BUTTON IN planEditor.tsx
+export async function saveStudentPlan(
+  planData: { semesterName: string; courseCode: string; order: number }[],
+) {
   const { user } = await validateRequest(); // makes sure the user is logged in
   if (!user) throw new Error("Unauthorized");
 
@@ -45,33 +43,20 @@ export async function saveStudentPlan( planData: { semesterName: string; courseC
   // Atomic operation: Clear old plan and insert new one
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
-  //   ...planData.map((item) =>
-  //     db.insert(studentPlansTable).values({
-  //       id: crypto.randomUUID(),
-  //       userId: user.id,
-  //       semesterName: item.semesterName,
-  //       courseCode: item.courseCode,
-  //       order: item.order,
-  //     })
-  //   ),
-  // ]);
-
-  // bulk insert
-  db.insert(studentPlansTable).values(
-    planData.map((item) => ({
-      id: crypto.randomUUID(),
-      userId: user.id,
-      semesterName: item.semesterName,
-      courseCode: item.courseCode,
-      order: item.order,
-    }))
-  ),
-]);
+    // bulk insert
+    db.insert(studentPlansTable).values(
+      planData.map((item) => ({
+        id: crypto.randomUUID(),
+        userId: user.id,
+        semesterName: item.semesterName,
+        courseCode: item.courseCode,
+        order: item.order,
+      })),
+    ),
+  ]);
 
   revalidatePath("/dashboard");
 }
-
-
 
 // ADD TARGET COLLEGE BUTTON IN dashboardClient.tsx
 export async function addTargetCollege(university: string, major: string) {
@@ -96,9 +81,6 @@ export async function addTargetCollege(university: string, major: string) {
 
   revalidatePath("/dashboard");
 }
-
-
-
 
 export async function removeTargetCollege(targetId: string) {
   const { user } = await validateRequest();
@@ -128,10 +110,6 @@ export async function removeTargetCollege(targetId: string) {
   revalidatePath("/dashboard");
 }
 
-
-
-
-
 export async function logout() {
   const { session } = await validateRequest();
 
@@ -148,10 +126,8 @@ export async function logout() {
   cookieStore.set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
 
   return redirect("/signin");
 }
-
-

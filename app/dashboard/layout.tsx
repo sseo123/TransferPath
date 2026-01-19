@@ -48,11 +48,7 @@ export default function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    {
-      href: "/dashboard/addCollege",
-      label: "Universities",
-      icon: GraduationCap,
-    },
+    { href: "/dashboard/addCollege", label: "Universities", icon: GraduationCap, },
   ];
 
   return (
