@@ -10,6 +10,8 @@ import { getRequirements, getUniversityCode } from "@/data/registry";
 import DashboardClient from "./dashboardClient";
 import { Semester, Season, PlannedCourse, RequirementGraph, RequirementNode, } from "@/lib/planner/types";
 
+await new Promise((resolve) => setTimeout(resolve, 3000)); // Forces a 3-second wait
+
 // Define the type for the database row based on your schema
 type StudentPlanRow = typeof studentPlansTable.$inferSelect;
 
@@ -164,4 +166,5 @@ export default async function Dashboard() {
       targetCount={targetCount}
     />
   );
+
 }
