@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Save, Trash2 } from "lucide-react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { saveStudentPlan } from "./actions";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragStartEvent, DragOverEvent, useDroppable, DragOverlay, defaultDropAnimationSideEffects, } from "@dnd-kit/core";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragStartEvent, useDroppable, DragOverlay, defaultDropAnimationSideEffects, } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable, } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -16,58 +16,135 @@ interface PlanEditorProps {
   onExit: () => void;
 }
 
-function moveBetweenContainers(
+// PURE HELPER FUNCTIONS (No React, No Side Effects)
+function getCourseLocation(
+  courseId: string,
   semesters: Semester[],
   unassigned: PlannedCourse[],
-  activeId: string,
-  activeContainer: string,
-  overContainer: string,
-) {
-  let movedCourse: PlannedCourse | undefined;
-
-  if (activeContainer === "sidebar") {
-    movedCourse = unassigned.find((c) => c.canonicalId === activeId);
-  } else {
-    movedCourse = semesters
-      .find((s) => s.name === activeContainer)
-      ?.courses.find((c) => c.canonicalId === activeId);
+): { container: string; index: number } | null {
+  // Check unassigned first
+  const unassignedIdx = unassigned.findIndex((c) => c.canonicalId === courseId);
+  if (unassignedIdx !== -1) {
+    return { container: "sidebar", index: unassignedIdx };
   }
 
-  if (!movedCourse) return null;
+  // Check semesters
+  for (const semester of semesters) {
+    const courseIdx = semester.courses.findIndex(
+      (c) => c.canonicalId === courseId,
+    );
+    if (courseIdx !== -1) {
+      return { container: semester.name, index: courseIdx };
+    }
+  }
+
+  return null;
+}
+
+function moveCourseToContainer(
+  courseId: string,
+  targetContainer: string,
+  semesters: Semester[],
+  unassigned: PlannedCourse[],
+): { semesters: Semester[]; unassigned: PlannedCourse[] } | null {
+  const sourceLocation = getCourseLocation(courseId, semesters, unassigned);
+  if (!sourceLocation) return null;
+
+  // Already in target container
+  if (sourceLocation.container === targetContainer) {
+    return { semesters, unassigned };
+  }
+
+  // Find the course object
+  let course: PlannedCourse | null = null;
+  if (sourceLocation.container === "sidebar") {
+    course = unassigned[sourceLocation.index];
+  } else {
+    const sem = semesters.find((s) => s.name === sourceLocation.container);
+    if (sem) {
+      course = sem.courses[sourceLocation.index];
+    }
+  }
+
+  if (!course) return null;
 
   // Remove from source
-  const newUnassignedSource =
-    activeContainer === "sidebar"
-      ? unassigned.filter((c) => c.canonicalId !== activeId)
-      : [...unassigned];
+  let newUnassigned = [...unassigned];
+  let newSemesters = semesters.map((s) => ({ ...s, courses: [...s.courses] }));
 
-  const newSemestersSource = semesters.map((s) => ({
-    ...s,
-    courses:
-      s.name === activeContainer
-        ? s.courses.filter((c) => c.canonicalId !== activeId)
-        : [...s.courses],
-  }));
+  if (sourceLocation.container === "sidebar") {
+    newUnassigned.splice(sourceLocation.index, 1);
+  } else {
+    const semIdx = newSemesters.findIndex(
+      (s) => s.name === sourceLocation.container,
+    );
+    if (semIdx !== -1) {
+      newSemesters[semIdx].courses.splice(sourceLocation.index, 1);
+    }
+  }
 
-  // Add to destination
-  if (overContainer === "sidebar") {
+  // Add to target
+  if (targetContainer === "sidebar") {
+    newUnassigned.push(course);
+  } else {
+    const targetSemIdx = newSemesters.findIndex(
+      (s) => s.name === targetContainer,
+    );
+    if (targetSemIdx !== -1) {
+      newSemesters[targetSemIdx].courses.push(course);
+    }
+  }
+
+  return { semesters: newSemesters, unassigned: newUnassigned };
+}
+
+function reorderCourseInContainer(
+  courseId: string,
+  targetCourseId: string,
+  semesters: Semester[],
+  unassigned: PlannedCourse[],
+): { semesters: Semester[]; unassigned: PlannedCourse[] } | null {
+  const sourceLocation = getCourseLocation(courseId, semesters, unassigned);
+  const targetLocation = getCourseLocation(
+    targetCourseId,
+    semesters,
+    unassigned,
+  );
+
+  if (!sourceLocation || !targetLocation) return null;
+  if (sourceLocation.container !== targetLocation.container) return null;
+  if (sourceLocation.index === targetLocation.index) {
+    return { semesters, unassigned };
+  }
+
+  if (sourceLocation.container === "sidebar") {
     return {
-      semesters: newSemestersSource,
-      unassigned: [...newUnassignedSource, movedCourse],
+      semesters,
+      unassigned: arrayMove(
+        unassigned,
+        sourceLocation.index,
+        targetLocation.index,
+      ),
     };
   } else {
-    const finalSemesters = newSemestersSource.map((s) =>
-      s.name === overContainer
-        ? { ...s, courses: [...s.courses, movedCourse] }
-        : s,
-    );
-    return {
-      semesters: finalSemesters,
-      unassigned: newUnassignedSource,
-    };
+    const newSemesters = semesters.map((semester) => {
+      if (semester.name === sourceLocation.container) {
+        return {
+          ...semester,
+          courses: arrayMove(
+            semester.courses,
+            sourceLocation.index,
+            targetLocation.index,
+          ),
+        };
+      }
+      return semester;
+    });
+    return { semesters: newSemesters, unassigned };
   }
 }
 
+// COMPONENTS
 function CourseCard({
   course,
   isValid = true,
@@ -95,7 +172,13 @@ function CourseCard({
     >
       <div className="flex justify-between items-start mb-1">
         <span
-          className={`text-[10px] font-black uppercase ${isSidebar ? "text-slate-400" : isValid ? "text-emerald-500" : "text-red-500"}`}
+          className={`text-[10px] font-black uppercase ${
+            isSidebar
+              ? "text-slate-400"
+              : isValid
+                ? "text-emerald-500"
+                : "text-red-500"
+          }`}
         >
           {course.localCode}
         </span>
@@ -126,23 +209,12 @@ function SortableCourse({
   missing: string[];
   isSidebar?: boolean;
 }) {
-  const sortableData = useMemo(() => ({ course }), [course]);
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: course.canonicalId,
-    data: sortableData,
-  });
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging, } 
+  = useSortable({ id: course.canonicalId, });
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    // Setting opacity to 0 hides the "original" while you drag the "overlay"
     opacity: isDragging ? 0 : 1,
   };
 
@@ -175,26 +247,27 @@ function DroppableSemester({
   onDelete: () => void;
   allSemesters: Semester[];
 }) {
-  const droppableData = useMemo(
-    () => ({ type: "semester", semester }),
-    [semester],
-  );
   const { setNodeRef, isOver } = useDroppable({
     id: semester.name,
-    data: droppableData,
   });
-  const courseIds = useMemo(
-    () => semester.courses.map((c) => c.canonicalId),
-    [semester.courses],
-  );
+
   const totalUnits = semester.courses.reduce((sum, c) => sum + c.units, 0);
   const maxUnits = semester.season === "summer" ? 12 : 19;
   const isOverLimit = totalUnits > maxUnits;
 
+  // Create stable array of IDs
+  const courseIds = semester.courses.map((c) => c.canonicalId);
+
   return (
     <div
       ref={setNodeRef}
-      className={`relative bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : isOverLimit ? "border-red-400 ring-4 ring-red-50" : "border-slate-200"}`}
+      className={`relative bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${
+        isOver
+          ? "border-[#82A7A6] ring-4 ring-teal-50"
+          : isOverLimit
+            ? "border-red-400 ring-4 ring-red-50"
+            : "border-slate-200"
+      }`}
     >
       {isOver && (
         <div className="absolute inset-0 z-10 bg-teal-50/40 flex items-center justify-center pointer-events-none">
@@ -209,7 +282,9 @@ function DroppableSemester({
             {semester.name}
           </h3>
           <span
-            className={`text-[10px] font-bold mt-1 uppercase tracking-wider ${isOverLimit ? "text-red-600" : "text-slate-400"}`}
+            className={`text-[10px] font-bold mt-1 uppercase tracking-wider ${
+              isOverLimit ? "text-red-600" : "text-slate-400"
+            }`}
           >
             {totalUnits} / {maxUnits} Units
           </span>
@@ -221,6 +296,11 @@ function DroppableSemester({
           <Trash2 size={16} />
         </button>
       </div>
+      {isOverLimit && (
+        <div className="p-3 bg-red-50 border-b border-red-200 text-red-600 text-xs font-bold text-center">
+          ⚠️ Counselor approval is needed for more than {maxUnits} units
+        </div>
+      )}
       <div className="p-4 flex-1">
         <SortableContext
           items={courseIds}
@@ -259,14 +339,16 @@ function DroppableSemester({
 function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   const { setNodeRef, isOver } = useDroppable({
     id: "sidebar",
-    data: { type: "sidebar" },
   });
-  const courseIds = useMemo(() => courses.map((c) => c.canonicalId), [courses]);
+
+  const courseIds = courses.map((c) => c.canonicalId);
 
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"}`}
+      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${
+        isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
+      }`}
     >
       <h3 className="font-black text-slate-800 text-lg mb-4">
         Required Courses
@@ -297,23 +379,30 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   );
 }
 
+// MAIN COMPONENT - NEW ARCHITECTURE
 export default function PlanEditor({
   initialSemesters,
   initialUnassigned,
   onExit,
 }: PlanEditorProps) {
+  // State - Single source of truth
   const [semesters, setSemesters] = useState<Semester[]>(initialSemesters);
-  const [unassignedCourses, setUnassignedCourses] =
+  const [unassigned, setUnassigned] =
     useState<PlannedCourse[]>(initialUnassigned);
   const [activeCourse, setActiveCourse] = useState<PlannedCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [triggerUpdate, setTriggerUpdate] = useState(0);
 
-  const isDirty = useMemo(
-    () =>
-      JSON.stringify(semesters) !== JSON.stringify(initialSemesters) ||
-      unassignedCourses.length > 0,
-    [semesters, initialSemesters, unassignedCourses],
-  );
+  // Pending operation ref - batches updates to avoid infinite loops
+  const pendingOperationRef = useRef<{
+    type: "move" | "reorder";
+    courseId: string;
+    target: string;
+  } | null>(null);
+
+  const isDirty =
+    JSON.stringify(semesters) !== JSON.stringify(initialSemesters) ||
+    unassigned.length > 0;
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -322,102 +411,118 @@ export default function PlanEditor({
     }),
   );
 
-  const findContainer = (id: string) => {
-    if (unassignedCourses.some((c) => c.canonicalId === id)) return "sidebar";
-    const sem = semesters.find((s) =>
-      s.courses.some((c) => c.canonicalId === id),
-    );
-    return sem ? sem.name : null;
-  };
+  // Process pending operation after render completes
+  useEffect(() => {
+    if (!pendingOperationRef.current) return;
 
-  const handleDragStart = (event: DragStartEvent) => {
-    const course = event.active.data.current?.course as PlannedCourse;
-    setActiveCourse(course);
-  };
+    const operation = pendingOperationRef.current;
+    pendingOperationRef.current = null;
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id as string;
-    const overId = over.id as string;
-
-    const activeContainer = findContainer(activeId);
-    const overContainer = semesters.find((s) => s.name === overId)
-      ? overId
-      : findContainer(overId) || (overId === "sidebar" ? "sidebar" : null);
-
-    if (!activeContainer || !overContainer || activeContainer === overContainer)
-      return;
-
-    // FIX: Perform the move ATOMICALLY
-    setSemesters((prevSemesters) => {
-      // Pass the LATEST unassignedCourses to the mover
-      const result = moveBetweenContainers(
-        prevSemesters,
-        unassignedCourses, // This is still slightly risky; see "Senior Pro-Tip" below
-        activeId,
-        activeContainer,
-        overContainer,
+    if (operation.type === "move") {
+      const result = moveCourseToContainer(
+        operation.courseId,
+        operation.target,
+        semesters,
+        unassigned,
       );
-
-      if (!result) return prevSemesters;
-
-      // Synchronously update unassigned while we are in the semester setter
-      setUnassignedCourses(result.unassigned);
-      return result.semesters;
-    });
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setActiveCourse(null);
-    if (!over) return;
-
-    const activeId = active.id as string;
-    const overId = over.id as string;
-    const activeContainer = findContainer(activeId);
-    const overContainer =
-      overId === "sidebar"
-        ? "sidebar"
-        : semesters.find((s) => s.name === overId)
-          ? overId
-          : findContainer(overId);
-
-    if (activeContainer && overContainer && activeContainer === overContainer) {
-      if (activeContainer === "sidebar") {
-        const oldIdx = unassignedCourses.findIndex(
-          (c) => c.canonicalId === activeId,
-        );
-        const newIdx = unassignedCourses.findIndex(
-          (c) => c.canonicalId === overId,
-        );
-        if (oldIdx !== newIdx)
-          setUnassignedCourses((prev) => arrayMove(prev, oldIdx, newIdx));
-      } else {
-        setSemesters((prev) =>
-          prev.map((s) => {
-            if (s.name === activeContainer) {
-              const oldIdx = s.courses.findIndex(
-                (c) => c.canonicalId === activeId,
-              );
-              const newIdx = s.courses.findIndex(
-                (c) => c.canonicalId === overId,
-              );
-              if (oldIdx !== newIdx)
-                return { ...s, courses: arrayMove(s.courses, oldIdx, newIdx) };
-            }
-            return s;
-          }),
-        );
+      if (result) {
+        setSemesters(result.semesters);
+        setUnassigned(result.unassigned);
+      }
+    } else if (operation.type === "reorder") {
+      const result = reorderCourseInContainer(
+        operation.courseId,
+        operation.target,
+        semesters,
+        unassigned,
+      );
+      if (result) {
+        setSemesters(result.semesters);
+        setUnassigned(result.unassigned);
       }
     }
-  };
+  }, [triggerUpdate]);
+
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const courseId = event.active.id as string;
+      const location = getCourseLocation(courseId, semesters, unassigned);
+
+      if (location) {
+        let course: PlannedCourse | null = null;
+        if (location.container === "sidebar") {
+          course = unassigned[location.index];
+        } else {
+          const sem = semesters.find((s) => s.name === location.container);
+          if (sem) course = sem.courses[location.index];
+        }
+        setActiveCourse(course);
+      }
+    },
+    [semesters, unassigned],
+  );
+
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      setActiveCourse(null);
+
+      const { active, over } = event;
+      if (!over) return;
+
+      const activeId = active.id as string;
+      const overId = over.id as string;
+
+      if (activeId === overId) return;
+
+      const activeLocation = getCourseLocation(activeId, semesters, unassigned);
+      if (!activeLocation) return;
+
+      // Check if overId is a semester name or sidebar
+      const isSemesterDrop = semesters.some((s) => s.name === overId);
+      const isSidebarDrop = overId === "sidebar";
+
+      if (isSemesterDrop || isSidebarDrop) {
+        // Dropping onto a container
+        const targetContainer = isSidebarDrop ? "sidebar" : overId;
+        if (activeLocation.container !== targetContainer) {
+          // Schedule move operation
+          pendingOperationRef.current = {
+            type: "move",
+            courseId: activeId,
+            target: targetContainer,
+          };
+          setTriggerUpdate((prev) => prev + 1);
+        }
+      } else {
+        // Dropping onto another course - could be reorder or move
+        const overLocation = getCourseLocation(overId, semesters, unassigned);
+        if (overLocation) {
+          if (activeLocation.container === overLocation.container) {
+            // Same container - reorder
+            pendingOperationRef.current = {
+              type: "reorder",
+              courseId: activeId,
+              target: overId,
+            };
+            setTriggerUpdate((prev) => prev + 1);
+          } else {
+            // Different container - move to that container
+            pendingOperationRef.current = {
+              type: "move",
+              courseId: activeId,
+              target: overLocation.container,
+            };
+            setTriggerUpdate((prev) => prev + 1);
+          }
+        }
+      }
+    },
+    [semesters, unassigned],
+  );
 
   const handleSave = async () => {
     setIsSaving(true);
 
-    // Map currently planned courses
     const flatData = semesters.flatMap((sem) =>
       sem.courses.map((c, i) => ({
         semesterName: sem.name,
@@ -426,44 +531,55 @@ export default function PlanEditor({
       })),
     );
 
-    // Map unassigned courses with the special "unassigned" tag
-    const unassignedData = unassignedCourses.map((c, i) => ({
+    const unassignedData = unassigned.map((c, i) => ({
       semesterName: "unassigned",
       courseCode: c.localCode,
       order: i,
     }));
 
-    // Save the combined payload
     await saveStudentPlan([...flatData, ...unassignedData]);
 
     setIsSaving(false);
     onExit();
   };
 
-  const handleDeleteSemester = (name: string) => {
-    const semToDelete = semesters.find((s) => s.name === name);
-    if (!semToDelete) return;
+  const handleDeleteSemester = useCallback(
+    (name: string) => {
+      const semToDelete = semesters.find((s) => s.name === name);
+      if (!semToDelete) return;
 
-    if (semToDelete.courses.length > 0) {
-      setUnassignedCourses((prev) => [...prev, ...semToDelete.courses]);
-    }
-    setSemesters((prev) => prev.filter((s) => s.name !== name));
-  };
+      setSemesters((prev) => prev.filter((s) => s.name !== name));
+      if (semToDelete.courses.length > 0) {
+        setUnassigned((prev) => [...prev, ...semToDelete.courses]);
+      }
+    },
+    [semesters],
+  );
 
-  const handleAddTerm = () => {
+  const handleAddTerm = useCallback(() => {
     setSemesters((prev) => {
       const latest =
         prev.length > 0
           ? prev[prev.length - 1]
           : { season: "fall" as const, year: 2024 };
-      const nextSeason =
-        latest.season === "fall"
-          ? "spring"
-          : latest.season === "spring"
-            ? "summer"
-            : "fall";
-      const nextYear = latest.season === "fall" ? latest.year + 1 : latest.year;
+
+      let nextSeason: "fall" | "spring" | "summer";
+      let nextYear: number;
+
+      if (latest.season === "fall") {
+        nextSeason = "spring";
+        nextYear = latest.year + 1;
+      } else if (latest.season === "spring") {
+        nextSeason = "summer";
+        nextYear = latest.year;
+      } else {
+        // summer -> fall
+        nextSeason = "fall";
+        nextYear = latest.year;
+      }
+
       const name = `${nextSeason.charAt(0).toUpperCase() + nextSeason.slice(1)} ${nextYear}`;
+
       return [
         ...prev,
         {
@@ -475,14 +591,13 @@ export default function PlanEditor({
         },
       ];
     });
-  };
+  }, []);
 
   return (
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
     >
       <div className="min-h-screen bg-slate-50 p-8 font-sans">
@@ -492,7 +607,8 @@ export default function PlanEditor({
               Course Planning
             </h1>
             <p className="text-slate-500 text-sm">
-              Draft your plan. Changes only save when you click &quot;Save Changes&quot;.
+              Draft your plan. Changes only save when you click &quot;Save
+              Changes&quot;.
             </p>
           </div>
           <div className="flex gap-3">
@@ -500,7 +616,7 @@ export default function PlanEditor({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all"
+                className="flex items-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all disabled:opacity-50"
               >
                 <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
               </button>
@@ -515,7 +631,7 @@ export default function PlanEditor({
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          <Sidebar courses={unassignedCourses} />
+          <Sidebar courses={unassigned} />
           <div className="flex-1 w-full space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {semesters.map((semester, sIdx) => (
