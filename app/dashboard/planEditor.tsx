@@ -69,8 +69,8 @@ function moveCourseToContainer(
   if (!course) return null;
 
   // Remove from source
-  let newUnassigned = [...unassigned];
-  let newSemesters = semesters.map((s) => ({ ...s, courses: [...s.courses] }));
+  const newUnassigned = [...unassigned];
+  const newSemesters = semesters.map((s) => ({ ...s, courses: [...s.courses] }));
 
   if (sourceLocation.container === "sidebar") {
     newUnassigned.splice(sourceLocation.index, 1);
