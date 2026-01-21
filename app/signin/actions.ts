@@ -9,7 +9,6 @@ import { drizzle } from "drizzle-orm/d1";
 import { userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-// Define the LoginState to match what useActionState expects
 type LoginState = {
   error?: string;
 };
@@ -32,8 +31,6 @@ export async function login(_prevState: LoginState, formData: FormData) {
     .where(eq(userTable.username, username))
     .get();
 
-  // Security note: Using the same error for user-not-found and wrong-password
-  // prevents "account enumeration" attacks. Good job here.
   if (
     !existingUser ||
     !(await verifyPassword(password, existingUser.passwordHash))
@@ -52,6 +49,5 @@ export async function login(_prevState: LoginState, formData: FormData) {
     sessionCookie.attributes
   );
 
-  // Success!
   return redirect("/dashboard");
 }

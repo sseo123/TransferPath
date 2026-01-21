@@ -38,24 +38,28 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col relative overflow-hidden">
-      <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-100">
-        <div className="flex items-center justify-between px-8 py-5">
-          <div
-            className="text-xl font-bold text-[#82A7A6] cursor-pointer"
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-7">
+          <h1
             onClick={() => router.push("/")}
+            className="text-xl font-bold text-black tracking-tight cursor-pointer"
           >
-            TransferPath
+            Transfer<span className="text-[#82A7A6]">Path</span>
+          </h1>
+
+          <div className="flex items-center gap-8">
+            <button
+              onClick={() => router.push("/signin")}
+              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-transform hover:scale-105 active:scale-95"
+            >
+              Sign in
+            </button>
           </div>
-          <button
-            onClick={() => router.push("/signin")}
-            className="px-4 py-2 text-sm font-bold border border-gray-200 rounded-lg"
-          >
-            Sign in
-          </button>
         </div>
-        <div className="w-full h-1 bg-gray-100">
+
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-100">
           <div
-            className="h-full bg-[#82A7A6] transition-all duration-500"
+            className="h-full bg-[#82A7A6] transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>

@@ -5,12 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { drizzle } from "drizzle-orm/d1";
-import {
-  studentPlansTable,
-  userTable,
-  completedSemestersTable,
-  completedCoursesTable,
-} from "@/db/schema";
+import { studentPlansTable, userTable, completedSemestersTable, completedCoursesTable, } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { userTargetsTable } from "@/db/schema";
@@ -34,18 +29,16 @@ export async function setStartTerm(
   revalidatePath("/dashboard");
 }
 
-// SAVE BUTTON IN planEditor.tsx
 export async function saveStudentPlan(
   planData: { semesterName: string; courseCode: string; order: number }[],
 ) {
-  const { user } = await validateRequest(); // makes sure the user is logged in
+  const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
   const { env } = await getCloudflareContext({ async: true });
   const cfEnv = env as Env;
   const db = drizzle(cfEnv.DB);
 
-  // Atomic operation: Clear old plan and insert new one
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
     // bulk insert
@@ -63,7 +56,6 @@ export async function saveStudentPlan(
   revalidatePath("/dashboard");
 }
 
-// ADD TARGET COLLEGE BUTTON IN dashboardClient.tsx
 export async function addTargetCollege(university: string, major: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
@@ -105,7 +97,6 @@ export async function removeTargetCollege(targetId: string) {
   const cfEnv = env as Env;
   const db = drizzle(cfEnv.DB);
 
-  // First, get the target to identify which university we're removing
   const [target] = await db
     .select()
     .from(userTargetsTable)
@@ -114,10 +105,8 @@ export async function removeTargetCollege(targetId: string) {
     throw new Error("Target college not found");
   }
 
-  // Delete the target
   await db.delete(userTargetsTable).where(eq(userTargetsTable.id, targetId));
 
-  // Hard wipe: Delete ALL student plan data AND completed courses to force regeneration
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
     db
@@ -163,7 +152,6 @@ export async function markSemesterComplete(semesterName: string) {
   const db = drizzle(cfEnv.DB);
 
   try {
-    // Check if already completed
     const existing = await db
       .select()
       .from(completedSemestersTable)
@@ -249,12 +237,10 @@ export async function saveCompletedCourses(
   const db = drizzle(cfEnv.DB);
 
   try {
-    // Delete existing completed courses
     await db
       .delete(completedCoursesTable)
       .where(eq(completedCoursesTable.userId, user.id));
 
-    // Only insert if there are courses to insert
     if (courseCodes.length > 0) {
       await db.insert(completedCoursesTable).values(
         courseCodes.map((courseCode, index) => ({
@@ -288,7 +274,6 @@ export async function getCompletedCourses(): Promise<string[]> {
       .from(completedCoursesTable)
       .where(eq(completedCoursesTable.userId, user.id));
 
-    // Sort by order field
     completed.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
     return completed.map((c) => c.courseCode);

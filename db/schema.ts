@@ -9,7 +9,7 @@ export const userTable = sqliteTable("user", {
   currentCollege: text("current_college"),
   major: text("major"),
   targetUni: text("target_uni"),
-  startSeason: text("start_season"), // "fall", "spring", "summer"
+  startSeason: text("start_season"), 
   startYear: integer("start_year"),
 });
 
@@ -41,8 +41,8 @@ export const studentPlansTable = sqliteTable("student_plans", {
 export const userTargetsTable = sqliteTable("user_targets", {
   id: text("id").primaryKey(),
   userId: text("user_id").references(() => userTable.id),
-  university: text("university").notNull(), // e.g., "UC Berkeley"
-  major: text("major").notNull(), // e.g., "Computer Science"
+  university: text("university").notNull(), 
+  major: text("major").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .defaultNow(),

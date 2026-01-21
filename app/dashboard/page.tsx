@@ -2,13 +2,7 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { drizzle } from "drizzle-orm/d1";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import {
-  userTable,
-  studentPlansTable,
-  userTargetsTable,
-  completedSemestersTable,
-  completedCoursesTable,
-} from "@/db/schema";
+import { userTable, studentPlansTable, userTargetsTable, completedSemestersTable, completedCoursesTable, } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";

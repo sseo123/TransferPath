@@ -3,8 +3,18 @@
 import { useState, useEffect } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
-import { logout, markSemesterComplete, unmarkSemesterComplete, } from "./actions";
-import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, } from "lucide-react";
+import {
+  logout,
+  markSemesterComplete,
+  unmarkSemesterComplete,
+} from "./actions";
+import {
+  ChevronDown,
+  ChevronRight,
+  GraduationCap,
+  CheckSquare,
+  Square,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
@@ -307,7 +317,12 @@ export default function DashboardClient({
               : 0
           }
           recycle={false}
-          numberOfPieces={100} tweenDuration={2000} gravity={0.35} friction={0.99} initialVelocityY={7} initialVelocityX={7} 
+          numberOfPieces={100}
+          tweenDuration={2000}
+          gravity={0.35}
+          friction={0.99}
+          initialVelocityY={7}
+          initialVelocityX={7}
           confettiSource={{
             x: typeof window !== "undefined" ? window.innerWidth * 0.25 : 0,
             y: -20,
@@ -355,7 +370,7 @@ export default function DashboardClient({
           {/* Expected Completion Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-[#6B8A89] rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-orange-600 text-xl">📅</span>
               </div>
               {/* Dynamic Semester Name */}
@@ -373,7 +388,7 @@ export default function DashboardClient({
           {/* Progress Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-[#6B8A89] rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-blue-600 text-xl">📈</span>
               </div>
               <span className="text-2xl font-bold text-slate-900">
@@ -388,7 +403,7 @@ export default function DashboardClient({
           {/* Total Units Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 bg-[#6B8A89] rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-teal-600 text-xl">🎯</span>
               </div>
               {/* Dynamic Unit Total */}
@@ -403,7 +418,7 @@ export default function DashboardClient({
 
           {/* Quote Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
-            <div className="w-10 h-10 bg-[#6B8A89] rounded-xl flex items-center justify-center mb-2">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2">
               <span className="text-teal-600 text-xl">📌</span>
             </div>
             <div>
@@ -424,7 +439,7 @@ export default function DashboardClient({
         >
           <div
             className={`bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner ${
-              initialUnassigned.length > 0 ? "lg:col-span-8" : ""
+              initialUnassigned.length > 0 ? "lg:col-span-9" : ""
             }`}
           >
             <div className="flex justify-between items-center mb-8 px-2">
@@ -478,7 +493,7 @@ export default function DashboardClient({
           </div>
 
           {initialUnassigned.length > 0 && (
-            <div className="lg:col-span-4 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm lg:max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
+            <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm lg:max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xl">⚠️</span>
                 <h3 className="font-bold text-slate-800 text-lg">
@@ -498,8 +513,8 @@ export default function DashboardClient({
                     <span className="font-semibold text-slate-800 text-sm">
                       {course.localCode}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium bg-white px-2 py-0.5 rounded-full border border-slate-200">
-                      {course.units}u
+                    <span className="text-xs text-slate-500 font-medium px-2 py-0.5">
+                      {course.units} units
                     </span>
                   </div>
                 ))}

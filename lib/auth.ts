@@ -30,7 +30,6 @@ export async function getLucia() {
 export const validateRequest = cache(async () => {
   const lucia = await getLucia();
 
-  // FIX: Added 'await' before cookies()
   const cookieStore = await cookies();
   const sessionId = cookieStore.get(lucia.sessionCookieName)?.value ?? null;
 
@@ -43,7 +42,6 @@ export const validateRequest = cache(async () => {
   try {
     if (result.session && result.session.fresh) {
       const sessionCookie = lucia.createSessionCookie(result.session.id);
-      // FIX: Use the awaited cookieStore
       cookieStore.set(
         sessionCookie.name,
         sessionCookie.value,
@@ -60,7 +58,6 @@ export const validateRequest = cache(async () => {
       );
     }
   } catch {
-    // Next.js may prevent setting cookies during the render phase
   }
 
   return result;

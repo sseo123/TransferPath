@@ -3,7 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, GraduationCap, ChevronLeft, ChevronRight, LogOut, } from "lucide-react";
+import {
+  LayoutDashboard,
+  GraduationCap,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+} from "lucide-react";
 import { logout } from "./actions";
 
 export default function DashboardLayout({
@@ -64,7 +70,7 @@ export default function DashboardLayout({
         >
           {!isCollapsed && (
             <h1 className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap px-2">
-              TransferPath
+              Transfer<span className="text-[#82A7A6]">Path</span>
             </h1>
           )}
 

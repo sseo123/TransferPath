@@ -12,13 +12,6 @@ function getFullRequirementList(
   const addOrUpdateRequirement = (node: RequirementNode) => {
     if (finalRequirements.has(node.canonicalId)) {
       const existing = finalRequirements.get(node.canonicalId)!;
-      // const existingOrigins = existing.origin ? [existing.origin] : [];
-      // const newOrigins = node.origin ? [node.origin] : [];
-      // const mergedOrigins = Array.from(
-      //   new Set([...existingOrigins, ...newOrigins])
-      // ).join(","); // Simplified for internal tracking, improved later
-
-      // Update criticality if needed
       existing.isCritical = existing.isCritical || node.isCritical;
     } else {
       finalRequirements.set(node.canonicalId, node);

@@ -7,7 +7,6 @@ import { GraduationCap } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
-// UPDATED: Removed 'edge' from the type definition
 type OnboardingData = {
   college: string;
   major: string;
@@ -56,7 +55,6 @@ function SignupContent() {
       </div>
 
       <form action={formAction} className="flex flex-col gap-5 text-left">
-        {/* Hidden Intent Fields - UPDATED: transferEdge input REMOVED */}
         <input
           type="hidden"
           name="currentCollege"
