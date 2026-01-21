@@ -20,10 +20,8 @@ const universities = [
 function useScrollAnimation() {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const currentRef = ref.current;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isVisible) {
@@ -32,11 +30,9 @@ function useScrollAnimation() {
       },
       { threshold: 0.1 },
     );
-
     if (currentRef) {
       observer.observe(currentRef);
     }
-
     return () => {
       if (currentRef) {
         observer.unobserve(currentRef);
@@ -511,7 +507,7 @@ export default function App() {
             Start planning your transfer today
           </h2>
           <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto font-medium">
-            Join thousands of students who&quot;ve successfully transferred
+            Join thousands of students who&apos;ve successfully transferred
             using TransferPath.
           </p>
           <button
