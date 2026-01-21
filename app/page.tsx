@@ -1,16 +1,9 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import {
-  ChevronRight,
-  ArrowRight,
-  CheckCircle2,
-  Star,
-  Sparkles,
-} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronRight, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-// --- KEEPING YOUR ORIGINAL DATA ---
 const universities = [
   { name: "UC Berkeley", logo: "/ucblogo.png" },
   { name: "UCLA", logo: "/uclalogo.png" },
@@ -24,12 +17,13 @@ const universities = [
   { name: "SJSU", logo: "/sjsu.png" },
 ];
 
-// --- INTERACTIVE ANIMATION HOOK ---
 function useScrollAnimation() {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const currentRef = ref.current;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isVisible) {
@@ -38,9 +32,15 @@ function useScrollAnimation() {
       },
       { threshold: 0.1 },
     );
-    if (ref.current) observer.observe(ref.current);
+
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
     return () => {
-      if (ref.current) observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
     };
   }, [isVisible]);
 
@@ -205,8 +205,8 @@ export default function App() {
                     <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex flex-col justify-center h-24 relative overflow-hidden">
                       <span className="absolute top-1 left-2 text-red-400 text-xs"></span>
                       <p className="text-[8px] text-slate-600 italic leading-tight px-1">
-                        "Success is not final, failure is not fatal: it is the
-                        courage to continue that counts."
+                        &quot;Success is not final, failure is not fatal: it is
+                        the courage to continue that counts.&quot;
                       </p>
                       <p className="text-[7px] text-slate-400 mt-1 self-end">
                         — Winston Churchill
@@ -511,8 +511,8 @@ export default function App() {
             Start planning your transfer today
           </h2>
           <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto font-medium">
-            Join thousands of students who've successfully transferred using
-            TransferPath.
+            Join thousands of students who&quot;ve successfully transferred
+            using TransferPath.
           </p>
           <button
             onClick={handleGetStarted}
