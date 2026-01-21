@@ -14,6 +14,7 @@ import {
   GraduationCap,
   CheckSquare,
   Square,
+  Plus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
@@ -269,6 +270,14 @@ export default function DashboardClient({
     }
   };
 
+  const handleTopRightAction = () => {
+    if (hasTargets) {
+      router.push("/dashboard/addCollege");
+    } else {
+      router.push("/dashboard/addCollege");
+    }
+  };
+
   if (isEditing) {
     return (
       <PlanEditor
@@ -345,14 +354,16 @@ export default function DashboardClient({
 
             <div className="flex items-center gap-4">
               <button
-                onClick={handleAction}
+                onClick={handleTopRightAction}
                 className={`px-4 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl ${
                   hasTargets
                     ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                     : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                 }`}
               >
-                {hasTargets ? "Edit Plan" : "Add Universities to Start"}
+                {hasTargets
+                  ? "Add Another University"
+                  : "Add Universities to Start"}
               </button>
               <form action={logout}>
                 <button
@@ -448,27 +459,43 @@ export default function DashboardClient({
               </h2>
               <button
                 onClick={handleAction}
-                className={`px-6 py-2.5 border transition-all shadow-sm text-[15px] font-semibold rounded-xl ${
+                className={`px-6 py-2.5 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold ${
                   hasTargets
-                    ? "bg-white border-slate-200 hover:bg-slate-50 text-slate-900"
-                    : "bg-white border-slate-200 hover:bg-slate-50 -text-slate-900"
+                    ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
+                    : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                 }`}
               >
-                {hasTargets ? "Add Term" : "Add University"}
+                {hasTargets ? "Edit Plan" : "Add University"}
               </button>
             </div>
-
             <div className="flex flex-col">
               {hasTargets ? (
-                initialSemesters.map((semester) => (
-                  <SemesterAccordionItem
-                    key={semester.name}
-                    semester={semester}
-                    onEdit={handleAction}
-                    isCompleted={completedSemesters.has(semester.name)}
-                    onToggleComplete={() => handleToggleComplete(semester.name)}
-                  />
-                ))
+                <>
+                  {initialSemesters.map((semester) => (
+                    <SemesterAccordionItem
+                      key={semester.name}
+                      semester={semester}
+                      onEdit={handleAction}
+                      isCompleted={completedSemesters.has(semester.name)}
+                      onToggleComplete={() =>
+                        handleToggleComplete(semester.name)
+                      }
+                    />
+                  ))}
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-200 rounded-[24px] bg-white hover:bg-slate-50 hover:border-slate-400 transition-all group mt-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#f1f5f9] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors">
+                        <Plus size={24} className="text-slate-600" />
+                      </div>
+                      <span className="text-lg font-bold text-slate-600">
+                        Add University
+                      </span>
+                    </div>
+                  </button>
+                </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
                   <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">

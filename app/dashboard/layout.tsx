@@ -96,7 +96,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-103 active:scale-100 hover:shadow-xl ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-103 active:scale-100 hover:shadow-l ${
                   isActive
                     ? "bg-[#82A7A6] text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-50"
