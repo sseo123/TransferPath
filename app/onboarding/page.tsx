@@ -21,7 +21,7 @@ export default function OnboardingPage() {
     if (step === 1) return formData.college !== "";
     if (step === 2) return formData.major !== "";
     if (step === 3) return formData.dreamUni !== "";
-    if (step === 4) return true; // Season and Year have defaults, always valid
+    if (step === 4) return true;
     return false;
   };
 
@@ -30,7 +30,6 @@ export default function OnboardingPage() {
       if (step < totalSteps) {
         setStep(step + 1);
       } else {
-        // Encode data and redirect to signup page
         const queryData = btoa(JSON.stringify(formData));
         router.push(`/signup?data=${queryData}`);
       }
@@ -64,7 +63,6 @@ export default function OnboardingPage() {
 
       <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6">
         <div className="w-full max-w-[500px] bg-white border border-gray-200 rounded-2xl p-10 shadow-sm">
-          {/* STEP 1: COLLEGE */}
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
@@ -83,7 +81,6 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 2: MAJOR */}
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
@@ -103,7 +100,6 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 3: TARGET UNI */}
           {step === 3 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
@@ -123,7 +119,6 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          {/* STEP 4: START DATE */}
           {step === 4 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">

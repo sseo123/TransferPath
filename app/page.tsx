@@ -21,7 +21,6 @@ export default function App() {
   const [email, setEmail] = useState("");
   const router = useRouter();
 
-  // Navigation handler for all Get Started buttons
   const handleGetStarted = () => {
     router.push("/onboarding");
   };
@@ -32,17 +31,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-teal-100">
-      {/* 1. FIXED NAVBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-5">
           <h1
             onClick={() => router.push("/")}
-            className="text-xl font-bold text-[#82A7A6] tracking-tight cursor-pointer"
+            className="text-xl font-bold text-black tracking-tight cursor-pointer"
           >
             TransferPath
           </h1>
           <div className="flex items-center gap-8">
-            {/* ADDED onClick HERE */}
             <button
               onClick={handleSignIn}
               className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-transform hover:scale-105 active:scale-95"
@@ -59,7 +56,6 @@ export default function App() {
         </div>
       </nav>
 
-      {/* 2. HERO SECTION */}
       <section
         className="relative flex min-h-screen w-full items-center border-b border-gray-100"
         style={{
@@ -127,7 +123,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* 3. University Section */}
       <div className="mx-auto max-w-8xl px-10 md:px-20 bg-[#f0f0f2]">
         <section className="py-24">
           <p className="mb-12 text-center text-2xl font-bold uppercase tracking-[0.3em] text-black">
@@ -157,7 +152,6 @@ export default function App() {
         </section>
       </div>
 
-      {/* 4. Founder's Message Section */}
       <section className="bg-white py-24 border-t border-gray-50">
         <div className="mx-auto max-w-[1440px] px-10 md:px-20">
           <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -192,7 +186,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* 5. Process Section */}
       <section className="w-full bg-[#B8D4D3] py-32 border-y border-gray-100">
         <div className="mx-auto max-w-7xl px-10 md:px-20">
           <h3 className="mb-20 text-center text-4xl font-extrabold text-gray-900">

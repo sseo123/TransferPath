@@ -23,7 +23,6 @@ export default function AddTargetModal({
   const [major, setMajor] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get available majors for the selected university
   const availableMajors = university
     ? majorsByUniversity[university] || []
     : [];
@@ -34,7 +33,6 @@ export default function AddTargetModal({
     e.preventDefault();
     if (!university || !major) return;
 
-    // Prevent duplicate university (since we want simple logic for now: 1 major per uni)
     if (existingTargets.some((t) => t.university === university)) {
       alert(
         "You have already added this university. To change major, please remove it first.",

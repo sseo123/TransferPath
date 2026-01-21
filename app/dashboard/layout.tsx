@@ -12,7 +12,6 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  // Track specifically if the user clicked "Close" while on a large screen
   const userManuallyClosed = useRef(false);
   const pathname = usePathname();
 
@@ -23,7 +22,6 @@ export default function DashboardLayout({
       if (width < 1024) {
         setIsCollapsed(true);
       } else {
-        // On large screens, only expand if the user hasn't explicitly hit "Close"
         if (!userManuallyClosed.current) {
           setIsCollapsed(false);
         }
@@ -38,7 +36,6 @@ export default function DashboardLayout({
   const toggleSidebar = () => {
     setIsCollapsed((prev) => {
       const newState = !prev;
-      // If we are on a large screen and the user just closed it, remember that
       if (window.innerWidth >= 1024) {
         userManuallyClosed.current = newState === true;
       }
@@ -48,12 +45,15 @@ export default function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/dashboard/addCollege", label: "Universities", icon: GraduationCap, },
+    {
+      href: "/dashboard/addCollege",
+      label: "Universities",
+      icon: GraduationCap,
+    },
   ];
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Sidebar - Same styling as before */}
       <aside
         className={`fixed top-0 left-0 h-screen bg-white border-r border-slate-200 transition-all duration-300 flex flex-col z-50 
           ${isCollapsed ? "w-0 lg:w-16 overflow-hidden border-none lg:border-solid" : "w-64"}
@@ -90,7 +90,7 @@ export default function DashboardLayout({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-103 active:scale-100 hover:shadow-xl ${
                   isActive
                     ? "bg-[#82A7A6] text-white shadow-sm"
                     : "text-slate-600 hover:bg-slate-50"

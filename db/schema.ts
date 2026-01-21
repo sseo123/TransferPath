@@ -47,3 +47,20 @@ export const userTargetsTable = sqliteTable("user_targets", {
     .notNull()
     .defaultNow(),
 });
+
+export const completedSemestersTable = sqliteTable("completed_semesters", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  semesterName: text("semester_name").notNull(),
+});
+
+export const completedCoursesTable = sqliteTable("completed_courses", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  courseCode: text("course_code").notNull(),
+  order: integer("order"),
+});

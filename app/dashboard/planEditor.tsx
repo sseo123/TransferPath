@@ -5,7 +5,7 @@ import { Save, Trash2 } from "lucide-react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { DVC_CATALOG } from "@/data/cc/dvc";
-import { saveStudentPlan } from "./actions";
+import { saveStudentPlan, saveCompletedCourses } from "./actions";
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragStartEvent, useDroppable, DragOverlay, defaultDropAnimationSideEffects, } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable, } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -13,22 +13,26 @@ import { CSS } from "@dnd-kit/utilities";
 interface PlanEditorProps {
   initialSemesters: Semester[];
   initialUnassigned: PlannedCourse[];
+  initialCompletedCourses: PlannedCourse[];
   onExit: () => void;
 }
 
-// PURE HELPER FUNCTIONS (No React, No Side Effects)
 function getCourseLocation(
   courseId: string,
   semesters: Semester[],
   unassigned: PlannedCourse[],
+  completed: PlannedCourse[],
 ): { container: string; index: number } | null {
-  // Check unassigned first
+  const completedIdx = completed.findIndex((c) => c.canonicalId === courseId);
+  if (completedIdx !== -1) {
+    return { container: "completed", index: completedIdx };
+  }
+
   const unassignedIdx = unassigned.findIndex((c) => c.canonicalId === courseId);
   if (unassignedIdx !== -1) {
     return { container: "sidebar", index: unassignedIdx };
   }
 
-  // Check semesters
   for (const semester of semesters) {
     const courseIdx = semester.courses.findIndex(
       (c) => c.canonicalId === courseId,
@@ -46,19 +50,29 @@ function moveCourseToContainer(
   targetContainer: string,
   semesters: Semester[],
   unassigned: PlannedCourse[],
-): { semesters: Semester[]; unassigned: PlannedCourse[] } | null {
-  const sourceLocation = getCourseLocation(courseId, semesters, unassigned);
+  completed: PlannedCourse[],
+): {
+  semesters: Semester[];
+  unassigned: PlannedCourse[];
+  completed: PlannedCourse[];
+} | null {
+  const sourceLocation = getCourseLocation(
+    courseId,
+    semesters,
+    unassigned,
+    completed,
+  );
   if (!sourceLocation) return null;
 
-  // Already in target container
   if (sourceLocation.container === targetContainer) {
-    return { semesters, unassigned };
+    return { semesters, unassigned, completed };
   }
 
-  // Find the course object
   let course: PlannedCourse | null = null;
   if (sourceLocation.container === "sidebar") {
     course = unassigned[sourceLocation.index];
+  } else if (sourceLocation.container === "completed") {
+    course = completed[sourceLocation.index];
   } else {
     const sem = semesters.find((s) => s.name === sourceLocation.container);
     if (sem) {
@@ -68,12 +82,14 @@ function moveCourseToContainer(
 
   if (!course) return null;
 
-  // Remove from source
   const newUnassigned = [...unassigned];
+  const newCompleted = [...completed];
   const newSemesters = semesters.map((s) => ({ ...s, courses: [...s.courses] }));
 
   if (sourceLocation.container === "sidebar") {
     newUnassigned.splice(sourceLocation.index, 1);
+  } else if (sourceLocation.container === "completed") {
+    newCompleted.splice(sourceLocation.index, 1);
   } else {
     const semIdx = newSemesters.findIndex(
       (s) => s.name === sourceLocation.container,
@@ -83,9 +99,10 @@ function moveCourseToContainer(
     }
   }
 
-  // Add to target
   if (targetContainer === "sidebar") {
     newUnassigned.push(course);
+  } else if (targetContainer === "completed") {
+    newCompleted.push(course);
   } else {
     const targetSemIdx = newSemesters.findIndex(
       (s) => s.name === targetContainer,
@@ -95,7 +112,11 @@ function moveCourseToContainer(
     }
   }
 
-  return { semesters: newSemesters, unassigned: newUnassigned };
+  return {
+    semesters: newSemesters,
+    unassigned: newUnassigned,
+    completed: newCompleted,
+  };
 }
 
 function reorderCourseInContainer(
@@ -103,18 +124,29 @@ function reorderCourseInContainer(
   targetCourseId: string,
   semesters: Semester[],
   unassigned: PlannedCourse[],
-): { semesters: Semester[]; unassigned: PlannedCourse[] } | null {
-  const sourceLocation = getCourseLocation(courseId, semesters, unassigned);
+  completed: PlannedCourse[],
+): {
+  semesters: Semester[];
+  unassigned: PlannedCourse[];
+  completed: PlannedCourse[];
+} | null {
+  const sourceLocation = getCourseLocation(
+    courseId,
+    semesters,
+    unassigned,
+    completed,
+  );
   const targetLocation = getCourseLocation(
     targetCourseId,
     semesters,
     unassigned,
+    completed,
   );
 
   if (!sourceLocation || !targetLocation) return null;
   if (sourceLocation.container !== targetLocation.container) return null;
   if (sourceLocation.index === targetLocation.index) {
-    return { semesters, unassigned };
+    return { semesters, unassigned, completed };
   }
 
   if (sourceLocation.container === "sidebar") {
@@ -122,6 +154,17 @@ function reorderCourseInContainer(
       semesters,
       unassigned: arrayMove(
         unassigned,
+        sourceLocation.index,
+        targetLocation.index,
+      ),
+      completed,
+    };
+  } else if (sourceLocation.container === "completed") {
+    return {
+      semesters,
+      unassigned,
+      completed: arrayMove(
+        completed,
         sourceLocation.index,
         targetLocation.index,
       ),
@@ -140,11 +183,10 @@ function reorderCourseInContainer(
       }
       return semester;
     });
-    return { semesters: newSemesters, unassigned };
+    return { semesters: newSemesters, unassigned, completed };
   }
 }
 
-// COMPONENTS
 function CourseCard({
   course,
   isValid = true,
@@ -209,8 +251,14 @@ function SortableCourse({
   missing: string[];
   isSidebar?: boolean;
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging, } 
-  = useSortable({ id: course.canonicalId, });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: course.canonicalId });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -241,11 +289,13 @@ function DroppableSemester({
   sIdx,
   onDelete,
   allSemesters,
+  completedCourses,
 }: {
   semester: Semester;
   sIdx: number;
   onDelete: () => void;
   allSemesters: Semester[];
+  completedCourses: PlannedCourse[];
 }) {
   const { setNodeRef, isOver } = useDroppable({
     id: semester.name,
@@ -255,7 +305,6 @@ function DroppableSemester({
   const maxUnits = semester.season === "summer" ? 12 : 19;
   const isOverLimit = totalUnits > maxUnits;
 
-  // Create stable array of IDs
   const courseIds = semester.courses.map((c) => c.canonicalId);
 
   return (
@@ -319,6 +368,7 @@ function DroppableSemester({
                 catalogData!,
                 sIdx,
                 allSemesters,
+                completedCourses,
               );
               return (
                 <SortableCourse
@@ -379,21 +429,68 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   );
 }
 
-// MAIN COMPONENT - NEW ARCHITECTURE
+function CompletedCoursesBox({ courses }: { courses: PlannedCourse[] }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: "completed",
+  });
+
+  const courseIds = courses.map((c) => c.canonicalId);
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`flex flex-col h-fit min-h-[300px] w-65 bg-white rounded-3xl border-2 p-5 transition-all mt-4 ${
+        isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
+      }`}
+    >
+      <h3 className="font-black text-slate-800 text-lg mb-4">
+        Completed Courses
+      </h3>
+      <p className="text-xs text-slate-500 mb-4">
+        Courses you&apos;ve already taken. These count toward prerequisites.
+      </p>
+      <div className="space-y-3 flex-1">
+        <SortableContext
+          items={courseIds}
+          strategy={verticalListSortingStrategy}
+        >
+          {courses.length === 0 ? (
+            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-32 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-4">
+              Drag courses here if you&apos;ve already completed them
+            </div>
+          ) : (
+            courses.map((course) => (
+              <SortableCourse
+                key={course.canonicalId}
+                course={course}
+                isValid={true}
+                missing={[]}
+                isSidebar={true}
+              />
+            ))
+          )}
+        </SortableContext>
+      </div>
+    </div>
+  );
+}
+
 export default function PlanEditor({
   initialSemesters,
   initialUnassigned,
+  initialCompletedCourses,
   onExit,
 }: PlanEditorProps) {
-  // State - Single source of truth
   const [semesters, setSemesters] = useState<Semester[]>(initialSemesters);
   const [unassigned, setUnassigned] =
     useState<PlannedCourse[]>(initialUnassigned);
+  const [completed, setCompleted] = useState<PlannedCourse[]>(
+    initialCompletedCourses,
+  );
   const [activeCourse, setActiveCourse] = useState<PlannedCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(0);
 
-  // Pending operation ref - batches updates to avoid infinite loops
   const pendingOperationRef = useRef<{
     type: "move" | "reorder";
     courseId: string;
@@ -402,7 +499,8 @@ export default function PlanEditor({
 
   const isDirty =
     JSON.stringify(semesters) !== JSON.stringify(initialSemesters) ||
-    unassigned.length > 0;
+    unassigned.length > 0 ||
+    JSON.stringify(completed) !== JSON.stringify(initialCompletedCourses);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -411,7 +509,6 @@ export default function PlanEditor({
     }),
   );
 
-  // Process pending operation after render completes
   useEffect(() => {
     if (!pendingOperationRef.current) return;
 
@@ -424,10 +521,12 @@ export default function PlanEditor({
         operation.target,
         semesters,
         unassigned,
+        completed,
       );
       if (result) {
         setSemesters(result.semesters);
         setUnassigned(result.unassigned);
+        setCompleted(result.completed);
       }
     } else if (operation.type === "reorder") {
       const result = reorderCourseInContainer(
@@ -435,10 +534,12 @@ export default function PlanEditor({
         operation.target,
         semesters,
         unassigned,
+        completed,
       );
       if (result) {
         setSemesters(result.semesters);
         setUnassigned(result.unassigned);
+        setCompleted(result.completed);
       }
     }
   }, [triggerUpdate]);
@@ -446,12 +547,19 @@ export default function PlanEditor({
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const courseId = event.active.id as string;
-      const location = getCourseLocation(courseId, semesters, unassigned);
+      const location = getCourseLocation(
+        courseId,
+        semesters,
+        unassigned,
+        completed,
+      );
 
       if (location) {
         let course: PlannedCourse | null = null;
         if (location.container === "sidebar") {
           course = unassigned[location.index];
+        } else if (location.container === "completed") {
+          course = completed[location.index];
         } else {
           const sem = semesters.find((s) => s.name === location.container);
           if (sem) course = sem.courses[location.index];
@@ -459,7 +567,7 @@ export default function PlanEditor({
         setActiveCourse(course);
       }
     },
-    [semesters, unassigned],
+    [semesters, unassigned, completed],
   );
 
   const handleDragEnd = useCallback(
@@ -474,18 +582,25 @@ export default function PlanEditor({
 
       if (activeId === overId) return;
 
-      const activeLocation = getCourseLocation(activeId, semesters, unassigned);
+      const activeLocation = getCourseLocation(
+        activeId,
+        semesters,
+        unassigned,
+        completed,
+      );
       if (!activeLocation) return;
 
-      // Check if overId is a semester name or sidebar
       const isSemesterDrop = semesters.some((s) => s.name === overId);
       const isSidebarDrop = overId === "sidebar";
+      const isCompletedDrop = overId === "completed";
 
-      if (isSemesterDrop || isSidebarDrop) {
-        // Dropping onto a container
-        const targetContainer = isSidebarDrop ? "sidebar" : overId;
+      if (isSemesterDrop || isSidebarDrop || isCompletedDrop) {
+        const targetContainer = isSidebarDrop
+          ? "sidebar"
+          : isCompletedDrop
+            ? "completed"
+            : overId;
         if (activeLocation.container !== targetContainer) {
-          // Schedule move operation
           pendingOperationRef.current = {
             type: "move",
             courseId: activeId,
@@ -494,11 +609,14 @@ export default function PlanEditor({
           setTriggerUpdate((prev) => prev + 1);
         }
       } else {
-        // Dropping onto another course - could be reorder or move
-        const overLocation = getCourseLocation(overId, semesters, unassigned);
+        const overLocation = getCourseLocation(
+          overId,
+          semesters,
+          unassigned,
+          completed,
+        );
         if (overLocation) {
           if (activeLocation.container === overLocation.container) {
-            // Same container - reorder
             pendingOperationRef.current = {
               type: "reorder",
               courseId: activeId,
@@ -506,7 +624,6 @@ export default function PlanEditor({
             };
             setTriggerUpdate((prev) => prev + 1);
           } else {
-            // Different container - move to that container
             pendingOperationRef.current = {
               type: "move",
               courseId: activeId,
@@ -517,30 +634,58 @@ export default function PlanEditor({
         }
       }
     },
-    [semesters, unassigned],
+    [semesters, unassigned, completed],
   );
 
   const handleSave = async () => {
     setIsSaving(true);
 
-    const flatData = semesters.flatMap((sem) =>
-      sem.courses.map((c, i) => ({
-        semesterName: sem.name,
+    try {
+      const flatData = semesters.flatMap((sem) =>
+        sem.courses.map((c, i) => ({
+          semesterName: sem.name,
+          courseCode: c.localCode,
+          order: i,
+        })),
+      );
+
+      const unassignedData = unassigned.map((c, i) => ({
+        semesterName: "unassigned",
         courseCode: c.localCode,
         order: i,
-      })),
-    );
+      }));
 
-    const unassignedData = unassigned.map((c, i) => ({
-      semesterName: "unassigned",
-      courseCode: c.localCode,
-      order: i,
-    }));
+      const completedCourseCodes = completed
+        .map((c) => c.localCode)
+        .filter(Boolean);
 
-    await saveStudentPlan([...flatData, ...unassignedData]);
+      console.log("Saving completed courses:", completedCourseCodes);
 
-    setIsSaving(false);
-    onExit();
+      try {
+        await saveStudentPlan([...flatData, ...unassignedData]);
+        console.log("Plan saved successfully");
+      } catch (planError) {
+        console.error("Plan save error:", planError);
+        throw new Error("Failed to save plan");
+      }
+
+      try {
+        await saveCompletedCourses(completedCourseCodes);
+        console.log("Completed courses saved successfully");
+      } catch (completedError) {
+        console.error("Completed courses save error:", completedError);
+        throw new Error("Failed to save completed courses");
+      }
+
+      setIsSaving(false);
+      onExit();
+    } catch (error) {
+      console.error("Error saving:", error);
+      setIsSaving(false);
+      alert(
+        `Failed to save: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
+    }
   };
 
   const handleDeleteSemester = useCallback(
@@ -573,7 +718,6 @@ export default function PlanEditor({
         nextSeason = "summer";
         nextYear = latest.year;
       } else {
-        // summer -> fall
         nextSeason = "fall";
         nextYear = latest.year;
       }
@@ -631,7 +775,10 @@ export default function PlanEditor({
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          <Sidebar courses={unassigned} />
+          <div className="flex flex-col">
+            <Sidebar courses={unassigned} />
+            <CompletedCoursesBox courses={completed} />
+          </div>
           <div className="flex-1 w-full space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {semesters.map((semester, sIdx) => (
@@ -641,6 +788,7 @@ export default function PlanEditor({
                   sIdx={sIdx}
                   onDelete={() => handleDeleteSemester(semester.name)}
                   allSemesters={semesters}
+                  completedCourses={completed}
                 />
               ))}
             </div>
