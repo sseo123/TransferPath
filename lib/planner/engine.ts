@@ -99,13 +99,14 @@ export function planningEngine(
     semesters.length < 16
   ) {
     const season = seasonCycle[currentSeasonIndex];
+    const semesterLimit = season == "summer" ? 12 : 19;
     const currentSemester: Semester = {
       name: `${
         season.charAt(0).toUpperCase() + season.slice(1)
       } ${currentYear}`,
       season: season,
       year: currentYear,
-      maxUnits: maxUnits,
+      maxUnits: semesterLimit,
       courses: [],
     };
 
@@ -128,7 +129,7 @@ export function planningEngine(
       if (
         prereqsMet &&
         catalogData.offerings.includes(season) &&
-        currentUnits + catalogData.units <= maxUnits
+        currentUnits + catalogData.units <= semesterLimit
       ) {
         currentSemester.courses.push({
           localCode: catalogData.localCode,

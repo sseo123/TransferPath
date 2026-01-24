@@ -26,6 +26,7 @@ interface DashboardClientProps {
   initialUnassigned: PlannedCourse[];
   initialCompletedCourses: PlannedCourse[];
   initialCompletedSemesters: string[];
+
   dbUser: {
     id: string;
     username: string;
@@ -33,6 +34,7 @@ interface DashboardClientProps {
     lastName: string | null;
     startSeason: string | null;
     startYear: number | null;
+    currentCollege: string | null;
   };
   targetCount: number;
 }
@@ -429,15 +431,18 @@ export default function DashboardClient({
 
           {/* Quote Card */}
           <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-2">
-              <span className="text-teal-600 text-xl">📌</span>
+            <div className="flex justify-between items-start">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
+                <span className="text-blue-600 text-xl">🏫</span>
+              </div>
+              <span className="text-2xl font-bold text-slate-900">
+                {dbUser.currentCollege || "Community College"}
+              </span>
             </div>
             <div>
-              <p className="text-slate-800 italic text-sm leading-relaxed font-medium">
-                &quot;Success is not final, failure is not fatal: it is the
-                courage to continue that counts.&quot;
+              <p className="text-slate-500 text-sm font-medium">
+                Your Current College
               </p>
-              <p className="text-slate-400 text-xs mt-2">— Winston Churchill</p>
             </div>
           </div>
         </div>
@@ -491,7 +496,7 @@ export default function DashboardClient({
                         <Plus size={24} className="text-slate-600" />
                       </div>
                       <span className="text-lg font-bold text-slate-600">
-                        Add University
+                        Add Semester
                       </span>
                     </div>
                   </button>

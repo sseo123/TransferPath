@@ -45,7 +45,7 @@ export default function UniversitiesClient({
         majorsByUniversity={majorsByUniversity}
       />
 
-      <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900">
+      <div className="max-w-7xl mx-auto p-8 font-sans text-slate-900">
         {/* Header */}
         <header className="mb-12">
           <div className="flex justify-between items-start mb-6">
@@ -54,7 +54,8 @@ export default function UniversitiesClient({
                 Target Universities
               </h1>
               <p className="text-slate-500 mt-2 text-lg font-medium">
-                Build your transfer roadmap to success
+                Select the universites you wish to transfer to, and the required
+                courses <br /> will be displayed on your Dashboard!
               </p>
             </div>
 

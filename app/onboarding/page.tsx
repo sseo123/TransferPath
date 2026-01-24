@@ -14,14 +14,14 @@ export default function OnboardingPage() {
     startYear: new Date().getFullYear(),
   });
 
-  const totalSteps = 4;
+  const totalSteps = 2;
   const progress = (step / totalSteps) * 100;
 
   const isStepComplete = () => {
     if (step === 1) return formData.college !== "";
-    if (step === 2) return formData.major !== "";
-    if (step === 3) return formData.dreamUni !== "";
-    if (step === 4) return true;
+    // if (step === 2) return formData.major !== "";
+    // if (step === 3) return formData.dreamUni !== "";
+    if (step === 2) return true;
     return false;
   };
 
@@ -80,12 +80,14 @@ export default function OnboardingPage() {
                 value={formData.college}
               >
                 <option value="">Select a college</option>
-                <option value="dvc">Diablo Valley College</option>
+                <option value="Diablo Valley College">
+                  Diablo Valley College
+                </option>
               </select>
             </div>
           )}
 
-          {step === 2 && (
+          {/* {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
                 What&apos;s your field of study?
@@ -121,9 +123,9 @@ export default function OnboardingPage() {
                 <option value="UCLA">UCLA</option>
               </select>
             </div>
-          )}
+          )} */}
 
-          {step === 4 && (
+          {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center">
                 When are you starting?

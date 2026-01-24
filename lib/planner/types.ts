@@ -1,5 +1,4 @@
 export type Season = "fall" | "spring" | "summer";
-export type TransferEdge = "speed" | "balance" | "gpa";
 export type CourseCategory =
   | "MATH"
   | "CS"
@@ -16,7 +15,6 @@ export interface StudentIntent {
   major: string;
   currentCollege: string;
   targetUniversity: string;
-  transferEdge: TransferEdge;
   startTerm: {
     season: Season;
     year: number;
@@ -39,7 +37,7 @@ export interface RequirementNode {
   canonicalId: string;
   category: CourseCategory;
   isCritical: boolean;
-  origin?: string; // e.g. "UCB", "UCLA"
+  origin?: string; 
 }
 
 // Category-based requirements (breadth, electives, etc.)

@@ -57,13 +57,19 @@ export default function AddTargetModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl scale-100 animate-in zoom-in-95 duration-200 border border-slate-100">
-        <header className="p-6 border-b border-slate-100 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-slate-900">
-            Add Target College
-          </h2>
+        <header className="p-6 border-b border-slate-100 flex justify-between items-start">
+          <div>
+            <h2 className="text-xl font-bold text-slate-900">
+              Select a University to Add
+            </h2>
+            <p className="text-sm text-slate-500 mt-1">
+              <b>WARNING:</b> Adding a university will reset any edited courses
+              and regenerate the plan from the original requirements.
+            </p>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors -mt-1"
           >
             <X size={20} />
           </button>
