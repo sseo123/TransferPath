@@ -59,7 +59,6 @@ export function planningEngine(
   catalog: CollegeCourse[],
   startSeason: Season,
   startYear: number,
-  maxUnits: number = 19
 ): Semester[] {
   const reqGraphs = Array.isArray(requirements) ? requirements : [requirements];
 
@@ -94,7 +93,7 @@ export function planningEngine(
   let currentYear = startYear;
 
   // 2. Schedule until all resolved requirements are met
-  while (   // We use a safety break of 12 semesters to prevent infinite loops
+  while (   
     scheduledCourses.size < totalRequiredNodes.length &&
     semesters.length < 16
   ) {
@@ -111,6 +110,7 @@ export function planningEngine(
     };
 
     let currentUnits = 0;
+    let addedAnyThisSemester = false; // <--- ADD THIS TRACKER
 
     // Check each required node against the catalog and current completion status
     for (const { node, origins } of totalRequiredNodes) {
@@ -141,7 +141,16 @@ export function planningEngine(
         });
         currentUnits += catalogData.units;
         scheduledCourses.add(node.canonicalId);
+        addedAnyThisSemester = true; // <--- MARK SUCCESS
       }
+    }
+
+    // SAFETY BREAK: If we went through every course and couldn't schedule a single one...
+    if (!addedAnyThisSemester) {
+       // We can't fulfill any more requirements (missing prereqs or offering mismatch)
+       // Push the last semester if it has courses, then BREAK the loop.
+       if (currentSemester.courses.length > 0) semesters.push(currentSemester);
+       break; 
     }
 
     if (currentSemester.courses.length > 0) {
@@ -156,6 +165,18 @@ export function planningEngine(
       currentSeasonIndex = 0;
       currentYear++;
     }
+  }
+  
+  const unscheduled = totalRequiredNodes
+    .filter(entry => !scheduledCourses.has(entry.node.canonicalId))
+    .map(entry => ({
+      localCode: entry.node.canonicalId, // or node.localCode if available
+      title: catalog.find(c => c.canonicalId === entry.node.canonicalId)?.title || "Unknown Course",
+      reason: "Missing prerequisites or seasonal unavailability"
+    }));
+
+  if (unscheduled.length > 0) {
+    console.warn("Planner stalled. Unscheduled courses:", unscheduled);
   }
 
   return semesters;

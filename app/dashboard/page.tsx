@@ -102,22 +102,23 @@ export default async function Dashboard() {
   const completedSemesterNames = completedSemesterRows.map(
     (r) => r.semesterName,
   );
-  const completedCourses: PlannedCourse[] = completedCourseRows
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-    .map((r) => {
-      const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
-      const reqData = catalog
-        ? requirementsMap.get(catalog.canonicalId)
-        : undefined;
-      return {
-        localCode: r.courseCode,
-        canonicalId: catalog?.canonicalId ?? "unknown",
-        title: catalog?.title ?? "Unknown",
-        units: catalog?.units ?? 0,
-        isCritical: reqData?.isCritical ?? false,
-        requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
-      };
-    });
+const completedCourses: PlannedCourse[] = completedCourseRows
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  .map((r) => {
+    const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
+    const reqData = catalog
+      ? requirementsMap.get(catalog.canonicalId)
+      : undefined;
+    return {
+      localCode: r.courseCode,
+      canonicalId: catalog?.canonicalId ?? "unknown", // Sets "unknown" if missing
+      title: catalog?.title ?? "Unknown",
+      units: catalog?.units ?? 0,
+      isCritical: reqData?.isCritical ?? false,
+      requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
+    };
+  })
+  .filter((c) => c.canonicalId !== "unknown"); // Drops the "ghost" courses
 
   hydratedUnassigned = unassignedRows
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
@@ -134,7 +135,9 @@ export default async function Dashboard() {
         isCritical: reqData?.isCritical ?? false,
         requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
       };
-    });
+    })
+    .filter((c) => c.canonicalId !== "unknown"); 
+
 
   if (plannedRows.length > 0) {
     const grouped = new Map<string, StudentPlanRow[]>();
@@ -169,7 +172,8 @@ export default async function Dashboard() {
             isCritical: reqData?.isCritical ?? false,
             requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
           };
-        }),
+        })
+          .filter((c) => c.canonicalId !== "unknown"), 
         maxUnits: seasonStr === "summer" ? 12 : 19,
       };
     });
@@ -199,10 +203,12 @@ export default async function Dashboard() {
       startSeason,
       startYear,
     );
+    // semesters = []
   } else {
     semesters = [];
   }
   const targetCount = userTargets.length;
+  
 
   return (
     <DashboardClient

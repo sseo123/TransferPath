@@ -29,10 +29,9 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "CHEM-121", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, title: "General Chemistry II", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
 
   // English
-  { localCode: "ENGL-C1000", canonicalId: CANONICAL_COURSES.ENGL_COMP_C1000, title: "Academic Reading and Writing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "ENGL-122", canonicalId: CANONICAL_COURSES.ENGL_COMP_1, title: "English Composition", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "ENGL-C1000", canonicalId: CANONICAL_COURSES.ENGL_COMP_1, title: "Academic Reading and Writing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "ENGL-123", canonicalId: CANONICAL_COURSES.ENGL_COMP_2, title: "Critical Thinking and Composition", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ENGL_COMP_1]  },
 
   //Ethnic Studies
-  { localCode: "ETHNIC_STUDIES", canonicalId: CANONICAL_COURSES.ETHNIC_STUDIES, title: "Ethnic Studies", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "ETHNIC-STUDIES", canonicalId: CANONICAL_COURSES.ETHNIC_STUDIES, title: "Ethnic Studies", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
 ];

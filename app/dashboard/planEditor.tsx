@@ -364,8 +364,17 @@ function DroppableSemester({
               const catalogData = DVC_CATALOG.find(
                 (c) => c.canonicalId === course.canonicalId,
               );
+
+              if (!catalogData) {
+                return (
+                  <div className="p-4 border-2 border-red-200 bg-red-50 rounded-2xl mb-3">
+                    <p className="text-xs font-bold text-red-600 uppercase">⚠️ Missing from Catalog</p>
+                    <p className="text-sm font-bold text-slate-800">{course.localCode}</p>
+                  </div>
+                );
+              }
               const { isValid, missing } = checkPrerequisites(
-                catalogData!,
+                catalogData,
                 sIdx,
                 allSemesters,
                 completedCourses,
