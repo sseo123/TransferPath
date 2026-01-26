@@ -3,7 +3,7 @@ import type { RequirementGraph } from "@/lib/planner/types";
 
 export const UCB_EE_REQUIREMENTS: RequirementGraph = {
   requiredChains: [
-    { canonicalId: CANONICAL_COURSES.ETHNIC_STUDIES, category: "PREP", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.CALC_1, category: "MATH", isCritical: true },
   ],
   categories: {}, 
 };

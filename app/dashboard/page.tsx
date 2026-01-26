@@ -208,7 +208,6 @@ const completedCourses: PlannedCourse[] = completedCourseRows
     semesters = [];
   }
   const targetCount = userTargets.length;
-  
 
   return (
     <DashboardClient

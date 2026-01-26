@@ -7,7 +7,9 @@ export type CourseCategory =
   | "ENGLISH"
   | "ENGINEERING"
   | "HISTORY"
-  | "PREP";
+  | "PREP"
+  | "BUSINESS"
+  | "ECON"
 
 //Student's transfer intent and constraints
 export interface StudentIntent {

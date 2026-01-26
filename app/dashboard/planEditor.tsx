@@ -1,13 +1,31 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Save, Trash2 } from "lucide-react";
+import { Save, Trash2, Info } from "lucide-react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { saveStudentPlan, saveCompletedCourses } from "./actions";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent, DragStartEvent, useDroppable, DragOverlay, defaultDropAnimationSideEffects, } from "@dnd-kit/core";
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable, } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  useDroppable,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 interface PlanEditorProps {
@@ -84,7 +102,10 @@ function moveCourseToContainer(
 
   const newUnassigned = [...unassigned];
   const newCompleted = [...completed];
-  const newSemesters = semesters.map((s) => ({ ...s, courses: [...s.courses] }));
+  const newSemesters = semesters.map((s) => ({
+    ...s,
+    courses: [...s.courses],
+  }));
 
   if (sourceLocation.container === "sidebar") {
     newUnassigned.splice(sourceLocation.index, 1);
@@ -368,8 +389,12 @@ function DroppableSemester({
               if (!catalogData) {
                 return (
                   <div className="p-4 border-2 border-red-200 bg-red-50 rounded-2xl mb-3">
-                    <p className="text-xs font-bold text-red-600 uppercase">⚠️ Missing from Catalog</p>
-                    <p className="text-sm font-bold text-slate-800">{course.localCode}</p>
+                    <p className="text-xs font-bold text-red-600 uppercase">
+                      ⚠️ Missing from Catalog
+                    </p>
+                    <p className="text-sm font-bold text-slate-800">
+                      {course.localCode}
+                    </p>
                   </div>
                 );
               }
@@ -405,7 +430,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[500px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${
+      className={`flex flex-col h-fit min-h-[400px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${
         isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
       }`}
     >
@@ -448,11 +473,11 @@ function CompletedCoursesBox({ courses }: { courses: PlannedCourse[] }) {
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[300px] w-65 bg-white rounded-3xl border-2 p-5 transition-all mt-4 ${
+      className={`flex flex-col h-fit min-h-[400px] w-65 bg-white rounded-3xl border-2 p-5 transition-all mt-4 ${
         isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
       }`}
     >
-      <h3 className="font-black text-slate-800 text-lg mb-4">
+      <h3 className="font-black text-slate-800 text-lg mb-2">
         Completed Courses
       </h3>
       <p className="text-xs text-slate-500 mb-4">
@@ -746,6 +771,88 @@ export default function PlanEditor({
     });
   }, []);
 
+  // return (
+  //   <DndContext
+  //     sensors={sensors}
+  //     collisionDetection={closestCenter}
+  //     onDragStart={handleDragStart}
+  //     onDragEnd={handleDragEnd}
+  //   >
+  //     <div className="min-h-screen bg-slate-50 p-8 font-sans">
+  //       <header className="flex justify-between items-center mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+  //         <div>
+  //           <h1 className="text-2xl font-black text-slate-800">
+  //             Course Planning
+  //           </h1>
+  //           <p className="text-slate-500 text-sm">
+  //             Draft your plan. Changes only save when you click &quot;Save
+  //             Changes&quot;.
+  //           </p>
+  //         </div>
+  //         <div className="flex gap-3">
+  //           {isDirty && (
+  //             <button
+  //               onClick={handleSave}
+  //               disabled={isSaving}
+  //               className="flex items-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all disabled:opacity-50"
+  //             >
+  //               <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
+  //             </button>
+  //           )}
+  //           <button
+  //             onClick={onExit}
+  //             className="px-6 py-2 bg-white border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all"
+  //           >
+  //             Escape Edit Mode
+  //           </button>
+  //         </div>
+  //       </header>
+
+  //       <div className="flex flex-col lg:flex-row gap-8 items-start">
+  //         <div className="flex flex-col">
+  //           <Sidebar courses={unassigned} />
+  //           <CompletedCoursesBox courses={completed} />
+  //         </div>
+  //         <div className="flex-1 w-full flex flex-col items-center">
+  //           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-8">
+  //             {semesters.map((semester, sIdx) => (
+  //               <DroppableSemester
+  //                 key={semester.name}
+  //                 semester={semester}
+  //                 sIdx={sIdx}
+  //                 onDelete={() => handleDeleteSemester(semester.name)}
+  //                 allSemesters={semesters}
+  //                 completedCourses={completed}
+  //               />
+  //             ))}
+  //           </div>
+
+  //           <button
+  //             onClick={handleAddTerm}
+  //             className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold hover:bg-white hover:border-slate-300 transition-all mb-10"
+  //           >
+  //             + Add Term
+  //           </button>
+
+  //           {/* GEMINI-STYLE FOOTER: Now centered with the button above */}
+  //           <footer className="w-full text-center pb-6">
+  //             <p className="text-[12px] text-slate-500/80 font-medium tracking-tight">
+  //               Academic departments may not offer summer courses for all
+  //               requirements. Verify availability with a counselor and confirm
+  //               articulation on{" "}
+  //               <a
+  //                 href="https://assist.org"
+  //                 target="_blank"
+  //                 rel="noopener noreferrer"
+  //                 className="underline decoration-slate-300 underline-offset-2 hover:text-slate-800 transition-colors"
+  //               >
+  //                 Assist.org
+  //               </a>
+  //             </p>
+  //           </footer>
+  //         </div>
+  //       </div>
+  //     </div>
   return (
     <DndContext
       sensors={sensors}
@@ -753,8 +860,9 @@ export default function PlanEditor({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen bg-slate-50 p-8 font-sans">
-        <header className="flex justify-between items-center mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+        {/* HEADER FIX: Added flex-wrap and items-start for small screens */}
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <div>
             <h1 className="text-2xl font-black text-slate-800">
               Course Planning
@@ -764,19 +872,19 @@ export default function PlanEditor({
               Changes&quot;.
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3 w-full sm:w-auto">
             {isDirty && (
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all disabled:opacity-50 whitespace-nowrap flex-1 sm:flex-none"
               >
                 <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
               </button>
             )}
             <button
               onClick={onExit}
-              className="px-6 py-2 bg-white border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all"
+              className="px-6 py-2 bg-white border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all whitespace-nowrap flex-1 sm:flex-none"
             >
               Escape Edit Mode
             </button>
@@ -784,12 +892,14 @@ export default function PlanEditor({
         </header>
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          <div className="flex flex-col">
+          {/* SIDEBAR FIX: Changed to Grid for side-by-side mobile view */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-col gap-4 w-full lg:w-auto">
             <Sidebar courses={unassigned} />
             <CompletedCoursesBox courses={completed} />
           </div>
-          <div className="flex-1 w-full space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          <div className="flex-1 w-full flex flex-col items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full mb-8">
               {semesters.map((semester, sIdx) => (
                 <DroppableSemester
                   key={semester.name}
@@ -801,12 +911,29 @@ export default function PlanEditor({
                 />
               ))}
             </div>
+
             <button
               onClick={handleAddTerm}
-              className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold hover:bg-white hover:border-slate-300 transition-all"
+              className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold hover:bg-white hover:border-slate-300 transition-all mb-10"
             >
               + Add Term
             </button>
+
+            <footer className="w-full text-center pb-6">
+              <p className="text-[12px] text-slate-500/80 font-medium tracking-tight">
+                Academic departments may not offer summer courses for all
+                requirements. Verify availability with a counselor and confirm
+                articulation on{" "}
+                <a
+                  href="https://assist.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-slate-300 underline-offset-2 hover:text-slate-800 transition-colors"
+                >
+                  Assist.org
+                </a>
+              </p>
+            </footer>
           </div>
         </div>
       </div>
