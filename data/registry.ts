@@ -1,10 +1,16 @@
 import type { RequirementGraph } from "@/lib/planner/types";
+
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_meche";
 import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_eecs";
 import { UCB_EE_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_ee";
+import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_test";
+
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
+import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
+
+
 import { UCSD_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_cs";
 
 export interface MajorEntry {
@@ -46,6 +52,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCB_EE_REQUIREMENTS,
         universityCode: "UCB",
       },
+      "Test": {
+        displayName: "TEST CASE",
+        requirements: UCB_TEST_REQUIREMENTS,
+        universityCode: "UCB",
+      },
     },
   },
   UCLA: {
@@ -59,6 +70,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Electrical Engineering": {
         displayName: "Electrical Engineering",
         requirements: UCLA_EE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
+      "Test": {
+        displayName: "TEST CASE",
+        requirements: UCLA_TEST_REQUIREMENTS,
         universityCode: "UCLA",
       },
     },
