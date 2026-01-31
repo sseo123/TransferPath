@@ -342,7 +342,7 @@ export default function DashboardClient({
           }}
         />
       )}
-      <div className="max-w-7xl mx-auto p-8 font-sans text-slate-900">
+      <div className="max-w-8xl mx-auto p-8 font-sans text-slate-900">
         <header className="mb-12 border-b border-slate-100 pb-8">
           <div className="flex justify-between items-start mb-6">
             <div>
