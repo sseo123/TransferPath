@@ -6,6 +6,7 @@ import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_eecs";
 import { UCB_EE_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_ee";
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_test";
 import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_business";
+import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_econ";
 
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
@@ -61,6 +62,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Business Administration": {
         displayName: "Business Administration",
         requirements: UCB_BUSINESS_REQUIREMENTS,
+        universityCode: "UCB",
+      },
+      "Economics": {
+        displayName: "Economics",
+        requirements: UCB_ECON_REQUIREMENTS,
         universityCode: "UCB",
       },
     },
