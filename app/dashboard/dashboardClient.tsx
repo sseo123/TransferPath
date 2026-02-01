@@ -3,19 +3,8 @@
 import { useState, useEffect } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
-import {
-  logout,
-  markSemesterComplete,
-  unmarkSemesterComplete,
-} from "./actions";
-import {
-  ChevronDown,
-  ChevronRight,
-  GraduationCap,
-  CheckSquare,
-  Square,
-  Plus,
-} from "lucide-react";
+import { logout, markSemesterComplete, unmarkSemesterComplete, } from "./actions";
+import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Calendar, Trash2, } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
@@ -172,6 +161,44 @@ function RowItem({
   );
 }
 
+function CollapsibleSection({
+  title,
+  count,
+  total,
+  children,
+  icon: Icon,
+}: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-6 bg-[#82A7A6] hover:bg-[#6B8A89] transition-colors text-white"
+      >
+        <div className="flex items-center gap-3 flex-1">
+          {Icon && <Icon size={24} className="text-white/80" />}
+          <span className="font-bold text-xl tracking-tight">{title}</span>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {total !== undefined && (
+            <span className="bg-white/20 text-white text-sm font-bold px-1 py-1 rounded-full backdrop-blur-sm">
+              {count}/{total}
+            </span>
+          )}
+          {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+        </div>
+      </button>
+
+      {isOpen && (
+        <div className="p-6 pt-5 border-t border-slate-100 space-y-3">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function DashboardClient({
   initialSemesters,
   initialUnassigned,
@@ -188,6 +215,79 @@ export default function DashboardClient({
   const router = useRouter();
 
   const hasTargets = targetCount > 0;
+  const [igetcTasks, setIgetcTasks] = useState([
+    { id: "1", label: "English Composition", completed: false },
+    { id: "2", label: "Critical Thinking", completed: false },
+    { id: "3", label: "Mathematical Concepts", completed: false },
+    { id: "4", label: "Arts & Humanities", completed: false },
+    { id: "5", label: "Social Sciences", completed: false },
+    { id: "6", label: "Physical/Bio Sciences", completed: false },
+  ]);
+
+  const [patternTasks, setPatternTasks] = useState([
+    { id: "p1", label: "English Composition", completed: false },
+    { id: "p2", label: "Critical Thinking", completed: false },
+    { id: "p3", label: "Math Concepts", completed: false },
+    { id: "p4", label: "Arts/Humanities 1", completed: false },
+    { id: "p5", label: "Social Science 1", completed: false },
+    { id: "p6", label: "Elective 1", completed: false },
+    { id: "p7", label: "Elective 2", completed: false },
+  ]);
+
+  const [deadlines, setDeadlines] = useState<
+    { id: string; title: string; date: string }[]
+  >([]);
+  const [showDeadlineModal, setShowDeadlineModal] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    const savedIgetc = localStorage.getItem("igetcTasks");
+    const savedPattern = localStorage.getItem("patternTasks");
+    const savedDeadlines = localStorage.getItem("deadlines");
+
+    if (savedIgetc) {
+      try {
+        setIgetcTasks(JSON.parse(savedIgetc));
+      } catch (e) {}
+    }
+    if (savedPattern) {
+      try {
+        setPatternTasks(JSON.parse(savedPattern));
+      } catch (e) {}
+    }
+    if (savedDeadlines) {
+      try {
+        setDeadlines(JSON.parse(savedDeadlines));
+      } catch (e) {}
+    }
+    setIsHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("igetcTasks", JSON.stringify(igetcTasks));
+    }
+  }, [igetcTasks, isHydrated]);
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("patternTasks", JSON.stringify(patternTasks));
+    }
+  }, [patternTasks, isHydrated]);
+
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("deadlines", JSON.stringify(deadlines));
+    }
+  }, [deadlines, isHydrated]);
+
+  // Helper to toggle checkboxes
+  const toggleTask = (id: string, type: "igetc" | "pattern") => {
+    const setter = type === "igetc" ? setIgetcTasks : setPatternTasks;
+    setter((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+    );
+  };
 
   useEffect(() => {
     if (showConfetti) {
@@ -446,31 +546,31 @@ export default function DashboardClient({
             </div>
           </div>
         </div>
-        <div
-          className={`${
-            initialUnassigned.length > 0
-              ? "flex flex-col lg:grid lg:grid-cols-12 gap-8"
-              : ""
-          }`}
-        >
-          <div
-            className={`bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner ${
-              initialUnassigned.length > 0 ? "lg:col-span-9" : ""
-            }`}
-          >
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-9 bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
             <div className="flex justify-between items-center mb-8 px-2">
               <h2 className="text-2xl font-bold text-slate-800">
                 Your Strategic Timeline
               </h2>
               <button
                 onClick={handleAction}
-                className={`px-6 py-2.5 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold ${
+                className={`flex items-center gap-2 px-4 py-3 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold ${
                   hasTargets
                     ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                     : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
                 }`}
               >
-                {hasTargets ? "Edit Plan" : "Add University"}
+                {hasTargets ? (
+                  <>
+                    <PenIcon size={16} className="text-slate-6" />
+                    Edit Plan
+                  </>
+                ) : (
+                  <>
+                    <Plus size={16} className="text-slate-6" />
+                    Add University
+                  </>
+                )}
               </button>
             </div>
             <div className="flex flex-col">
@@ -524,35 +624,189 @@ export default function DashboardClient({
             </div>
           </div>
 
-          {initialUnassigned.length > 0 && (
-            <div className="lg:col-span-3 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm lg:max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">⚠️</span>
-                <h3 className="font-bold text-slate-800 text-lg">
-                  Remaining Unscheduled Courses
-                </h3>
-              </div>
-              <p className="text-slate-500 text-sm mb-4">
-                {initialUnassigned.length} course
-                {initialUnassigned.length !== 1 ? "s" : ""} not yet scheduled
-              </p>
-              <div className="space-y-2">
-                {initialUnassigned.map((course) => (
+          <div className="lg:col-span-3 space-y-5">
+            {/* 1. Unscheduled Courses */}
+            {initialUnassigned.length > 0 && (
+              <CollapsibleSection
+                title="Needs Scheduling"
+                icon={() => <span className="text-xl">⚠️</span>}
+              >
+                <div className="space-y-4">
+                  <p className="text-slate-500 text-sm font-medium">
+                    {initialUnassigned.length} course
+                    {initialUnassigned.length !== 1 ? "s" : ""}{" "}
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="text-[#82A7A6] font-bold hover:underline underline-offset-2"
+                    >
+                      needs scheduling
+                    </button>
+                  </p>
+
+                  {/* Course List Scrollbox */}
+                  <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent space-y-2 pr-2">
+                    {initialUnassigned.map((course) => (
+                      <div
+                        key={course.canonicalId}
+                        className="px-4 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center hover:bg-slate-100 transition-colors"
+                      >
+                        <span className="font-bold text-slate-800 text-lg tracking-tight">
+                          {course.localCode}
+                        </span>
+                        <span className="text-sm text-slate-500 font-bold px-3 py-1 bg-white rounded-full border border-slate-100">
+                          {course.units} units
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </CollapsibleSection>
+            )}
+
+            {/* 2. IGETC */}
+            <CollapsibleSection
+              title="IGETC"
+              count={igetcTasks.filter((t) => t.completed).length}
+              total={igetcTasks.length}
+              icon={CheckSquare}
+            >
+              <div className="space-y-3">
+                {igetcTasks.map((task) => (
                   <div
-                    key={course.canonicalId}
-                    className="px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center hover:bg-slate-100 transition-colors"
+                    key={task.id}
+                    className="flex items-center gap-3 cursor-pointer group"
+                    onClick={() => toggleTask(task.id, "igetc")}
                   >
-                    <span className="font-semibold text-slate-800 text-sm">
-                      {course.localCode}
-                    </span>
-                    <span className="text-xs text-slate-500 font-medium px-2 py-0.5">
-                      {course.units} units
+                    {task.completed ? (
+                      <CheckSquare size={16} className="text-[#82A7A6]" />
+                    ) : (
+                      <Square
+                        size={16}
+                        className="text-slate-300 group-hover:text-slate-400"
+                      />
+                    )}
+                    <span
+                      className={`text-sm font-semibold ${task.completed ? "text-slate-400 line-through" : "text-slate-600"}`}
+                    >
+                      {task.label}
                     </span>
                   </div>
                 ))}
+                <div className="pt-2 border-t border-slate-100 mt-4">
+                  <p className="text-xs text-slate-400 font-medium text-center italic">
+                    Don't know if you've fullfilled an IGETC requirement?{" "}
+                    <a
+                      href="https://assist.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#82A7A6] font-bold hover:underline"
+                    >
+                      Check assist.org
+                    </a>
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            </CollapsibleSection>
+
+            {/* 3. 7-Course Pattern */}
+            <CollapsibleSection
+              title="7-Course Pattern"
+              count={patternTasks.filter((t) => t.completed).length}
+              total={patternTasks.length}
+              icon={CheckSquare}
+            >
+              <div className="space-y-3">
+                {patternTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex items-center gap-3 cursor-pointer group"
+                    onClick={() => toggleTask(task.id, "pattern")}
+                  >
+                    {task.completed ? (
+                      <CheckSquare size={16} className="text-[#82A7A6]" />
+                    ) : (
+                      <Square
+                        size={16}
+                        className="text-slate-300 group-hover:text-slate-400"
+                      />
+                    )}
+                    <span
+                      className={`text-sm font-semibold ${task.completed ? "text-slate-400 line-through" : "text-slate-600"}`}
+                    >
+                      {task.label}
+                    </span>
+                  </div>
+                ))}
+                <div className="pt-2 border-t border-slate-100 mt-4">
+                  <p className="text-xs text-slate-400 font-medium text-center italic">
+                    Don't know if you've fullfilled a 7-course pattern
+                    requirement?{" "}
+                    <a
+                      href="https://assist.org"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#82A7A6] font-bold hover:underline"
+                    >
+                      Check assist.org
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </CollapsibleSection>
+
+            {/* 4. Deadlines Section */}
+            <CollapsibleSection title="Important Deadlines" icon={Calendar}>
+              <div className="space-y-3">
+                {deadlines.length === 0 ? (
+                  <p className="text-[11px] text-slate-400 italic text-center py-2">
+                    No deadlines added
+                  </p>
+                ) : (
+                  deadlines.map((d) => (
+                    <div
+                      key={d.id}
+                      className="flex items-center justify-between group bg-slate-50 p-2 rounded-lg"
+                    >
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold text-slate-700">
+                          {d.title}
+                        </span>
+                        <span className="text-[10px] text-slate-400">
+                          {d.date}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() =>
+                          setDeadlines(
+                            deadlines.filter((item) => item.id !== d.id),
+                          )
+                        }
+                      >
+                        <Trash2
+                          size={12}
+                          className="text-slate-300 hover:text-red-400"
+                        />
+                      </button>
+                    </div>
+                  ))
+                )}
+                <button
+                  onClick={() => {
+                    const title = prompt("Deadline Title?");
+                    const date = prompt("Date (Month Day, Year)?");
+                    if (title && date)
+                      setDeadlines([
+                        ...deadlines,
+                        { id: Date.now().toString(), title, date },
+                      ]);
+                  }}
+                  className="w-full py-2 border border-dashed border-slate-200 rounded-lg text-[11px] font-bold text-slate-500 hover:bg-slate-100"
+                >
+                  + Add New Deadline
+                </button>
+              </div>
+            </CollapsibleSection>
+          </div>
         </div>
       </div>
     </div>
