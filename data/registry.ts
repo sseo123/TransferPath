@@ -1,19 +1,25 @@
 import type { RequirementGraph } from "@/lib/planner/types";
 
-import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_cs";
-import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_meche";
-import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_eecs";
-import { UCB_EE_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_ee";
+import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
+import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
+import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_eecs";
+import { UCB_EE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ee";
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_test";
-import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_business";
-import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucberkeley/ucb_econ";
+import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
+import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
 
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
-
 import { UCSD_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_cs";
+
+import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
+
+import { UCI_CS_REQUIREMENTS } from "@/data/colleges/uci/uci_cs";
+
+import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
+
 
 export interface MajorEntry {
   displayName: string;
@@ -71,7 +77,7 @@ const REGISTRY: Record<string, UniversityEntry> = {
       },
     },
   },
-  UCLA: {
+  "UCLA": {
     displayName: "UCLA",
     majors: {
       "Computer Science": {
@@ -98,6 +104,36 @@ const REGISTRY: Record<string, UniversityEntry> = {
         displayName: "Computer Science",
         requirements: UCSD_CS_REQUIREMENTS,
         universityCode: "UCSD",
+      },
+    },
+  },
+  "UC Irvine": {
+    displayName: "UC Irvine",
+    majors: {
+      "Computer Science": {
+        displayName: "Computer Science",
+        requirements: UCI_CS_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+    },
+  },
+  "UC Davis": {
+    displayName: "UC Davis",
+    majors: {
+      "Computer Science": {
+        displayName: "Computer Science",
+        requirements: UCD_CS_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+    },
+  },
+  "UC Santa Barbra": {
+    displayName: "UC Santa Barbra",
+    majors: {
+      "Computer Science": {
+        displayName: "Computer Science",
+        requirements: UCSB_CS_REQUIREMENTS,
+        universityCode: "UCSB",
       },
     },
   },

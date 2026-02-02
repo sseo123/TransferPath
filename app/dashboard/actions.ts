@@ -39,19 +39,25 @@ export async function saveStudentPlan(
   const cfEnv = env as Env;
   const db = drizzle(cfEnv.DB);
 
-  await db.batch([
-    db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
-    // bulk insert
-    db.insert(studentPlansTable).values(
-      planData.map((item) => ({
-        id: crypto.randomUUID(),
-        userId: user.id,
-        semesterName: item.semesterName,
-        courseCode: item.courseCode,
-        order: item.order,
-      })),
-    ),
-  ]);
+  // Delete first
+  await db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id));
+
+  // Chunk the inserts to stay under D1's SQL variable limit.
+  // Each row has 4 columns (id, userId, semesterName, courseCode, order = 5 actually),
+  // so with a limit of ~32 variables, safe chunk size is 6 rows.
+  const CHUNK_SIZE = 6;
+  const rows = planData.map((item) => ({
+    id: crypto.randomUUID(),
+    userId: user.id,
+    semesterName: item.semesterName,
+    courseCode: item.courseCode,
+    order: item.order,
+  }));
+
+  for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
+    const chunk = rows.slice(i, i + CHUNK_SIZE);
+    await db.insert(studentPlansTable).values(chunk);
+  }
 
   revalidatePath("/dashboard");
 }
