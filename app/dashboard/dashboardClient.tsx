@@ -403,6 +403,14 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
     }
   };
 
+  // Security: Clear localStorage on logout to prevent data persistence
+  const handleLogout = async () => {
+    localStorage.removeItem("igetcTasks2");
+    localStorage.removeItem("patternTasks1");
+    localStorage.removeItem("deadlines");
+    await logout();
+  };
+
   if (isEditing) {
     return (
       <PlanEditor
@@ -490,14 +498,12 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
                   ? "Add Another University"
                   : "Add Universities to Start"}
               </button>
-              <form action={logout}>
-                <button
-                  type="submit"
-                  className="px-4 py-3 text-sm font-bold text-black rounded-xl transition-all hover:scale-105 active:scale-95"
-                >
-                  Sign Out
-                </button>
-              </form>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-3 text-sm font-bold text-black rounded-xl transition-all hover:scale-105 active:scale-95"
+              >
+                Sign Out
+              </button>
             </div>
           </div>
         </header>

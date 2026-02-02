@@ -97,15 +97,26 @@ export async function removeTargetCollege(targetId: string) {
   const cfEnv = env as Env;
   const db = drizzle(cfEnv.DB);
 
+  // Security: Verify target belongs to the authenticated user (prevents IDOR attacks)
   const [target] = await db
     .select()
     .from(userTargetsTable)
-    .where(eq(userTargetsTable.id, targetId));
+    .where(
+      and(
+        eq(userTargetsTable.id, targetId),
+        eq(userTargetsTable.userId, user.id)
+      )
+    );
   if (!target) {
-    throw new Error("Target college not found");
+    throw new Error("Target college not found or access denied");
   }
 
-  await db.delete(userTargetsTable).where(eq(userTargetsTable.id, targetId));
+  await db.delete(userTargetsTable).where(
+    and(
+      eq(userTargetsTable.id, targetId),
+      eq(userTargetsTable.userId, user.id)
+    )
+  );
 
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),

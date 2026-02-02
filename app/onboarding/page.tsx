@@ -1,10 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { saveOnboardingData } from "./actions";
 
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     college: "",
@@ -25,16 +27,24 @@ export default function OnboardingPage() {
     return false;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (isStepComplete()) {
       if (step < totalSteps) {
         setStep(step + 1);
       } else {
-        const queryData = btoa(JSON.stringify(formData));
-        router.push(`/signup?data=${queryData}`);
+        // Security: Store data in secure httpOnly cookie instead of URL
+        setIsSubmitting(true);
+        try {
+          await saveOnboardingData(formData);
+          router.push("/signup");
+        } catch (error) {
+          console.error("Failed to save onboarding data:", error);
+          setIsSubmitting(false);
+        }
       }
     }
   };
+
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] flex flex-col relative overflow-hidden">
@@ -187,14 +197,18 @@ export default function OnboardingPage() {
           </button>
           <button
             onClick={handleNext}
-            disabled={!isStepComplete()}
+            disabled={!isStepComplete() || isSubmitting}
             className={`px-8 py-3 font-bold rounded-xl transition-all ${
-              isStepComplete()
+              isStepComplete() && !isSubmitting
                 ? "bg-[#82A7A6] text-white"
                 : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
           >
-            {step === totalSteps ? "Finish & Sign Up" : "Continue"}
+            {isSubmitting 
+              ? "Loading..." 
+              : step === totalSteps 
+                ? "Finish & Sign Up" 
+                : "Continue"}
           </button>
         </div>
       </footer>
