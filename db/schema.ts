@@ -9,8 +9,11 @@ export const userTable = sqliteTable("user", {
   currentCollege: text("current_college"),
   major: text("major"),
   targetUni: text("target_uni"),
-  startSeason: text("start_season"), 
+  startSeason: text("start_season"),
   startYear: integer("start_year"),
+  igetcTasks: text("igetc_tasks"), // Stringified JSON
+  patternTasks: text("pattern_tasks"), // Stringified JSON
+  deadlines: text("deadlines"), // Stringified JSON
 });
 
 // ADD THIS TABLE - Lucia requires it

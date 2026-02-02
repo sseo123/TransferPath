@@ -271,6 +271,32 @@ export async function saveCompletedCourses(
   }
 }
 
+export async function syncUserData(data: {
+  igetcTasks?: any[];
+  patternTasks?: any[];
+  deadlines?: any[];
+}) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const { env } = await getCloudflareContext({ async: true });
+  const cfEnv = env as Env;
+  const db = drizzle(cfEnv.DB);
+
+  const updateData: any = {};
+  if (data.igetcTasks) updateData.igetcTasks = JSON.stringify(data.igetcTasks);
+  if (data.patternTasks)
+    updateData.patternTasks = JSON.stringify(data.patternTasks);
+  if (data.deadlines) updateData.deadlines = JSON.stringify(data.deadlines);
+
+  if (Object.keys(updateData).length > 0) {
+    await db
+      .update(userTable)
+      .set(updateData)
+      .where(eq(userTable.id, user.id));
+  }
+}
+
 export async function getCompletedCourses(): Promise<string[]> {
   const { user } = await validateRequest();
   if (!user) return [];

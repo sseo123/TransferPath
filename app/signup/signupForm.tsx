@@ -102,7 +102,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
           <input
             name="password"
             type="password"
-            placeholder="Min. 8 characters with uppercase, lowercase, and number"
+            placeholder="Min. 8 characters"
             required
             minLength={8}
             maxLength={128}

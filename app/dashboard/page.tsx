@@ -209,6 +209,15 @@ const completedCourses: PlannedCourse[] = completedCourseRows
   }
   const targetCount = userTargets.length;
 
+  // Security: Parse persisted UI data with robust fallbacks
+  const initialIgetcTasks = dbUser.igetcTasks
+    ? JSON.parse(dbUser.igetcTasks)
+    : null;
+  const initialPatternTasks = dbUser.patternTasks
+    ? JSON.parse(dbUser.patternTasks)
+    : null;
+  const initialDeadlines = dbUser.deadlines ? JSON.parse(dbUser.deadlines) : [];
+
   return (
     <DashboardClient
       initialSemesters={semesters}
@@ -217,6 +226,9 @@ const completedCourses: PlannedCourse[] = completedCourseRows
       initialCompletedSemesters={completedSemesterNames}
       dbUser={dbUser}
       targetCount={targetCount}
+      initialIgetcTasks={initialIgetcTasks}
+      initialPatternTasks={initialPatternTasks}
+      initialDeadlines={initialDeadlines}
     />
   );
 }

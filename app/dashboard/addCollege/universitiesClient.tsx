@@ -55,7 +55,7 @@ export default function UniversitiesClient({
               </h1>
               <p className="text-slate-500 mt-2 text-lg font-medium">
                 Select the universites you wish to transfer to, and the required
-                courses <br /> will be displayed on your Dashboard!
+                courses will be displayed on your Dashboard!
               </p>
             </div>
 

@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
-import { logout, markSemesterComplete, unmarkSemesterComplete, } from "./actions";
+import {
+  logout,
+  markSemesterComplete,
+  unmarkSemesterComplete,
+  syncUserData,
+} from "./actions";
 import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Calendar, Trash2, } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
@@ -26,6 +31,9 @@ interface DashboardClientProps {
     currentCollege: string | null;
   };
   targetCount: number;
+  initialIgetcTasks: any[] | null;
+  initialPatternTasks: any[] | null;
+  initialDeadlines: { id: string; title: string; date: string }[];
 }
 
 function SemesterAccordionItem({
@@ -195,7 +203,17 @@ function CollapsibleSection({ title, count, total, children, icon: Icon, }: any)
   );
 }
 
-export default function DashboardClient({ initialSemesters, initialUnassigned, initialCompletedCourses, initialCompletedSemesters, dbUser, targetCount, }: DashboardClientProps) {
+export default function DashboardClient({
+  initialSemesters,
+  initialUnassigned,
+  initialCompletedCourses,
+  initialCompletedSemesters,
+  dbUser,
+  targetCount,
+  initialIgetcTasks,
+  initialPatternTasks,
+  initialDeadlines,
+}: DashboardClientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [completedSemesters, setCompletedSemesters] = useState<Set<string>>(
     new Set(initialCompletedSemesters),
@@ -204,39 +222,72 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
   const router = useRouter();
 
   const hasTargets = targetCount > 0;
-  // in the hydration, igetcTasks and igetcTasks1 already have fixed values, therefore, it's igetc
-  const [igetcTasks2, setIgetcTasks2] = useState([
-    { id: "1", label: "English Communication", completed: false },
-    {
-      id: "2",
-      label: "Matmatical Concepts and Quantitative Reasoning",
-      completed: false,
-    },
-    { id: "3", label: "Arts and Humanities", completed: false },
-    { id: "4", label: "Social and Behavioral Sciences", completed: false },
-    { id: "5", label: "Physical and Biological Sciences", completed: false },
-    { id: "6", label: "Language Other than English", completed: false },
-    { id: "7", label: "Ethnic Studies", completed: false },
-  ]);
 
-  //same thing with patternTasks1
-  const [patternTasks1, setPatternTasks1] = useState([
-    { id: "p1", label: "English Composition", completed: false },
-    {
-      id: "p2",
-      label: "Mathematical Concepts and Quantitative Reasoning",
-      completed: false,
-    },
-    { id: "p3", label: "Physical and Biological Science", completed: false },
-    { id: "p4", label: "Social and Behavioral Science", completed: false },
-    { id: "p5", label: "Arts and Humanities", completed: false },
-  ]);
+  // Security: Sync flags for debouncing
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  // Requirement Checklists State
+  const [igetcTasks2, setIgetcTasks2] = useState(
+    initialIgetcTasks ?? [
+      { id: "1", label: "English Communication", completed: false },
+      {
+        id: "2",
+        label: "Matmatical Concepts and Quantitative Reasoning",
+        completed: false,
+      },
+      { id: "3", label: "Arts and Humanities", completed: false },
+      { id: "4", label: "Social and Behavioral Sciences", completed: false },
+      { id: "5", label: "Physical and Biological Sciences", completed: false },
+      { id: "6", label: "Language Other than English", completed: false },
+      { id: "7", label: "Ethnic Studies", completed: false },
+    ],
+  );
+
+  const [patternTasks1, setPatternTasks1] = useState(
+    initialPatternTasks ?? [
+      { id: "p1", label: "English Composition", completed: false },
+      {
+        id: "p2",
+        label: "Mathematical Concepts and Quantitative Reasoning",
+        completed: false,
+      },
+      { id: "p3", label: "Physical and Biological Science", completed: false },
+      { id: "p4", label: "Social and Behavioral Science", completed: false },
+      { id: "p5", label: "Arts and Humanities", completed: false },
+    ],
+  );
 
   const [deadlines, setDeadlines] = useState<
     { id: string; title: string; date: string }[]
-  >([]);
+  >(initialDeadlines ?? []);
+
   const [showDeadlineModal, setShowDeadlineModal] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+
+  // Security: Debounced Database Synchronization
+  useEffect(() => {
+    if (!isHydrated) {
+      setIsHydrated(true);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSyncing(true);
+      try {
+        await syncUserData({
+          igetcTasks: igetcTasks2,
+          patternTasks: patternTasks1,
+          deadlines: deadlines,
+        });
+      } catch (error) {
+        console.error("Sync failed:", error);
+      } finally {
+        setIsSyncing(false);
+      }
+    }, 1500); // 1.5s debounce
+
+    return () => clearTimeout(timer);
+  }, [igetcTasks2, patternTasks1, deadlines, isHydrated]);
 
   const [isDeadlineModalOpen, setIsDeadlineModalOpen] = useState(false);
   const [newDeadlineTitle, setNewDeadlineTitle] = useState("");
@@ -262,47 +313,6 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
       setIsDeadlineModalOpen(false);
     }
   };
-
-  useEffect(() => {
-    const savedIgetc = localStorage.getItem("igetcTasks2");
-    const savedPattern = localStorage.getItem("patternTasks1");
-    const savedDeadlines = localStorage.getItem("deadlines");
-
-    if (savedIgetc) {
-      try {
-        setIgetcTasks2(JSON.parse(savedIgetc));
-      } catch (e) {}
-    }
-    if (savedPattern) {
-      try {
-        setPatternTasks1(JSON.parse(savedPattern));
-      } catch (e) {}
-    }
-    if (savedDeadlines) {
-      try {
-        setDeadlines(JSON.parse(savedDeadlines));
-      } catch (e) {}
-    }
-    setIsHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem("igetcTasks2", JSON.stringify(igetcTasks2));
-    }
-  }, [igetcTasks2, isHydrated]);
-
-  useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem("patternTasks1", JSON.stringify(patternTasks1));
-    }
-  }, [patternTasks1, isHydrated]);
-
-  useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem("deadlines", JSON.stringify(deadlines));
-    }
-  }, [deadlines, isHydrated]);
 
   // Helper to toggle checkboxes
   const toggleTask = (id: string, type: "igetc" | "pattern") => {
@@ -403,11 +413,8 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
     }
   };
 
-  // Security: Clear localStorage on logout to prevent data persistence
+  // Security: Logout action
   const handleLogout = async () => {
-    localStorage.removeItem("igetcTasks2");
-    localStorage.removeItem("patternTasks1");
-    localStorage.removeItem("deadlines");
     await logout();
   };
 
@@ -480,9 +487,22 @@ export default function DashboardClient({ initialSemesters, initialUnassigned, i
               <h1 className="text-4xl font-black text-slate-900 tracking-tight">
                 Welcome, {dbUser.firstName}!
               </h1>
-              <p className="text-slate-500 mt-2 text-lg font-medium">
-                Here is your transfer plan
-              </p>
+              <div className="flex items-center gap-2 mt-2">
+                <p className="text-slate-500 text-lg font-medium">
+                  Here is your transfer plan
+                </p>
+                {isHydrated && (
+                  <span
+                    className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300 ${
+                      isSyncing
+                        ? "bg-amber-50 text-amber-800 border border-amber-50 animate-pulse"
+                        : "bg-emerald-50 text-emerald-800 border border-emerald-50"
+                    }`}
+                  >
+                    {isSyncing ? "Syncing..." : "Saved to Cloud"}
+                  </span>
+                )}
+              </div>
             </div>
 
             <div className="flex items-center gap-4">
