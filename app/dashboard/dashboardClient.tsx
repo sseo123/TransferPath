@@ -161,13 +161,7 @@ function RowItem({
   );
 }
 
-function CollapsibleSection({
-  title,
-  count,
-  total,
-  children,
-  icon: Icon,
-}: any) {
+function CollapsibleSection({ title, count, total, children, icon: Icon, }: any) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
@@ -181,9 +175,11 @@ function CollapsibleSection({
         </div>
 
         <div className="flex items-center gap-4">
-          {total !== undefined && (
-            <span className="bg-white/20 text-white text-sm font-bold px-1 py-1 rounded-full backdrop-blur-sm">
-              {count}/{total}
+          {/* UPDATED LOGIC BELOW */}
+          {count !== undefined && count > 0 && (
+            <span className="bg-white/20 text-white text-sm font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+              {count}
+              {total !== undefined ? `/${total}` : ""}
             </span>
           )}
           {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
@@ -199,14 +195,7 @@ function CollapsibleSection({
   );
 }
 
-export default function DashboardClient({
-  initialSemesters,
-  initialUnassigned,
-  initialCompletedCourses,
-  initialCompletedSemesters,
-  dbUser,
-  targetCount,
-}: DashboardClientProps) {
+export default function DashboardClient({ initialSemesters, initialUnassigned, initialCompletedCourses, initialCompletedSemesters, dbUser, targetCount, }: DashboardClientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [completedSemesters, setCompletedSemesters] = useState<Set<string>>(
     new Set(initialCompletedSemesters),
@@ -215,23 +204,32 @@ export default function DashboardClient({
   const router = useRouter();
 
   const hasTargets = targetCount > 0;
-  const [igetcTasks, setIgetcTasks] = useState([
-    { id: "1", label: "English Composition", completed: false },
-    { id: "2", label: "Critical Thinking", completed: false },
-    { id: "3", label: "Mathematical Concepts", completed: false },
-    { id: "4", label: "Arts & Humanities", completed: false },
-    { id: "5", label: "Social Sciences", completed: false },
-    { id: "6", label: "Physical/Bio Sciences", completed: false },
+  // in the hydration, igetcTasks and igetcTasks1 already have fixed values, therefore, it's igetc
+  const [igetcTasks2, setIgetcTasks2] = useState([
+    { id: "1", label: "English Communication", completed: false },
+    {
+      id: "2",
+      label: "Matmatical Concepts and Quantitative Reasoning",
+      completed: false,
+    },
+    { id: "3", label: "Arts and Humanities", completed: false },
+    { id: "4", label: "Social and Behavioral Sciences", completed: false },
+    { id: "5", label: "Physical and Biological Sciences", completed: false },
+    { id: "6", label: "Language Other than English", completed: false },
+    { id: "7", label: "Ethnic Studies", completed: false },
   ]);
 
-  const [patternTasks, setPatternTasks] = useState([
+  //same thing with patternTasks1
+  const [patternTasks1, setPatternTasks1] = useState([
     { id: "p1", label: "English Composition", completed: false },
-    { id: "p2", label: "Critical Thinking", completed: false },
-    { id: "p3", label: "Math Concepts", completed: false },
-    { id: "p4", label: "Arts/Humanities 1", completed: false },
-    { id: "p5", label: "Social Science 1", completed: false },
-    { id: "p6", label: "Elective 1", completed: false },
-    { id: "p7", label: "Elective 2", completed: false },
+    {
+      id: "p2",
+      label: "Mathematical Concepts and Quantitative Reasoning",
+      completed: false,
+    },
+    { id: "p3", label: "Physical and Biological Science", completed: false },
+    { id: "p4", label: "Social and Behavioral Science", completed: false },
+    { id: "p5", label: "Arts and Humanities", completed: false },
   ]);
 
   const [deadlines, setDeadlines] = useState<
@@ -240,19 +238,44 @@ export default function DashboardClient({
   const [showDeadlineModal, setShowDeadlineModal] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
+  const [isDeadlineModalOpen, setIsDeadlineModalOpen] = useState(false);
+  const [newDeadlineTitle, setNewDeadlineTitle] = useState("");
+  const [newDeadlineDate, setNewDeadlineDate] = useState("");
+
+  const handleAddDeadline = () => {
+    if (newDeadlineTitle && newDeadlineDate) {
+      // Limit title to roughly 10 words
+      const limitedTitle = newDeadlineTitle.split(" ").slice(0, 10).join(" ");
+
+      setDeadlines([
+        ...deadlines,
+        {
+          id: Date.now().toString(),
+          title: limitedTitle,
+          date: newDeadlineDate,
+        },
+      ]);
+
+      // Reset and Close
+      setNewDeadlineTitle("");
+      setNewDeadlineDate("");
+      setIsDeadlineModalOpen(false);
+    }
+  };
+
   useEffect(() => {
-    const savedIgetc = localStorage.getItem("igetcTasks");
-    const savedPattern = localStorage.getItem("patternTasks");
+    const savedIgetc = localStorage.getItem("igetcTasks2");
+    const savedPattern = localStorage.getItem("patternTasks1");
     const savedDeadlines = localStorage.getItem("deadlines");
 
     if (savedIgetc) {
       try {
-        setIgetcTasks(JSON.parse(savedIgetc));
+        setIgetcTasks2(JSON.parse(savedIgetc));
       } catch (e) {}
     }
     if (savedPattern) {
       try {
-        setPatternTasks(JSON.parse(savedPattern));
+        setPatternTasks1(JSON.parse(savedPattern));
       } catch (e) {}
     }
     if (savedDeadlines) {
@@ -265,15 +288,15 @@ export default function DashboardClient({
 
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem("igetcTasks", JSON.stringify(igetcTasks));
+      localStorage.setItem("igetcTasks2", JSON.stringify(igetcTasks2));
     }
-  }, [igetcTasks, isHydrated]);
+  }, [igetcTasks2, isHydrated]);
 
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem("patternTasks", JSON.stringify(patternTasks));
+      localStorage.setItem("patternTasks1", JSON.stringify(patternTasks1));
     }
-  }, [patternTasks, isHydrated]);
+  }, [patternTasks1, isHydrated]);
 
   useEffect(() => {
     if (isHydrated) {
@@ -283,7 +306,7 @@ export default function DashboardClient({
 
   // Helper to toggle checkboxes
   const toggleTask = (id: string, type: "igetc" | "pattern") => {
-    const setter = type === "igetc" ? setIgetcTasks : setPatternTasks;
+    const setter = type === "igetc" ? setIgetcTasks2 : setPatternTasks1;
     setter((prev) =>
       prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
     );
@@ -666,23 +689,26 @@ export default function DashboardClient({
             {/* 2. IGETC */}
             <CollapsibleSection
               title="IGETC"
-              count={igetcTasks.filter((t) => t.completed).length}
-              total={igetcTasks.length}
+              count={igetcTasks2.filter((t) => t.completed).length}
+              total={igetcTasks2.length}
               icon={CheckSquare}
             >
               <div className="space-y-3">
-                {igetcTasks.map((task) => (
+                {igetcTasks2.map((task) => (
                   <div
                     key={task.id}
                     className="flex items-center gap-3 cursor-pointer group"
                     onClick={() => toggleTask(task.id, "igetc")}
                   >
                     {task.completed ? (
-                      <CheckSquare size={16} className="text-[#82A7A6]" />
+                      <CheckSquare
+                        size={16}
+                        className="flex-shrink-0 text-[#82A7A6]"
+                      />
                     ) : (
                       <Square
                         size={16}
-                        className="text-slate-300 group-hover:text-slate-400"
+                        className="flex-shrink-0 text-slate-300 group-hover:text-slate-400"
                       />
                     )}
                     <span
@@ -711,23 +737,26 @@ export default function DashboardClient({
             {/* 3. 7-Course Pattern */}
             <CollapsibleSection
               title="7-Course Pattern"
-              count={patternTasks.filter((t) => t.completed).length}
-              total={patternTasks.length}
+              count={patternTasks1.filter((t) => t.completed).length}
+              total={patternTasks1.length}
               icon={CheckSquare}
             >
               <div className="space-y-3">
-                {patternTasks.map((task) => (
+                {patternTasks1.map((task) => (
                   <div
                     key={task.id}
                     className="flex items-center gap-3 cursor-pointer group"
                     onClick={() => toggleTask(task.id, "pattern")}
                   >
                     {task.completed ? (
-                      <CheckSquare size={16} className="text-[#82A7A6]" />
+                      <CheckSquare
+                        size={16}
+                        className="flex-shrink-0 text-[#82A7A6]"
+                      />
                     ) : (
                       <Square
                         size={16}
-                        className="text-slate-300 group-hover:text-slate-400"
+                        className="flex-shrink-0 text-slate-300 group-hover:text-slate-400"
                       />
                     )}
                     <span
@@ -755,23 +784,27 @@ export default function DashboardClient({
             </CollapsibleSection>
 
             {/* 4. Deadlines Section */}
-            <CollapsibleSection title="Important Deadlines" icon={Calendar}>
+            <CollapsibleSection
+              title="Important Deadlines"
+              icon={Calendar}
+              count={deadlines.length > 0 ? deadlines.length : undefined}
+            >
               <div className="space-y-3">
                 {deadlines.length === 0 ? (
-                  <p className="text-[11px] text-slate-400 italic text-center py-2">
+                  <p className="text-sm text-slate-400 italic text-center py-2">
                     No deadlines added
                   </p>
                 ) : (
                   deadlines.map((d) => (
                     <div
                       key={d.id}
-                      className="flex items-center justify-between group bg-slate-50 p-2 rounded-lg"
+                      className="flex items-center justify-between group bg-slate-50 p-3 rounded-xl border border-slate-100"
                     >
                       <div className="flex flex-col">
-                        <span className="text-xs font-bold text-slate-700">
+                        <span className="text-sm font-bold text-slate-700 leading-tight">
                           {d.title}
                         </span>
-                        <span className="text-[10px] text-slate-400">
+                        <span className="text-xs text-slate-400 mt-1">
                           {d.date}
                         </span>
                       </div>
@@ -781,26 +814,18 @@ export default function DashboardClient({
                             deadlines.filter((item) => item.id !== d.id),
                           )
                         }
+                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-50 rounded-md"
                       >
-                        <Trash2
-                          size={12}
-                          className="text-slate-300 hover:text-red-400"
-                        />
+                        <Trash2 size={14} className="text-red-400" />
                       </button>
                     </div>
                   ))
                 )}
+
+                {/* THIS IS THE TRIGGER BUTTON */}
                 <button
-                  onClick={() => {
-                    const title = prompt("Deadline Title?");
-                    const date = prompt("Date (Month Day, Year)?");
-                    if (title && date)
-                      setDeadlines([
-                        ...deadlines,
-                        { id: Date.now().toString(), title, date },
-                      ]);
-                  }}
-                  className="w-full py-2 border border-dashed border-slate-200 rounded-lg text-[11px] font-bold text-slate-500 hover:bg-slate-100"
+                  onClick={() => setIsDeadlineModalOpen(true)}
+                  className="w-full py-3 border border-dashed border-slate-200 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all"
                 >
                   + Add New Deadline
                 </button>
@@ -809,6 +834,64 @@ export default function DashboardClient({
           </div>
         </div>
       </div>
+
+      {isDeadlineModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity animate-in fade-in duration-300"
+            onClick={() => setIsDeadlineModalOpen(false)}
+          />
+
+          <div className="relative bg-white rounded-[32px] shadow-2xl w-full max-w-md p-8 border border-slate-100 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-2xl font-black text-slate-800 mb-6 tracking-tight">
+              Add New Deadline
+            </h3>
+
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1">
+                  What is the deadline for? (Max 10 words)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., UC TAG Deadline"
+                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6] focus:border-transparent transition-all font-medium"
+                  value={newDeadlineTitle}
+                  onChange={(e) => setNewDeadlineTitle(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1">
+                  When is it due?
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., November 30, 2026"
+                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6] focus:border-transparent transition-all font-medium"
+                  value={newDeadlineDate}
+                  onChange={(e) => setNewDeadlineDate(e.target.value)}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setIsDeadlineModalOpen(false)}
+                  className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddDeadline}
+                  className="flex-1 py-4 bg-[#82A7A6] text-white font-bold rounded-2xl hover:bg-[#6B8A89] shadow-lg shadow-[#82A7A6]/20 transition-all active:scale-95"
+                >
+                  Save Deadline
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
