@@ -589,15 +589,15 @@ export default function DashboardClient({
                 }`}
               >
                 {hasTargets
-                  ? "Add Another University"
-                  : "Add Universities to Start"}
+                  ? "+ Add Another University"
+                  : "+ Add Universities to Start"}
               </button>
-              <button
+              {/* <button
                 onClick={handleLogout}
                 className="px-4 py-3 text-sm font-bold text-black rounded-xl transition-all hover:scale-105 active:scale-95"
               >
                 Sign Out
-              </button>
+              </button> */}
             </div>
           </div>
         </header>
@@ -751,8 +751,7 @@ export default function DashboardClient({
             {/* 1. Unscheduled Courses */}
             {initialUnassigned.length > 0 && (
               <CollapsibleSection
-                title="Needs Scheduling"
-                icon={() => <span className="text-xl">⚠️</span>}
+                title="⚠️ WARNING ⚠️"
               >
                 <div className="space-y-4">
                   <p className="text-slate-500 text-sm font-medium">

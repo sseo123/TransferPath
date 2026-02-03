@@ -1,19 +1,22 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { ChevronRight, CheckCircle2 } from "lucide-react";
+import { ChevronRight, CheckCircle2, Pencil, CheckSquare, Square, ChevronDown, LayoutDashboard, GraduationCap} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const universities = [
   { name: "UC Berkeley", logo: "/ucblogo.png" },
   { name: "UCLA", logo: "/uclalogo.png" },
-  { name: "Columbia University", logo: "/columbiaa.png" },
-  { name: "Stanford", logo: "/stanford.png" },
-  { name: "Cornell", logo: "/corn.png" },
-  { name: "UCSD", logo: "/ucsd.png" },
+  // { name: "Columbia University", logo: "/columbiaa.png" },
+  // { name: "Stanford", logo: "/stanford.png" },
+  // { name: "Cornell", logo: "/corn.png" },
+  { name: "UC San Diego", logo: "/ucsd.png" },
   { name: "UC Irvine", logo: "/uci.png" },
   { name: "UC Davis", logo: "/ucd.png" },
-  { name: "UCSB", logo: "/ucsb.png" },
+  { name: "UC Santa Barbara", logo: "/ucsb.png" },
+  { name: "UC Riverside", logo: "/ucr.png" },
+  { name: "UC Santa Cruz", logo: "/ucsc1.png" },
+  { name: "UC Merced", logo: "/ucm1.png" },
   { name: "SJSU", logo: "/sjsu.png" },
 ];
 
@@ -135,246 +138,179 @@ export default function App() {
             </div>
           </div>
 
-          {/* THE LAPTOP MOCKUP (REPLICATING DASHBOARD) */}
-          <div
-            className={`relative mx-auto max-w-5xl transition-all duration-1000 delay-200 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-            style={{
-              transform: heroVisible
-                ? `translateY(${scrollY * 0.02}px)`
-                : "translateY(40px)",
-            }}
-          >
-            <div className="relative bg-slate-900 rounded-t-2xl p-2 shadow-2xl border-x border-t border-slate-700">
-              {/* Window Controls */}
-              <div className="flex gap-1.5 mb-2 px-2">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
+{/* THE LAPTOP MOCKUP (REPLICATING DASHBOARD) */}
+<div 
+  className={`relative mx-auto max-w-6xl transition-all duration-1000 delay-200 ${
+    heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
+  }`}
+  style={{
+    transform: heroVisible
+      ? `translateY(${scrollY * 0.02}px)`
+      : "translateY(40px)",
+  }}
+>
+  
+  {/* 1. LAPTOP SCREEN/BEZEL */}
+  <div className="relative rounded-[1.5rem] bg-[#0F172A] p-3 shadow-2xl border-[1px] border-slate-700">
+    
+    {/* Camera/Notch Area */}
+    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-28 h-5 bg-[#0F172A] rounded-b-xl z-20 flex justify-center items-center gap-2">
+      <div className="w-1.5 h-1.5 rounded-full bg-slate-800" />
+      <div className="w-1 h-1 rounded-full bg-blue-900/50" />
+    </div>
+
+    {/* The Dashboard Content (The Screen) */}
+    <div className="relative bg-white rounded-xl overflow-hidden flex min-h-[600px] h-[700px]">
+      
+      {/* Left Sidebar */}
+      <div className="w-52 border-r border-gray-100 p-6 flex flex-col justify-between shrink-0 bg-white">
+        <div className="space-y-6">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold text-slate-800">Transfer<span className="text-[#82A7A6]">Path</span></h1>
+            <ChevronDown size={16} className="text-gray-400" />
+          </div>
+          <nav className="space-y-2 mt-8">
+            <div className="flex items-center gap-3 bg-[#82A7A6]/15 text-[#82A7A6] px-3 py-2.5 rounded-lg font-semibold text-sm">
+              <LayoutDashboard size={18} /> Dashboard
+            </div>
+            <div className="flex items-center gap-3 text-gray-400 px-3 py-2.5 font-semibold text-sm hover:text-gray-600 transition-colors cursor-pointer">
+              <GraduationCap size={18} /> Universities
+            </div>
+          </nav>
+        </div>
+        <div className="text-red-500 font-semibold text-sm flex items-center gap-2 cursor-pointer mt-auto hover:text-red-600 transition-colors">
+          Sign Out
+        </div>
+      </div>
+
+      {/* Main Dashboard Content */}
+      <div className="flex-1 bg-[#F9FBFA] p-8">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-slate-900">Welcome!</h2>
+            <div className="flex items-center gap-2 mt-1">
+              <p className="text-gray-500 text-sm">Here is your transfer plan</p>
+              <span className="bg-[#D1E7E6] text-[#4A6B6A] text-[10px] px-2 py-0.5 rounded-md font-semibold">Saved to Cloud</span>
+            </div>
+          </div>
+          <button className="bg-[#82A7A6] text-white px-4 py-2.5 rounded-lg font-semibold text-sm shadow-sm hover:bg-[#6d8d8c] transition-all">
+            + Add Another University
+          </button>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-4 gap-3 mb-6">
+          {[
+            { label: "Expected Completion", val: "Summer 2028", icon: "📅" },
+            { label: "Progress", val: "0%", icon: "📈" },
+            { label: "Total Units", val: "52", icon: "🎯" },
+            { label: "Your Current College", val: "Community College", icon: "" },
+          ].map((card, i) => (
+            <div key={i} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
+              <div className="flex justify-between items-start mb-3">
+                <span className="text-2xl">{card.icon}</span>
+                <span className="text-xl font-bold text-slate-900">{card.val}</span>
               </div>
+              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">{card.label}</p>
+            </div>
+          ))}
+        </div>
 
-              {/* Screen Content */}
-              <div className="bg-[#F8F9FA] rounded-lg overflow-hidden border border-slate-200 aspect-[16/10] relative">
-                <div className="absolute inset-0 p-6 overflow-hidden">
-                  <div className="flex justify-between items-start mb-8">
-                    <div>
-                      <h2 className="text-3xl font-black text-slate-900 tracking-tight">
-                        Welcome!
-                      </h2>
-                      <p className="text-sm text-slate-500 font-medium mt-1">
-                        Here is your transfer plan
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <button className="px-5 py-2 bg-[#82A7A6] text-white text-xs font-bold rounded-lg shadow-sm hover:bg-[#6d8d8c] transition-colors">
-                        Edit Plan
-                      </button>
-                      <button className="text-xs font-bold text-slate-900 hover:text-slate-600">
-                        Sign Out
-                      </button>
-                    </div>
+        {/* Timeline and Sidebar Row */}
+        <div className="flex gap-4">
+          <div className="flex-1 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold text-slate-900">Your Strategic Timeline</h3>
+              <button className="flex items-center gap-2 bg-[#82A7A6] text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-[#6d8d8c] transition-all">
+                <Pencil size={14} /> Edit Plan
+              </button>
+            </div>
+
+            <div className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50/30 flex flex-col h-full">
+              <div className="bg-gray-50 px-4 py-3 flex justify-between items-center border-b border-gray-200">
+                <div className="flex items-center gap-3">
+                  <ChevronDown size={18} className="text-gray-400" />
+                  <span className="font-bold text-slate-800 text-sm">Fall 2026</span>
+                  <span className="text-gray-400 text-xs">· 15 Units</span>
+                </div>
+                <div className="w-5 h-5 rounded border-2 border-gray-300 bg-white" />
+              </div>
+              
+              <div className="divide-y divide-gray-100 bg-white flex-1 overflow-y-auto">
+                {[
+                  { code: 'CHEM-120', title: 'General Chemistry I', units: '3', tags: ['UCB', 'UCLA'] },
+                  { code: 'MATH-192', title: 'Calculus I', units: '4', tags: ['UCB', 'UCSD', 'UCD', '+2 more'] },
+                  { code: 'ENGL-C1000', title: 'Academic Reading and Writing', units: '3', tags: ['UCB', 'UCD', 'UCLA', '+1 more'] },
+                  { code: 'COMSC-140', title: 'Python Programming', units: '3', tags: ['UCB'] },
+                  { code: 'PHYS-129', title: 'Mechanics', units: '3', tags: ['UCB', 'UCLA', 'UCSD'] }
+                ].map((course) => (
+                  <div key={course.code} className="px-4 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
+                     <div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-slate-900 text-sm">{course.code}</span>
+                          {course.tags.map((tag, i) => (
+                            <span key={i} className={`${tag.startsWith('+') ? 'bg-gray-200 text-gray-600' : 'bg-[#82A7A6] text-white'} text-[9px] px-1.5 py-0.5 rounded font-bold uppercase`}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-0.5">{course.title}</p>
+                     </div>
+                     <span className="font-bold text-slate-700 text-xs uppercase tracking-wide">{course.units} UNITS</span>
                   </div>
-                  {/* Top Row: Stats Cards */}
-                  <div className="grid grid-cols-4 gap-3 mb-6">
-                    {[
-                      {
-                        label: "Expected Completion",
-                        val: "Fall 2027",
-                      },
-                      { label: "Progress", val: "14%" },
-                      { label: "Total Units", val: "65" },
-                    ].map((card, i) => (
-                      <div
-                        key={i}
-                        className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col justify-between h-24"
-                      >
-                        <div className="flex justify-between items-start">
-                          <span className="font-bold text-slate-800 text-sm">
-                            {card.val}
-                          </span>
-                        </div>
-                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">
-                          {card.label}
-                        </p>
-                      </div>
-                    ))}
-                    {/* Quote Card */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-3 flex flex-col justify-center h-24 relative overflow-hidden">
-                      <span className="absolute top-1 left-2 text-red-400 text-xs"></span>
-                      <p className="text-[8px] text-slate-600 italic leading-tight px-1">
-                        &quot;Success is not final, failure is not fatal: it is
-                        the courage to continue that counts.&quot;
-                      </p>
-                      <p className="text-[7px] text-slate-400 mt-1 self-end">
-                        — Winston Churchill
-                      </p>
-                    </div>
-                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                  {/* Main Layout: Timeline & Sidebar */}
-                  <div className="flex gap-4 items-start ">
-                    {/* Timeline Area */}
-                    <div className="flex-1 bg-white rounded-3xl border border-slate-100 shadow-sm p-5">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-sm font-black text-slate-800">
-                          Your Strategic Timeline
-                        </h3>
-                        <button className="px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-[9px] font-bold text-slate-600 hover:bg-slate-100 transition-colors">
-                          Add Term
-                        </button>
-                      </div>
-
-                      {/* Spring 2026 Semester */}
-                      <div className="rounded-2xl border border-slate-100 overflow-hidden">
-                        <div className="bg-slate-50/50 px-4 py-3 flex justify-between items-center border-b border-slate-100">
-                          <div className="flex items-center gap-2">
-                            <ChevronRight
-                              size={12}
-                              className="text-slate-400 rotate-90"
-                            />
-                            <span className="text-xs font-bold text-slate-700">
-                              Spring 2026
-                            </span>
-                            <span className="text-[10px] text-slate-400 font-medium ml-2">
-                              12 Units
-                            </span>
-                          </div>
-                          <div className="w-3.5 h-3.5 rounded border border-slate-300" />
-                        </div>
-
-                        <div className="p-2 space-y-1">
-                          {/* Course: COMSC-110 */}
-                          <div className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors">
-                            <div>
-                              <div className="text-[10px] font-black text-slate-800">
-                                COMSC-110
-                              </div>
-                              <div className="text-[8px] text-slate-400">
-                                Intro to Programming
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-[7px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">
-                                UCB
-                              </span>
-                              <span className="text-[9px] font-black text-slate-800">
-                                4 UNITS
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Course: ENGL-122 */}
-                          <div className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors border-t border-slate-50">
-                            <div>
-                              <div className="text-[10px] font-black text-slate-800">
-                                ENGL-122
-                              </div>
-                              <div className="text-[8px] text-slate-400">
-                                English Composition
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-[7px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">
-                                UCB
-                              </span>
-                              <span className="text-[9px] font-black text-slate-800">
-                                3 UNITS
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Course: MATH-192 */}
-                          <div className="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors border-t border-slate-50">
-                            <div>
-                              <div className="text-[10px] font-black text-slate-800">
-                                MATH-192
-                              </div>
-                              <div className="text-[8px] text-slate-400">
-                                Calculus I
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <div className="flex gap-1">
-                                <span className="text-[7px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">
-                                  UCLA
-                                </span>
-                                <span className="text-[7px] font-bold px-1.5 py-0.5 bg-slate-100 text-slate-500 rounded uppercase">
-                                  UCSD
-                                </span>
-                              </div>
-                              <span className="text-[9px] font-black text-slate-800">
-                                5 UNITS
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="rounded-2xl border border-slate-100 bg-white opacity-50 overflow-hidden">
-                        <div className="px-5 py-4 flex justify-between items-center bg-slate-50/10">
-                          <div className="flex items-center gap-3">
-                            <ChevronRight
-                              size={14}
-                              className="text-slate-300"
-                            />
-                            <span className="text-sm font-bold text-slate-400 line-through">
-                              Summer 2026
-                            </span>
-                            <span className="text-xs text-slate-300 font-medium ml-2 italic">
-                              9 Units
-                            </span>
-                          </div>
-                          <div className="text-[#82A7A6]">✓</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Sidebar: Remaining Unscheduled */}
-                    <div className="w-52 flex flex-col gap-4">
-                      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
-                        <div className="flex items-start gap-2 mb-2">
-                          <span className="text-xs mt-0.5">⚠️</span>
-                          <div>
-                            <h4 className="text-[10px] font-black text-slate-800 leading-tight">
-                              Remaining Unscheduled Courses
-                            </h4>
-                            <p className="text-[8px] text-slate-400 mt-1">
-                              2 courses not yet scheduled
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-2 mt-4">
-                          <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
-                            <span className="text-[9px] font-bold text-slate-700">
-                              MATH-292
-                            </span>
-                            <span className="text-[7px] text-slate-400 font-bold">
-                              5 units
-                            </span>
-                          </div>
-                          <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
-                            <span className="text-[9px] font-bold text-slate-700">
-                              ENGL-C1000
-                            </span>
-                            <span className="text-[7px] text-slate-400 font-bold">
-                              3 units
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          <div className="w-72 space-y-3 shrink-0">
+            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
+              <div className="flex justify-between items-center mb-4">
+                 <div className="flex items-center gap-2 font-bold text-sm">
+                   <CheckSquare size={16}/> IGETC
+                 </div>
+                 <div className="flex items-center gap-1 bg-white/20 px-2.5 py-1 rounded-md text-[10px] font-bold">
+                   3/7 <ChevronRight size={12}/>
+                 </div>
+              </div>
+            </div>
+            
+            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2 font-bold text-sm">
+                  <CheckSquare size={16}/> 7-Course Pattern
+                </div>
+                <div className="flex items-center gap-1 bg-white/20 px-2.5 py-1 rounded-md text-[10px] font-bold">
+                  1/5 <ChevronRight size={12}/>
                 </div>
               </div>
             </div>
 
-            {/* Laptop Base */}
-            <div
-              className="relative h-3 bg-slate-300 rounded-b-xl mx-auto shadow-inner"
-              style={{ width: "105%", marginLeft: "-2.5%" }}
-            />
+            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
+              <div className="flex items-center gap-2 font-bold text-sm mb-3">
+                <span className="text-lg">📅</span> Important Deadlines
+              </div>
+              <p className="text-xs text-white/60 italic text-center py-4">No deadlines added</p>
+              <button className="w-full mt-2 text-xs font-semibold text-white/80 hover:text-white transition-colors">
+                + Add New Deadline
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  {/* 2. LAPTOP BASE */}
+  <div className="relative w-[104%] -left-[2%] h-4 bg-slate-300 rounded-b-2xl shadow-xl">
+    <div className="absolute top-0 inset-x-0 h-[2px] bg-white/30" />
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-2 bg-slate-400/50 rounded-b-lg" />
+  </div>
+</div>
+        </div>
       </section>
+
 
       {/* 3. KEEPING YOUR UNIVERSITIES SECTION WITH ANIMATION */}
       <div
@@ -385,7 +321,7 @@ export default function App() {
           <p
             className={`mb-12 text-center text-2xl font-bold uppercase tracking-[0.3em] text-black transition-all duration-700 ${universitiesVisible ? "opacity-100" : "opacity-0 translate-y-4"}`}
           >
-            Featuring 50+ universities
+            Featuring all UC's and more!
           </p>
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-10 md:gap-x-20">
             {universities.map((uni, i) => (
@@ -507,7 +443,7 @@ export default function App() {
             Start planning your transfer today
           </h2>
           <p className="text-xl text-gray-700 mb-10 max-w-2xl mx-auto font-medium">
-            Join thousands of students who&apos;ve successfully transferred
+            Join hundreds of students who&apos;ve successfully transfered
             using TransferPath.
           </p>
           <button

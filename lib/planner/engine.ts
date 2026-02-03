@@ -110,7 +110,7 @@ export function planningEngine(
     };
 
     let currentUnits = 0;
-    let addedAnyThisSemester = false; // <--- ADD THIS TRACKER
+    let addedAnyThisSemester = false;
 
     // Check each required node against the catalog and current completion status
     for (const { node, origins } of totalRequiredNodes) {
