@@ -17,7 +17,7 @@ const universities = [
   { name: "UC Riverside", logo: "/ucr.png" },
   { name: "UC Santa Cruz", logo: "/ucsc1.png" },
   { name: "UC Merced", logo: "/ucm1.png" },
-  { name: "SJSU", logo: "/sjsu.png" },
+  // { name: "SJSU", logo: "/sjsu.png" },
 ];
 
 function useScrollAnimation() {

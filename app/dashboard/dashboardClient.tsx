@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { logout, markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
-import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Calendar, Trash2, } from "lucide-react";
+import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Calendar, Trash2, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
@@ -106,63 +106,6 @@ function SemesterAccordionItem({
     </div>
   );
 }
-
-// function RowItem({
-//   course,
-//   isCompleted = false,
-// }: {
-//   course: PlannedCourse;
-//   isCompleted?: boolean;
-// }) {
-//   const getBadgeStyle = (code: string) => {
-//     return "bg-[#7ca1ad] text-white text-[10px] font-bold uppercase tracking-wider rounded-full";
-//   };
-
-//   return (
-//     <div className="group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-colors cursor-pointer">
-//       <div className="flex flex-col gap-1">
-//         <span
-//           className={`text-lg font-bold leading-tight ${isCompleted ? "line-through text-slate-400" : "text-slate-900"}`}
-//         >
-//           {course.localCode}
-//         </span>
-//         <span
-//           className={`font-medium ${isCompleted ? "line-through text-slate-400" : "text-slate-500"}`}
-//         >
-//           {course.title}
-//         </span>
-//       </div>
-
-//       <div className="flex items-center gap-4">
-//         {/* Badges */}
-//         <div className="flex gap-2">
-//           {course.isCritical &&
-//             // Show specific university requirements
-//             (course.requiredBy && course.requiredBy.length > 0 ? (
-//               course.requiredBy.map((uni) => (
-//                 <span
-//                   key={uni}
-//                   className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full border ${getBadgeStyle(
-//                     uni,
-//                   )}`}
-//                 >
-//                   {uni}
-//                 </span>
-//               ))
-//             ) : (
-//               <span className="px-3 py-1 bg-teal-100 text-teal-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-teal-200">
-//                 Required
-//               </span>
-//             ))}
-
-//           <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full">
-//             {course.units} Units
-//           </span>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 function RowItem({
   course,
@@ -503,6 +446,34 @@ export default function DashboardClient({
     );
   }
 
+  const handleDownloadCSV = () => {
+    const headers = ["Semester", "Course Code", "Course Title", "Units", "Status"];
+    
+    const rows = initialSemesters.flatMap((semester) =>
+      semester.courses.map((course) => [
+        semester.name,
+        `"${course.localCode}"`,
+        `"${course.title}"`,
+        course.units,
+        completedSemesters.has(semester.name) ? "Completed" : "Planned"
+      ])
+    );
+
+    const csvContent = [headers, ...rows]
+      .map((e) => e.join(","))
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `${dbUser.firstName}_Transfer_Plan.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalUnits = initialSemesters.reduce((acc, semester) => {
     return (
       acc + semester.courses.reduce((sum, course) => sum + course.units, 0)
@@ -527,7 +498,7 @@ export default function DashboardClient({
       : "TBD";
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-blue">
       {showConfetti && (
         <Confetti
           width={typeof window !== "undefined" ? window.innerWidth : 0}
@@ -581,6 +552,13 @@ export default function DashboardClient({
 
             <div className="flex items-center gap-4">
               <button
+                onClick={handleDownloadCSV}
+                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-white border border-slate-200 text-slate-700 rounded-xl shadow-sm transition-all hover:bg-slate-50 hover:scale-105 active:scale-95"
+              >
+                <Download size={18} />
+                Download CSV
+              </button>
+              <button
                 onClick={handleTopRightAction}
                 className={`px-4 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl ${
                   hasTargets
@@ -592,12 +570,6 @@ export default function DashboardClient({
                   ? "+ Add Another University"
                   : "+ Add Universities to Start"}
               </button>
-              {/* <button
-                onClick={handleLogout}
-                className="px-4 py-3 text-sm font-bold text-black rounded-xl transition-all hover:scale-105 active:scale-95"
-              >
-                Sign Out
-              </button> */}
             </div>
           </div>
         </header>
@@ -670,9 +642,9 @@ export default function DashboardClient({
           </div>
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-9 bg-slate-50 rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
+          <div className="lg:col-span-9 bg-[#82A7A6] rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
             <div className="flex justify-between items-center mb-8 px-2">
-              <h2 className="text-2xl font-bold text-slate-800">
+              <h2 className="text-3xl font-bold text-white">
                 Your Strategic Timeline
               </h2>
               <button
@@ -695,6 +667,19 @@ export default function DashboardClient({
                   </>
                 )}
               </button>
+            </div>
+            <div className="mb-6 px-2">
+              <p className="text-sm text-white font-medium flex items-center gap-1">
+                Always feel free to double-check your course articulations on
+                <a
+                  href="https://assist.org" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-black font-bold hover:underline decoration-2"
+                >
+                  assist.org
+                </a>
+              </p>
             </div>
             <div className="flex flex-col">
               {hasTargets ? (
@@ -729,10 +714,10 @@ export default function DashboardClient({
                   <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
                     <GraduationCap size={32} />
                   </div>
-                  <h3 className="text-lg font-bold text-slate-800">
+                  <h3 className="text-lg font-bold text-white">
                     No universities targeted yet
                   </h3>
-                  <p className="text-slate-500 max-w-xs mt-2 mb-6">
+                  <p className="text-white max-w-xs mt-2 mb-6">
                     Select your target colleges so we can build your
                     requirements.
                   </p>
