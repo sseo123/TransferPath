@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, GraduationCap, Plus } from "lucide-react";
+import { X, GraduationCap, Plus, School } from "lucide-react";
 import AddTargetModal from "./addTargetModal";
 import { removeTargetCollege } from "../actions";
 
@@ -71,7 +71,7 @@ export default function UniversitiesClient({
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-[#82a79d] rounded-xl flex items-center justify-center flex-shrink-0">
-              <GraduationCap size={24} className="text-white" />
+              <School size={24} className="text-white" />
             </div>
             <div>
               <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
@@ -85,8 +85,8 @@ export default function UniversitiesClient({
         </div>
 
         {/* Gray Background Wrapper */}
-        <div className="bg-[#f8fafc] rounded-3xl border border-slate-200 p-8">
-          <h2 className="text-2xl font-bold text-slate-800 mb-6">
+        <div className="bg-[#82a79d] rounded-3xl border border-slate-200 p-8">
+          <h2 className="text-3xl font-bold text-white mb-15">
             Your Universities
           </h2>
 

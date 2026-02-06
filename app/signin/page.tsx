@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { login } from "./actions";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -10,7 +10,14 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-6 font-sans">
-      <div className="w-full max-w-[480px] bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-12 text-center">
+      <div className="w-full max-w-[480px] bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-12 text-center relative">
+        <Link 
+          href="/" 
+          className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-slate-600 transition-colors text-sm font-semibold group"
+        >
+          <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
+          Back
+        </Link>
         <div className="flex flex-col items-center mb-10">
           <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4">
             <GraduationCap className="w-6 h-6 text-[#82A7A6]" />
