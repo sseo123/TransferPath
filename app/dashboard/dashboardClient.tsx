@@ -32,7 +32,6 @@ interface DashboardClientProps {
   targetCount: number;
   initialIgetcTasks: any[] | null;
   initialPatternTasks: any[] | null;
-  initialDeadlines: { id: string; title: string; date: string }[];
 }
 
 // ... (SemesterAccordionItem remains same)
@@ -130,7 +129,7 @@ function CollapsibleSection({
   icon?: any;
   variant?: "default" | "warning";
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   
   const bgClass = variant === "warning" ? "bg-amber-400 hover:bg-amber-500" : "bg-[#82A7A6] hover:bg-[#6B8A89]";
   const textClass = variant === "warning" ? "text-amber-950" : "text-white";
@@ -179,7 +178,6 @@ export default function DashboardClient({
   targetCount,
   initialIgetcTasks,
   initialPatternTasks,
-  initialDeadlines,
 }: DashboardClientProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [completedSemesters, setCompletedSemesters] = useState<Set<string>>(
@@ -224,11 +222,6 @@ export default function DashboardClient({
     ],
   );
 
-  const [deadlines, setDeadlines] = useState<
-    { id: string; title: string; date: string }[]
-  >(initialDeadlines ?? []);
-
-  const [showDeadlineModal, setShowDeadlineModal] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Security: Debounced Database Synchronization
@@ -244,7 +237,6 @@ export default function DashboardClient({
         await syncUserData({
           igetcTasks: igetcTasks2,
           patternTasks: patternTasks1,
-          deadlines: deadlines,
         });
       } catch (error) {
         console.error("Sync failed:", error);
@@ -254,39 +246,18 @@ export default function DashboardClient({
     }, 1500); // 1.5s debounce
 
     return () => clearTimeout(timer);
-  }, [igetcTasks2, patternTasks1, deadlines, isHydrated]);
+  }, [igetcTasks2, patternTasks1, isHydrated]);
 
-  const [isDeadlineModalOpen, setIsDeadlineModalOpen] = useState(false);
-  const [newDeadlineTitle, setNewDeadlineTitle] = useState("");
-  const [newDeadlineDate, setNewDeadlineDate] = useState("");
-
-  const handleAddDeadline = () => {
-    if (newDeadlineTitle && newDeadlineDate) {
-      // Limit title to roughly 10 words
-      const limitedTitle = newDeadlineTitle.split(" ").slice(0, 10).join(" ");
-
-      setDeadlines([
-        ...deadlines,
-        {
-          id: Date.now().toString(),
-          title: limitedTitle,
-          date: newDeadlineDate,
-        },
-      ]);
-
-      // Reset and Close
-      setNewDeadlineTitle("");
-      setNewDeadlineDate("");
-      setIsDeadlineModalOpen(false);
+  const handleToggleTask = (id: string, type: "igetc" | "pattern") => {
+    if (type === "igetc") {
+      setIgetcTasks2((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+      );
+    } else {
+      setPatternTasks1((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+      );
     }
-  };
-
-  // Helper to toggle checkboxes
-  const toggleTask = (id: string, type: "igetc" | "pattern") => {
-    const setter = type === "igetc" ? setIgetcTasks2 : setPatternTasks1;
-    setter((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-    );
   };
 
   useEffect(() => {
@@ -730,7 +701,7 @@ export default function DashboardClient({
                   <div
                     key={task.id}
                     className="flex items-center gap-3 cursor-pointer group"
-                    onClick={() => toggleTask(task.id, "igetc")}
+                    onClick={() => handleToggleTask(task.id, "igetc")}
                   >
                     {task.completed ? (
                       <CheckSquare
@@ -778,7 +749,7 @@ export default function DashboardClient({
                   <div
                     key={task.id}
                     className="flex items-center gap-3 cursor-pointer group"
-                    onClick={() => toggleTask(task.id, "pattern")}
+                    onClick={() => handleToggleTask(task.id, "pattern")}
                   >
                     {task.completed ? (
                       <CheckSquare
@@ -814,116 +785,11 @@ export default function DashboardClient({
                 </div>
               </div>
             </CollapsibleSection>
-
-            {/* 4. Deadlines Section */}
-            <CollapsibleSection
-              title="Important Deadlines"
-              icon={Calendar}
-              count={deadlines.length > 0 ? deadlines.length : undefined}
-            >
-              <div className="space-y-3">
-                {deadlines.length === 0 ? (
-                  <p className="text-sm text-slate-400 italic text-center py-2">
-                    No deadlines added
-                  </p>
-                ) : (
-                  deadlines.map((d) => (
-                    <div
-                      key={d.id}
-                      className="flex items-center justify-between group bg-slate-50 p-3 rounded-xl border border-slate-100"
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-slate-700 leading-tight">
-                          {d.title}
-                        </span>
-                        <span className="text-xs text-slate-400 mt-1">
-                          {d.date}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() =>
-                          setDeadlines(
-                            deadlines.filter((item) => item.id !== d.id),
-                          )
-                        }
-                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-red-50 rounded-md"
-                      >
-                        <Trash2 size={14} className="text-red-400" />
-                      </button>
-                    </div>
-                  ))
-                )}
-
-                {/* THIS IS THE TRIGGER BUTTON */}
-                <button
-                  onClick={() => setIsDeadlineModalOpen(true)}
-                  className="w-full py-3 border border-dashed border-slate-200 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 hover:border-slate-300 transition-all"
-                >
-                  + Add New Deadline
-                </button>
-              </div>
-            </CollapsibleSection>
           </div>
         </div>
       </div>
 
-      {isDeadlineModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-md transition-opacity animate-in fade-in duration-300"
-            onClick={() => setIsDeadlineModalOpen(false)}
-          />
-
-          <div className="relative bg-white rounded-[32px] shadow-2xl w-full max-w-md p-8 border border-slate-100 animate-in fade-in zoom-in duration-200">
-            <h3 className="text-2xl font-black text-slate-800 mb-6 tracking-tight">
-              Add New Deadline
-            </h3>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1">
-                  What is the deadline for? (Max 10 words)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., UC TAG Deadline"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6] focus:border-transparent transition-all font-medium"
-                  value={newDeadlineTitle}
-                  onChange={(e) => setNewDeadlineTitle(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1">
-                  When is it due?
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g., November 30, 2026"
-                  className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6] focus:border-transparent transition-all font-medium"
-                  value={newDeadlineDate}
-                  onChange={(e) => setNewDeadlineDate(e.target.value)}
-                />
-              </div>
-
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setIsDeadlineModalOpen(false)}
-                  className="flex-1 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddDeadline}
-                  className="flex-1 py-4 bg-[#82A7A6] text-white font-bold rounded-2xl hover:bg-[#6B8A89] shadow-lg shadow-[#82A7A6]/20 transition-all active:scale-95"
-                >
-                  Save Deadline
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal code for deadlines removed */}
     </div>
   );
 }

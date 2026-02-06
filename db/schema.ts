@@ -79,3 +79,24 @@ export const customCoursesTable = sqliteTable("custom_courses", {
   requiredBy: text("required_by"), // JSON array of university codes (optional)
   createdAt: integer("created_at", { mode: "timestamp" }),
 });
+
+export const calendarTasksTable = sqliteTable("calendar_tasks", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  title: text("title").notNull(),
+  date: text("date").notNull(), // ISO date string YYYY-MM-DD
+  type: text("type", { enum: ["homework", "deadline", "other"] }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+});
+
+export const calendarNotesTable = sqliteTable("calendar_notes", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  content: text("content").notNull(),
+  date: text("date").notNull(), // ISO date string YYYY-MM-DD
+  createdAt: integer("created_at", { mode: "timestamp" }).defaultNow(),
+});

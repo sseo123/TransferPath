@@ -46,6 +46,37 @@ function useScrollAnimation() {
   return [ref, isVisible] as const;
 }
 
+const Logo = () => {
+  const handleRefresh = () => {
+    window.location.href = "/";
+  };
+
+  return (
+    <div 
+      onClick={handleRefresh} 
+      className="flex items-center gap-2.5 cursor-pointer group select-none"
+    >
+      <div className="relative w-9 h-9 border-[2.5px] border-[#82A7A6] rounded-xl flex items-center justify-center overflow-hidden transition-transform group-hover:scale-105 group-active:scale-95">
+        <svg 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="#82A7A6" 
+          strokeWidth="3.5" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          className="w-5 h-5 translate-y-[-1px]"
+        >
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        <div className="absolute bottom-1.5 w-4 h-[2.5px] bg-[#82A7A6] rounded-full" />
+      </div>
+      <span className="text-xl font-bold text-black tracking-tight">
+        Transfer<span className="text-[#82A7A6]">Path</span>
+      </span>
+    </div>
+  );
+};
+
 export default function App() {
   const [email, setEmail] = useState("");
   const [scrollY, setScrollY] = useState(0);
@@ -72,12 +103,7 @@ export default function App() {
       {/* 1. KEEPING YOUR HEADBAR */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-5">
-          <h1
-            onClick={() => router.push("/")}
-            className="text-xl font-bold text-black tracking-tight cursor-pointer"
-          >
-            Transfer<span className="text-[#82A7A6]">Path</span>
-          </h1>
+          <Logo />
           <div className="flex items-center gap-8">
             <button
               onClick={handleSignIn}
@@ -97,7 +123,7 @@ export default function App() {
 
       {/* 2. HERO SECTION WITH PAGE STRUCTURE & LAPTOP */}
       <section
-        className="relative pt-32 pb-20 px-10"
+        className="relative pt-32 pb-20 px-10 mt-10"
         style={{
           background:
             "linear-gradient(0deg, rgba(130, 167, 166, 0.15) 0%, rgba(255, 255, 255, 1) 50%)",
@@ -348,20 +374,20 @@ export default function App() {
       </div>
 
       {/* 4. BUILT FOR CALIFORNIA STUDENTS SECTION */}
-      <section ref={detailsRef} className="py-24 px-10 bg-[#FAF9F6]">
+      <section ref={detailsRef} className="py-24 px-10 bg-[#82A7A6]">
         <div className="mx-auto max-w-[1440px]">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div
               className={`transition-all duration-1000 ${detailsVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"}`}
             >
-              <h2 className="text-5xl font-bold mb-6 leading-tight text-gray-900">
-                Built for <span className="text-[#82A7A6]">California</span>
+              <h2 className="text-5xl font-bold mb-6 leading-tight text-white">
+                Built for <span className="text-yellow-300">California</span>
                 <br />
                 community college
                 <br />
                 students
               </h2>
-              <p className="text-xl text-gray-500 leading-relaxed max-w-lg">
+              <p className="text-xl text-white leading-relaxed max-w-lg">
                 Navigate the complex UC, CSU, and private university transfer
                 requirements with trustworthy course planning and real-time
                 articulation data.

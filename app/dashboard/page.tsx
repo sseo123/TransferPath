@@ -253,7 +253,6 @@ export default async function Dashboard() {
       targetCount={targetCount}
       initialIgetcTasks={initialIgetcTasks}
       initialPatternTasks={initialPatternTasks}
-      initialDeadlines={initialDeadlines}
     />
   );
 }

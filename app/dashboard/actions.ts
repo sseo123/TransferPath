@@ -4,8 +4,8 @@ import { getLucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDb } from "@/lib/db";
-import { studentPlansTable, userTable, completedSemestersTable, completedCoursesTable, customCoursesTable } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
+import { studentPlansTable, userTable, completedSemestersTable, completedCoursesTable, customCoursesTable, calendarTasksTable, calendarNotesTable } from "@/db/schema";
+import { eq, and, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { userTargetsTable } from "@/db/schema";
 
@@ -329,4 +329,98 @@ export async function getCompletedCourses(): Promise<string[]> {
     console.error("Error fetching completed courses:", error);
     return [];
   }
+}
+
+export async function getCalendarData() {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const db = await getDb();
+
+  const [tasks, notes] = await Promise.all([
+    db.select().from(calendarTasksTable).where(eq(calendarTasksTable.userId, user.id)).orderBy(desc(calendarTasksTable.createdAt)),
+    db.select().from(calendarNotesTable).where(eq(calendarNotesTable.userId, user.id)).orderBy(desc(calendarNotesTable.createdAt)),
+  ]);
+
+  return { tasks, notes };
+}
+
+export async function addCalendarTask(title: string, date: string, type: "homework" | "deadline" | "other") {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  // Security: Input Validation
+  if (!title || title.trim().length === 0 || title.length > 500) throw new Error("Invalid title");
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Invalid date format");
+  if (!["homework", "deadline", "other"].includes(type)) throw new Error("Invalid task type");
+
+  const db = await getDb();
+
+  const id = crypto.randomUUID();
+  await db.insert(calendarTasksTable).values({
+    id,
+    userId: user.id,
+    title: title.trim(),
+    date,
+    type,
+  });
+
+  revalidatePath("/dashboard");
+  return { id };
+}
+
+export async function deleteCalendarTask(id: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+  if (!id) throw new Error("Invalid ID");
+
+  const db = await getDb();
+
+  await db.delete(calendarTasksTable).where(
+    and(
+      eq(calendarTasksTable.id, id),
+      eq(calendarTasksTable.userId, user.id)
+    )
+  );
+
+  revalidatePath("/dashboard");
+}
+
+export async function addCalendarNote(content: string, date: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  // Security: Input Validation
+  if (!content || content.trim().length === 0 || content.length > 2000) throw new Error("Invalid content");
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new Error("Invalid date format");
+
+  const db = await getDb();
+
+  const id = crypto.randomUUID();
+  await db.insert(calendarNotesTable).values({
+    id,
+    userId: user.id,
+    content: content.trim(),
+    date,
+  });
+
+  revalidatePath("/dashboard");
+  return { id };
+}
+
+export async function deleteCalendarNote(id: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+  if (!id) throw new Error("Invalid ID");
+
+  const db = await getDb();
+
+  await db.delete(calendarNotesTable).where(
+    and(
+      eq(calendarNotesTable.id, id),
+      eq(calendarNotesTable.userId, user.id)
+    )
+  );
+
+  revalidatePath("/dashboard");
 }
