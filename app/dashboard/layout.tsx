@@ -3,13 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  GraduationCap,
-  ChevronLeft,
-  ChevronRight,
-  LogOut,
-} from "lucide-react";
+import { LayoutDashboard, GraduationCap, ChevronLeft, ChevronRight, LogOut, } from "lucide-react";
 import { logout } from "./actions";
 
 export default function DashboardLayout({

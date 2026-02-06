@@ -36,6 +36,13 @@
       "when": 1770055051232,
       "tag": "0004_soft_lyja",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1770347287125,
+      "tag": "0005_breezy_beast",
+      "breakpoints": true
     }
   ]
 }

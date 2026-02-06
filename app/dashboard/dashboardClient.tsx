@@ -8,13 +8,17 @@ import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, Pe
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
+import { calculateTotalUnits } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
+import CourseItem from "@/components/CourseItem";
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
   initialUnassigned: PlannedCourse[];
   initialCompletedCourses: PlannedCourse[];
+  initialCustomCourses: PlannedCourse[]; // NEW
   initialCompletedSemesters: string[];
+  targetUniversities: { name: string; code: string }[]; // NEW
 
   dbUser: {
     id: string;
@@ -31,6 +35,9 @@ interface DashboardClientProps {
   initialDeadlines: { id: string; title: string; date: string }[];
 }
 
+// ... (SemesterAccordionItem remains same)
+
+
 function SemesterAccordionItem({
   semester,
   isCompleted,
@@ -42,7 +49,7 @@ function SemesterAccordionItem({
   onToggleComplete: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(true);
-  const totalUnits = semester.courses.reduce((sum, c) => sum + c.units, 0);
+  const totalUnits = calculateTotalUnits(semester.courses);
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4">
@@ -93,9 +100,10 @@ function SemesterAccordionItem({
           ) : (
             <div className="divide-y divide-slate-100">
               {semester.courses.map((course, idx) => (
-                <RowItem
+                <CourseItem
                   key={`${course.canonicalId}-${idx}`}
                   course={course}
+                  variant="row"
                   isCompleted={isCompleted}
                 />
               ))}
@@ -107,102 +115,42 @@ function SemesterAccordionItem({
   );
 }
 
-function RowItem({
-  course,
-  isCompleted = false,
-}: {
-  course: PlannedCourse;
-  isCompleted?: boolean;
+function CollapsibleSection({ 
+  title, 
+  count, 
+  total, 
+  children, 
+  icon: Icon,
+  variant = "default"
+}: { 
+  title: string; 
+  count?: number; 
+  total?: number; 
+  children: React.ReactNode; 
+  icon?: any;
+  variant?: "default" | "warning";
 }) {
-  const getBadgeStyle = (code: string) => {
-    return "bg-[#7ca1ad] text-white text-[10px] font-bold uppercase tracking-wider rounded-full";
-  };
-
-  const allUnis = course.requiredBy || [];
-  const displayedUnis = allUnis.slice(0, 3);
-  const remainingUnis = allUnis.slice(3);
-  const remainingCount = remainingUnis.length;
-
-  return (
-    <div className="group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-colors cursor-pointer">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <span className={`text-lg font-bold leading-tight ${isCompleted ? "line-through text-slate-400" : "text-slate-900"}`}>
-            {course.localCode}
-          </span>
-
-          {course.isCritical && (
-            <div className="flex items-center gap-2">
-              <span className="text-slate-300 font-bold">·</span>
-              <div className="flex gap-1.5 items-center">
-                {allUnis.length > 0 ? (
-                  <>
-                    {displayedUnis.map((uni) => (
-                      <span key={uni} className={`px-2 py-0.5 border ${getBadgeStyle(uni)}`}>
-                        {uni}
-                      </span>
-                    ))}
-                    
-                    {remainingCount > 0 && (
-                      <div className="relative group/tooltip">
-                        <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full cursor-help">
-                          +{remainingCount} more
-                        </span>
-                        
-                        {/* Tooltip visible on hover */}
-                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:flex flex-col gap-1 bg-[#82A7A6] text-white p-2 rounded-lg shadow-xl z-50 min-w-[120px]">
-                          {remainingUnis.map(uni => (
-                            <span key={uni} className="text-[10px] font-bold border-b border-white/10 last:border-0 pb-1 last:pb-0">
-                              {uni}
-                            </span>
-                          ))}
-                          {/* Triangle pointer */}
-                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[#82A7A6]" />
-                        </div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-teal-200">
-                    Required
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <span className={`font-medium ${isCompleted ? "line-through text-slate-400" : "text-slate-500"}`}>
-          {course.title}
-        </span>
-      </div>
-
-      <div className="flex items-center gap-4">
-        <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full text-slate-500">
-          {course.units} Units
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function CollapsibleSection({ title, count, total, children, icon: Icon, }: any) {
   const [isOpen, setIsOpen] = useState(false);
+  
+  const bgClass = variant === "warning" ? "bg-amber-400 hover:bg-amber-500" : "bg-[#82A7A6] hover:bg-[#6B8A89]";
+  const textClass = variant === "warning" ? "text-amber-950" : "text-white";
+  const badgeClass = variant === "warning" ? "bg-amber-950/10 text-amber-950" : "bg-white/20 text-white";
+
   return (
-    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className={`bg-white rounded-3xl border shadow-sm overflow-hidden ${variant === "warning" ? "border-amber-200" : "border-slate-200"}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-6 bg-[#82A7A6] hover:bg-[#6B8A89] transition-colors text-white"
+        className={`w-full flex items-center justify-between p-6 transition-colors ${bgClass} ${textClass}`}
       >
         <div className="flex items-center gap-3 flex-1">
-          {Icon && <Icon size={24} className="text-white/80" />}
+          {Icon && <Icon size={24} className={variant === "warning" ? "text-amber-900/80" : "text-white/80"} />}
           <span className="font-bold text-xl tracking-tight">{title}</span>
         </div>
 
         <div className="flex items-center gap-4">
           {/* UPDATED LOGIC BELOW */}
           {count !== undefined && count > 0 && (
-            <span className="bg-white/20 text-white text-sm font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+            <span className={`text-sm font-bold px-2 py-1 rounded-full backdrop-blur-sm ${badgeClass}`}>
               {count}
               {total !== undefined ? `/${total}` : ""}
             </span>
@@ -224,7 +172,9 @@ export default function DashboardClient({
   initialSemesters,
   initialUnassigned,
   initialCompletedCourses,
+  initialCustomCourses,
   initialCompletedSemesters,
+  targetUniversities,
   dbUser,
   targetCount,
   initialIgetcTasks,
@@ -356,6 +306,8 @@ export default function DashboardClient({
           (s) => s.name === semesterName,
         );
         const allCoursesValid = semester.courses.every((course) => {
+          if (course.isCustom) return true;
+
           const catalogData = DVC_CATALOG.find(
             (c) => c.canonicalId === course.canonicalId,
           );
@@ -441,6 +393,8 @@ export default function DashboardClient({
         initialSemesters={initialSemesters}
         initialUnassigned={initialUnassigned}
         initialCompletedCourses={initialCompletedCourses}
+        initialCustomCourses={initialCustomCourses}
+        targetUniversities={targetUniversities}
         onExit={() => setIsEditing(false)}
       />
     );
@@ -474,20 +428,13 @@ export default function DashboardClient({
     document.body.removeChild(link);
   };
 
-  const totalUnits = initialSemesters.reduce((acc, semester) => {
-    return (
-      acc + semester.courses.reduce((sum, course) => sum + course.units, 0)
-    );
-  }, 0);
+  const totalUnits = calculateTotalUnits(initialSemesters.flatMap(s => s.courses));
 
-  const completedUnits = initialSemesters.reduce((acc, semester) => {
-    if (completedSemesters.has(semester.name)) {
-      return (
-        acc + semester.courses.reduce((sum, course) => sum + course.units, 0)
-      );
-    }
-    return acc;
-  }, 0);
+  const completedUnits = calculateTotalUnits(
+    initialSemesters
+      .filter(s => completedSemesters.has(s.name))
+      .flatMap(s => s.courses)
+  );
 
   const progressPercentage =
     totalUnits > 0 ? Math.round((completedUnits / totalUnits) * 100) : 0;
@@ -675,7 +622,7 @@ export default function DashboardClient({
                   href="https://assist.org" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-black font-bold hover:underline decoration-2"
+                  className="text-blue-600 font-bold hover:underline decoration-2"
                 >
                   assist.org
                 </a>
@@ -737,6 +684,7 @@ export default function DashboardClient({
             {initialUnassigned.length > 0 && (
               <CollapsibleSection
                 title="⚠️ WARNING ⚠️"
+                variant="warning"
               >
                 <div className="space-y-4">
                   <p className="text-slate-500 text-sm font-medium">

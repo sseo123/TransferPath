@@ -12,3 +12,5 @@ export const UCB_ECON_REQUIREMENTS: RequirementGraph = {
   ],
   categories: {}, 
 };
+
+//accurate: last checked feb 5, 2026

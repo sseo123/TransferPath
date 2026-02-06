@@ -19,3 +19,5 @@ export const UCB_EECS_REQUIREMENTS: RequirementGraph = {
   ],
   categories: {}, 
 };
+
+//accurate: last checked feb 5, 2026

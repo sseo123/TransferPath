@@ -2,7 +2,7 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { drizzle } from "drizzle-orm/d1";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { userTable, studentPlansTable, userTargetsTable, completedSemestersTable, completedCoursesTable, } from "@/db/schema";
+import { userTable, studentPlansTable, userTargetsTable, completedSemestersTable, completedCoursesTable, customCoursesTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { planningEngine } from "@/lib/planner/engine";
 import { DVC_CATALOG } from "@/data/cc/dvc";
@@ -13,8 +13,8 @@ import {
   Season,
   RequirementGraph,
   RequirementNode,
+  PlannedCourse,
 } from "@/lib/planner/types";
-import { PlannedCourse } from "@/lib/planner/types";
 
 type StudentPlanRow = typeof studentPlansTable.$inferSelect;
 
@@ -36,10 +36,20 @@ export default async function Dashboard() {
     .from(userTargetsTable)
     .where(eq(userTargetsTable.userId, user.id));
 
+  const targetUniversities = userTargets.map(t => ({
+    name: t.university,
+    code: getUniversityCode(t.university, t.major) || t.university,
+  }));
+
   const savedPlanRows = await db
     .select()
     .from(studentPlansTable)
     .where(eq(studentPlansTable.userId, user.id));
+
+  const customCourseRows = await db
+    .select()
+    .from(customCoursesTable)
+    .where(eq(customCoursesTable.userId, user.id));
 
   const completedSemesterRows = await db
     .select()
@@ -50,6 +60,23 @@ export default async function Dashboard() {
     .select()
     .from(completedCoursesTable)
     .where(eq(completedCoursesTable.userId, user.id));
+
+  const customCoursesForEditor: PlannedCourse[] = customCourseRows.map((c) => ({
+    localCode: c.localCode,
+    canonicalId: `custom-${c.id}`,
+    title: c.title,
+    units: c.units,
+    isCritical: c.requiredBy ? JSON.parse(c.requiredBy).length > 0 : false,
+    requiredBy: c.requiredBy ? JSON.parse(c.requiredBy) : [],
+    isCustom: true,
+  }));
+
+  const findCourseByCode = (code: string) => {
+    return (
+      DVC_CATALOG.find((c) => c.localCode === code) ||
+      customCoursesForEditor.find((c) => c.localCode === code)
+    );
+  };
 
   const plannedRows = savedPlanRows.filter(
     (row) => row.semesterName !== "unassigned",
@@ -102,42 +129,41 @@ export default async function Dashboard() {
   const completedSemesterNames = completedSemesterRows.map(
     (r) => r.semesterName,
   );
-const completedCourses: PlannedCourse[] = completedCourseRows
-  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-  .map((r) => {
-    const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
-    const reqData = catalog
-      ? requirementsMap.get(catalog.canonicalId)
-      : undefined;
-    return {
-      localCode: r.courseCode,
-      canonicalId: catalog?.canonicalId ?? "unknown", // Sets "unknown" if missing
-      title: catalog?.title ?? "Unknown",
-      units: catalog?.units ?? 0,
-      isCritical: reqData?.isCritical ?? false,
-      requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
-    };
-  })
-  .filter((c) => c.canonicalId !== "unknown"); // Drops the "ghost" courses
+  const completedCourses: PlannedCourse[] = completedCourseRows
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    .map((r) => {
+      const course = findCourseByCode(r.courseCode);
+      const reqData = course ? requirementsMap.get(course.canonicalId) : undefined;
+      
+      return {
+        localCode: r.courseCode,
+        canonicalId: course?.canonicalId ?? "unknown",
+        title: course?.title ?? "Unknown",
+        units: course?.units ?? 0,
+        isCritical: reqData?.isCritical ?? false,
+        requiredBy: reqData ? Array.from(reqData.requiredBy) : (course && "isCustom" in course && course.isCustom ? course.requiredBy : []),
+        isCustom: course && "isCustom" in course ? course.isCustom : false,
+      };
+    })
+    .filter((c) => c.canonicalId !== "unknown");
 
   hydratedUnassigned = unassignedRows
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .map((r) => {
-      const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
-      const reqData = catalog
-        ? requirementsMap.get(catalog.canonicalId)
-        : undefined;
+      const course = findCourseByCode(r.courseCode);
+      const reqData = course ? requirementsMap.get(course.canonicalId) : undefined;
+
       return {
         localCode: r.courseCode,
-        canonicalId: catalog?.canonicalId ?? "unknown",
-        title: catalog?.title ?? "Unknown",
-        units: catalog?.units ?? 0,
+        canonicalId: course?.canonicalId ?? "unknown",
+        title: course?.title ?? "Unknown",
+        units: course?.units ?? 0,
         isCritical: reqData?.isCritical ?? false,
-        requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
+        requiredBy: reqData ? Array.from(reqData.requiredBy) : (course && "isCustom" in course && course.isCustom ? course.requiredBy : []),
+        isCustom: course && "isCustom" in course ? course.isCustom : false,
       };
     })
-    .filter((c) => c.canonicalId !== "unknown"); 
-
+    .filter((c) => c.canonicalId !== "unknown");
 
   if (plannedRows.length > 0) {
     const grouped = new Map<string, StudentPlanRow[]>();
@@ -157,23 +183,22 @@ const completedCourses: PlannedCourse[] = completedCourseRows
         name,
         season: seasonStr as Season,
         year: yearNum,
-        courses: rows.map((r) => {
-          const catalog = DVC_CATALOG.find((c) => c.localCode === r.courseCode);
+        courses: rows
+          .map((r) => {
+            const course = findCourseByCode(r.courseCode);
+            const reqData = course ? requirementsMap.get(course.canonicalId) : undefined;
 
-          const reqData = catalog
-            ? requirementsMap.get(catalog.canonicalId)
-            : undefined;
-
-          return {
-            localCode: r.courseCode,
-            canonicalId: catalog?.canonicalId ?? "unknown",
-            title: catalog?.title ?? "Unknown",
-            units: catalog?.units ?? 0,
-            isCritical: reqData?.isCritical ?? false,
-            requiredBy: reqData ? Array.from(reqData.requiredBy) : [],
-          };
-        })
-          .filter((c) => c.canonicalId !== "unknown"), 
+            return {
+              localCode: r.courseCode,
+              canonicalId: course?.canonicalId ?? "unknown",
+              title: course?.title ?? "Unknown",
+              units: course?.units ?? 0,
+              isCritical: reqData?.isCritical ?? false,
+              requiredBy: reqData ? Array.from(reqData.requiredBy) : (course && "isCustom" in course && course.isCustom ? course.requiredBy : []),
+              isCustom: course && "isCustom" in course ? course.isCustom : false,
+            };
+          })
+          .filter((c) => c.canonicalId !== "unknown"),
         maxUnits: seasonStr === "summer" ? 12 : 19,
       };
     });
@@ -203,13 +228,11 @@ const completedCourses: PlannedCourse[] = completedCourseRows
       startSeason,
       startYear,
     );
-    // semesters = []
   } else {
     semesters = [];
   }
   const targetCount = userTargets.length;
 
-  // Security: Parse persisted UI data with robust fallbacks
   const initialIgetcTasks = dbUser.igetcTasks
     ? JSON.parse(dbUser.igetcTasks)
     : null;
@@ -223,7 +246,9 @@ const completedCourses: PlannedCourse[] = completedCourseRows
       initialSemesters={semesters}
       initialUnassigned={hydratedUnassigned}
       initialCompletedCourses={completedCourses}
+      initialCustomCourses={customCoursesForEditor}
       initialCompletedSemesters={completedSemesterNames}
+      targetUniversities={targetUniversities}
       dbUser={dbUser}
       targetCount={targetCount}
       initialIgetcTasks={initialIgetcTasks}

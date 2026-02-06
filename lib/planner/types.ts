@@ -65,6 +65,7 @@ export interface PlannedCourse {
   units: number;
   isCritical: boolean;
   requiredBy?: string[]; // List of university codes
+  isCustom?: boolean;
 }
 
 

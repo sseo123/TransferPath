@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
 export const userTable = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -66,4 +66,16 @@ export const completedCoursesTable = sqliteTable("completed_courses", {
     .references(() => userTable.id),
   courseCode: text("course_code").notNull(),
   order: integer("order"),
+});
+
+export const customCoursesTable = sqliteTable("custom_courses", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  localCode: text("local_code").notNull(),
+  title: text("title").notNull(),
+  units: real("units").notNull(),
+  requiredBy: text("required_by"), // JSON array of university codes (optional)
+  createdAt: integer("created_at", { mode: "timestamp" }),
 });

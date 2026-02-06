@@ -4,8 +4,10 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { Save, Trash2, Info } from "lucide-react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
+import { calculateTotalUnits, getUnitLimit } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import { saveStudentPlan, saveCompletedCourses } from "./actions";
+import CourseItem from "@/components/CourseItem";
 import {
   DndContext,
   closestCenter,
@@ -32,6 +34,8 @@ interface PlanEditorProps {
   initialSemesters: Semester[];
   initialUnassigned: PlannedCourse[];
   initialCompletedCourses: PlannedCourse[];
+  initialCustomCourses: PlannedCourse[];
+  targetUniversities: { name: string; code: string }[];
   onExit: () => void;
 }
 
@@ -208,69 +212,167 @@ function reorderCourseInContainer(
   }
 }
 
-function CourseCard({
-  course,
-  isValid = true,
-  missing = [],
-  isOverlay = false,
-  isSidebar = false,
+function CreateCourseModal({
+  isOpen,
+  onClose,
+  onCreate,
+  targetUniversities,
 }: {
-  course: PlannedCourse;
-  isValid?: boolean;
-  missing?: string[];
-  isOverlay?: boolean;
-  isSidebar?: boolean;
+  isOpen: boolean;
+  onClose: () => void;
+  onCreate: (data: {
+    localCode: string;
+    title: string;
+    units: number;
+    requiredBy: string[];
+  }) => void;
+  targetUniversities: { name: string; code: string }[];
 }) {
+  const [localCode, setLocalCode] = useState("");
+  const [title, setTitle] = useState("");
+  const [units, setUnits] = useState(3.0);
+  const [requiredBy, setRequiredBy] = useState<string[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!localCode.trim() || !title.trim()) {
+      setError("Course code and title are required.");
+      return;
+    }
+    if (units < 0.5 || units > 6) {
+      setError("Units must be between 0.5 and 6.");
+      return;
+    }
+    onCreate({ localCode: localCode.trim(), title: title.trim(), units, requiredBy });
+    setLocalCode("");
+    setTitle("");
+    setUnits(3.0);
+    setRequiredBy([]);
+    setError(null);
+  };
+
   return (
-    <div
-      className={`p-4 border-2 rounded-2xl shadow-sm transition-all group relative ${
-        isOverlay ? "cursor-grabbing shadow-xl scale-105 z-50" : "cursor-grab"
-      } ${
-        isSidebar
-          ? "bg-slate-50 border-slate-200"
-          : isValid
-            ? "border-emerald-100 bg-white"
-            : "border-red-200 bg-white"
-      }`}
-    >
-      <div className="flex justify-between items-start mb-1">
-        <span
-          className={`text-[10px] font-black uppercase ${
-            isSidebar
-              ? "text-slate-400"
-              : isValid
-                ? "text-emerald-500"
-                : "text-red-500"
-          }`}
-        >
-          {course.localCode}
-        </span>
-        <span className="text-[10px] font-bold text-slate-300">
-          {course.units} Units
-        </span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-purple-50/50">
+          <div>
+            <h2 className="text-2xl font-black text-slate-800">Add Custom Course</h2>
+            <p className="text-slate-500 text-sm mt-1">Courses not found in the DVC catalog</p>
+          </div>
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+            <Trash2 size={24} className="rotate-45" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+          <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl flex gap-3">
+            <Info size={20} className="text-amber-600 shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-700 font-medium leading-relaxed">
+              Note: Custom courses won&apos;t have prerequisite validation. Please ensure you&apos;ve met any requirements before enrolling.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Course Code</label>
+              <input
+                autoFocus
+                type="text"
+                value={localCode}
+                onChange={(e) => setLocalCode(e.target.value)}
+                placeholder="e.g., MATH 999"
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Units</label>
+              <input
+                type="number"
+                min="0"
+                max="10"
+                step="1"
+                value={units}
+                onChange={(e) => setUnits(parseFloat(e.target.value))}
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Course Title</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., Advanced Calculus"
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+            />
+          </div>
+
+          {targetUniversities.length > 0 && (
+            <div className="space-y-3">
+              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Required By Universities</label>
+              <div className="grid grid-cols-2 gap-2">
+                {targetUniversities.map((uni) => (
+                  <label key={uni.code} className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={requiredBy.includes(uni.code)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setRequiredBy([...requiredBy, uni.code]);
+                        } else {
+                          setRequiredBy(requiredBy.filter(c => c !== uni.code));
+                        }
+                      }}
+                      className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                    />
+                    <span className="text-xs font-bold text-slate-700">{uni.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {error && <p className="text-xs font-bold text-red-500 text-center">{error}</p>}
+
+          <div className="pt-4 flex gap-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-4 bg-slate-50 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-all active:scale-95"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-[2] py-4 bg-purple-600 text-white font-bold rounded-2xl shadow-lg shadow-purple-200 hover:bg-purple-700 hover:shadow-xl transition-all active:scale-95"
+            >
+              Create Course
+            </button>
+          </div>
+        </form>
       </div>
-      <h4 className="font-bold text-slate-800 text-sm leading-tight pr-4">
-        {course.title}
-      </h4>
-      {!isValid && !isSidebar && missing.length > 0 && (
-        <p className="text-[9px] font-black text-red-500 uppercase mt-2">
-          ⚠️ Missing: {missing.join(", ")}
-        </p>
-      )}
     </div>
   );
 }
+
 
 function SortableCourse({
   course,
   isValid,
   missing,
   isSidebar = false,
+  onDelete,
 }: {
   course: PlannedCourse;
   isValid: boolean;
   missing: string[];
   isSidebar?: boolean;
+  onDelete?: () => void;
 }) {
   const {
     attributes,
@@ -295,11 +397,12 @@ function SortableCourse({
       {...listeners}
       className="touch-none select-none mb-3"
     >
-      <CourseCard
+      <CourseItem
         course={course}
         isValid={isValid}
         missing={missing}
         isSidebar={isSidebar}
+        onDelete={onDelete}
       />
     </div>
   );
@@ -309,12 +412,14 @@ function DroppableSemester({
   semester,
   sIdx,
   onDelete,
+  onDeleteCourse,
   allSemesters,
   completedCourses,
 }: {
   semester: Semester;
   sIdx: number;
   onDelete: () => void;
+  onDeleteCourse: (canonicalId: string) => void;
   allSemesters: Semester[];
   completedCourses: PlannedCourse[];
 }) {
@@ -322,8 +427,8 @@ function DroppableSemester({
     id: semester.name,
   });
 
-  const totalUnits = semester.courses.reduce((sum, c) => sum + c.units, 0);
-  const maxUnits = semester.season === "summer" ? 12 : 19;
+  const totalUnits = calculateTotalUnits(semester.courses);
+  const maxUnits = getUnitLimit(semester.season);
   const isOverLimit = totalUnits > maxUnits;
 
   const courseIds = semester.courses.map((c) => c.canonicalId);
@@ -382,13 +487,25 @@ function DroppableSemester({
             </div>
           ) : (
             semester.courses.map((course) => {
+              if (course.isCustom) {
+                return (
+                  <SortableCourse
+                    key={course.canonicalId}
+                    course={course}
+                    isValid={true}
+                    missing={[]}
+                    onDelete={() => onDeleteCourse(course.canonicalId)}
+                  />
+                );
+              }
+
               const catalogData = DVC_CATALOG.find(
                 (c) => c.canonicalId === course.canonicalId,
               );
 
               if (!catalogData) {
                 return (
-                  <div className="p-4 border-2 border-red-200 bg-red-50 rounded-2xl mb-3">
+                  <div key={course.canonicalId} className="p-4 border-2 border-red-200 bg-red-50 rounded-2xl mb-3">
                     <p className="text-xs font-bold text-red-600 uppercase">
                       ⚠️ Missing from Catalog
                     </p>
@@ -410,6 +527,7 @@ function DroppableSemester({
                   course={course}
                   isValid={isValid}
                   missing={missing}
+                  onDelete={() => onDeleteCourse(course.canonicalId)}
                 />
               );
             })
@@ -420,7 +538,13 @@ function DroppableSemester({
   );
 }
 
-function Sidebar({ courses }: { courses: PlannedCourse[] }) {
+function Sidebar({ 
+  courses,
+  onDeleteCourse,
+}: { 
+  courses: PlannedCourse[];
+  onDeleteCourse: (canonicalId: string) => void;
+}) {
   const { setNodeRef, isOver } = useDroppable({
     id: "sidebar",
   });
@@ -443,8 +567,8 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
           strategy={verticalListSortingStrategy}
         >
           {courses.length === 0 ? (
-            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-32 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-4">
-              Courses from deleted semesters will appear here
+            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-50 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-2">
+              Deleted courses will appear here. Drag and drop to add them back or delete them.
             </div>
           ) : (
             courses.map((course) => (
@@ -454,6 +578,7 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
                 isValid={true}
                 missing={[]}
                 isSidebar={true}
+                onDelete={() => onDeleteCourse(course.canonicalId)}
               />
             ))
           )}
@@ -463,7 +588,13 @@ function Sidebar({ courses }: { courses: PlannedCourse[] }) {
   );
 }
 
-function CompletedCoursesBox({ courses }: { courses: PlannedCourse[] }) {
+function CompletedCoursesBox({ 
+  courses,
+  onDeleteCourse,
+}: { 
+  courses: PlannedCourse[];
+  onDeleteCourse: (canonicalId: string) => void;
+}) {
   const { setNodeRef, isOver } = useDroppable({
     id: "completed",
   });
@@ -480,17 +611,14 @@ function CompletedCoursesBox({ courses }: { courses: PlannedCourse[] }) {
       <h3 className="font-black text-slate-800 text-lg mb-2">
         Completed Courses
       </h3>
-      <p className="text-xs text-slate-500 mb-4">
-        Courses you&apos;ve already taken. These count toward prerequisites.
-      </p>
       <div className="space-y-3 flex-1">
         <SortableContext
           items={courseIds}
           strategy={verticalListSortingStrategy}
         >
           {courses.length === 0 ? (
-            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-32 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-4">
-              Drag courses here if you&apos;ve already completed them
+            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-50 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-2">
+              Drag completed courses here: Courses you&apos;ve already taken, AP credits, etc.
             </div>
           ) : (
             courses.map((course) => (
@@ -500,6 +628,7 @@ function CompletedCoursesBox({ courses }: { courses: PlannedCourse[] }) {
                 isValid={true}
                 missing={[]}
                 isSidebar={true}
+                onDelete={() => onDeleteCourse(course.canonicalId)}
               />
             ))
           )}
@@ -513,6 +642,8 @@ export default function PlanEditor({
   initialSemesters,
   initialUnassigned,
   initialCompletedCourses,
+  initialCustomCourses,
+  targetUniversities,
   onExit,
 }: PlanEditorProps) {
   const [semesters, setSemesters] = useState<Semester[]>(initialSemesters);
@@ -521,6 +652,9 @@ export default function PlanEditor({
   const [completed, setCompleted] = useState<PlannedCourse[]>(
     initialCompletedCourses,
   );
+  const [customCourses, setCustomCourses] = useState<PlannedCourse[]>(initialCustomCourses);
+  const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+
   const [activeCourse, setActiveCourse] = useState<PlannedCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(0);
@@ -534,7 +668,8 @@ export default function PlanEditor({
   const isDirty =
     JSON.stringify(semesters) !== JSON.stringify(initialSemesters) ||
     unassigned.length > 0 ||
-    JSON.stringify(completed) !== JSON.stringify(initialCompletedCourses);
+    JSON.stringify(completed) !== JSON.stringify(initialCompletedCourses) ||
+    JSON.stringify(customCourses) !== JSON.stringify(initialCustomCourses);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -577,6 +712,48 @@ export default function PlanEditor({
       }
     }
   }, [triggerUpdate]);
+
+  const handleDeleteCourse = useCallback(
+    (canonicalId: string, location: 'semester' | 'sidebar' | 'completed') => {
+      if (location === 'semester' || location === 'completed') {
+        const result = moveCourseToContainer(canonicalId, 'sidebar', semesters, unassigned, completed);
+        if (result) {
+          setSemesters(result.semesters);
+          setUnassigned(result.unassigned);
+          setCompleted(result.completed);
+        }
+      } else {
+        // location === 'sidebar'
+        const courseToDelete = unassigned.find(c => c.canonicalId === canonicalId);
+        setUnassigned(prev => prev.filter(c => c.canonicalId !== canonicalId));
+        if (courseToDelete?.isCustom) {
+          setCustomCourses(prev => prev.filter(c => c.canonicalId !== canonicalId));
+        }
+      }
+    },
+    [semesters, unassigned, completed]
+  );
+
+  const handleCreateCourse = (courseData: {
+    localCode: string;
+    title: string;
+    units: number;
+    requiredBy: string[];
+  }) => {
+    const newCourse: PlannedCourse = {
+      canonicalId: `custom-${crypto.randomUUID()}`,
+      localCode: courseData.localCode,
+      title: courseData.title,
+      units: courseData.units,
+      isCritical: courseData.requiredBy.length > 0,
+      requiredBy: courseData.requiredBy,
+      isCustom: true,
+    };
+
+    setCustomCourses((prev) => [...prev, newCourse]);
+    setUnassigned((prev) => [...prev, newCourse]);
+    setShowCreateCourseModal(false);
+  };
 
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
@@ -689,15 +866,22 @@ export default function PlanEditor({
         order: i,
       }));
 
+      const customCoursesData = customCourses.map((c) => ({
+        localCode: c.localCode,
+        title: c.title,
+        units: c.units,
+        requiredBy: c.requiredBy || [],
+      }));
+
       const completedCourseCodes = completed
         .map((c) => c.localCode)
         .filter(Boolean);
 
-      console.log("Saving completed courses:", completedCourseCodes);
+      console.log("Saving plan with custom courses");
 
       try {
-        await saveStudentPlan([...flatData, ...unassignedData]);
-        console.log("Plan saved successfully");
+        await saveStudentPlan([...flatData, ...unassignedData], customCoursesData);
+        console.log("Plan and custom courses saved successfully");
       } catch (planError) {
         console.error("Plan save error:", planError);
         throw new Error("Failed to save plan");
@@ -778,7 +962,7 @@ export default function PlanEditor({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans">
+      <div className="min-h-screen bg-white p-4 md:p-8 font-sans">
         {/* HEADER FIX: Added flex-wrap and items-start for small screens */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
           <div>
@@ -801,6 +985,12 @@ export default function PlanEditor({
               </button>
             )}
             <button
+              onClick={() => setShowCreateCourseModal(true)}
+              className="px-6 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition-all whitespace-nowrap flex-1 sm:flex-none"
+            >
+              + Add Custom Course
+            </button>
+            <button
               onClick={onExit}
               className="px-6 py-2 bg-white border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all whitespace-nowrap flex-1 sm:flex-none"
             >
@@ -812,8 +1002,14 @@ export default function PlanEditor({
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* SIDEBAR FIX: Changed to Grid for side-by-side mobile view */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:flex-col gap-4 w-full lg:w-auto">
-            <Sidebar courses={unassigned} />
-            <CompletedCoursesBox courses={completed} />
+            <Sidebar 
+              courses={unassigned} 
+              onDeleteCourse={(id) => handleDeleteCourse(id, 'sidebar')} 
+            />
+            <CompletedCoursesBox 
+              courses={completed} 
+              onDeleteCourse={(id) => handleDeleteCourse(id, 'completed')}
+            />
           </div>
 
           <div className="flex-1 w-full flex flex-col items-center">
@@ -824,6 +1020,7 @@ export default function PlanEditor({
                   semester={semester}
                   sIdx={sIdx}
                   onDelete={() => handleDeleteSemester(semester.name)}
+                  onDeleteCourse={(id) => handleDeleteCourse(id, 'semester')}
                   allSemesters={semesters}
                   completedCourses={completed}
                 />
@@ -863,9 +1060,15 @@ export default function PlanEditor({
         }}
       >
         {activeCourse ? (
-          <CourseCard course={activeCourse} isOverlay={true} />
+          <CourseItem course={activeCourse} isOverlay={true} />
         ) : null}
       </DragOverlay>
+      <CreateCourseModal
+        isOpen={showCreateCourseModal}
+        onClose={() => setShowCreateCourseModal(false)}
+        onCreate={handleCreateCourse}
+        targetUniversities={targetUniversities}
+      />
     </DndContext>
   );
 }

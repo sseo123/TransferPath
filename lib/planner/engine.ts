@@ -42,8 +42,8 @@ function getFullRequirementList(
           existing.isCritical = existing.isCritical || currentReq.isCritical;
           if (currentReq.origin && !existing.origin?.includes(currentReq.origin)) {
             existing.origin = existing.origin
-            ? '${existing.origion},${currentReq.origin}'
-            : currentReq.origin;
+              ? `${existing.origin},${currentReq.origin}`
+              : currentReq.origin;
           }
         }
       }

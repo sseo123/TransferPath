@@ -3,9 +3,8 @@
 import { getLucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { drizzle } from "drizzle-orm/d1";
-import { studentPlansTable, userTable, completedSemestersTable, completedCoursesTable, } from "@/db/schema";
+import { getDb } from "@/lib/db";
+import { studentPlansTable, userTable, completedSemestersTable, completedCoursesTable, customCoursesTable } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { userTargetsTable } from "@/db/schema";
@@ -17,9 +16,7 @@ export async function setStartTerm(
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   await db
     .update(userTable)
@@ -31,18 +28,26 @@ export async function setStartTerm(
 
 export async function saveStudentPlan(
   planData: { semesterName: string; courseCode: string; order: number }[],
+  customCoursesData: { 
+    localCode: string; 
+    title: string; 
+    units: number; 
+    requiredBy: string[] 
+  }[]
 ) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
-  await db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id));
+  await db.batch([
+    db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
+    db.delete(customCoursesTable).where(eq(customCoursesTable.userId, user.id)),
+  ]);
 
+  // Insert plan data
   const CHUNK_SIZE = 6;
-  const rows = planData.map((item) => ({
+  const planRows = planData.map((item) => ({
     id: crypto.randomUUID(),
     userId: user.id,
     semesterName: item.semesterName,
@@ -50,9 +55,27 @@ export async function saveStudentPlan(
     order: item.order,
   }));
 
-  for (let i = 0; i < rows.length; i += CHUNK_SIZE) {
-    const chunk = rows.slice(i, i + CHUNK_SIZE);
+  for (let i = 0; i < planRows.length; i += CHUNK_SIZE) {
+    const chunk = planRows.slice(i, i + CHUNK_SIZE);
     await db.insert(studentPlansTable).values(chunk);
+  }
+
+  // Insert custom courses
+  if (customCoursesData.length > 0) {
+    const customRows = customCoursesData.map((item) => ({
+      id: crypto.randomUUID(),
+      userId: user.id,
+      localCode: item.localCode,
+      title: item.title,
+      units: item.units,
+      requiredBy: JSON.stringify(item.requiredBy),
+      createdAt: new Date(),
+    }));
+
+    for (let i = 0; i < customRows.length; i += CHUNK_SIZE) {
+      const chunk = customRows.slice(i, i + CHUNK_SIZE);
+      await db.insert(customCoursesTable).values(chunk);
+    }
   }
 
   revalidatePath("/dashboard");
@@ -62,9 +85,7 @@ export async function addTargetCollege(university: string, major: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   // Basic validation
   if (!university || !major) {
@@ -73,6 +94,7 @@ export async function addTargetCollege(university: string, major: string) {
 
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
+    db.delete(customCoursesTable).where(eq(customCoursesTable.userId, user.id)),
     db
       .delete(completedCoursesTable)
       .where(eq(completedCoursesTable.userId, user.id)),
@@ -95,9 +117,7 @@ export async function removeTargetCollege(targetId: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   // Security: Verify target belongs to the authenticated user (prevents IDOR attacks)
   const [target] = await db
@@ -122,6 +142,7 @@ export async function removeTargetCollege(targetId: string) {
 
   await db.batch([
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
+    db.delete(customCoursesTable).where(eq(customCoursesTable.userId, user.id)),
     db
       .delete(completedCoursesTable)
       .where(eq(completedCoursesTable.userId, user.id)),
@@ -160,9 +181,7 @@ export async function markSemesterComplete(semesterName: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   try {
     const existing = await db
@@ -195,9 +214,7 @@ export async function unmarkSemesterComplete(semesterName: string) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   try {
     await db
@@ -221,9 +238,7 @@ export async function getCompletedSemesters(): Promise<string[]> {
   const { user } = await validateRequest();
   if (!user) return [];
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   try {
     const completed = await db
@@ -245,9 +260,7 @@ export async function saveCompletedCourses(
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   try {
     await db
@@ -281,9 +294,7 @@ export async function syncUserData(data: {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   const updateData: any = {};
   if (data.igetcTasks) updateData.igetcTasks = JSON.stringify(data.igetcTasks);
@@ -303,9 +314,7 @@ export async function getCompletedCourses(): Promise<string[]> {
   const { user } = await validateRequest();
   if (!user) return [];
 
-  const { env } = await getCloudflareContext({ async: true });
-  const cfEnv = env as Env;
-  const db = drizzle(cfEnv.DB);
+  const db = await getDb();
 
   try {
     const completed = await db

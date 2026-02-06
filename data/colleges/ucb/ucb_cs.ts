@@ -13,3 +13,5 @@ export const UCB_CS_REQUIREMENTS: RequirementGraph = {
   ],
   categories: {}, 
 };
+
+//accurate: last checked feb 5, 2026
