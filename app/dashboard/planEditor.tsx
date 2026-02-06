@@ -711,6 +711,7 @@ export default function PlanEditor({
         setCompleted(result.completed);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerUpdate]);
 
   const handleDeleteCourse = useCallback(

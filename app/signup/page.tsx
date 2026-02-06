@@ -1,4 +1,4 @@
-import { getOnboardingData, clearOnboardingData } from "../onboarding/actions";
+import { getOnboardingData } from "../onboarding/actions";
 import { redirect } from "next/navigation";
 import SignupForm from "./signupForm";
 

@@ -280,7 +280,7 @@ export default function CalendarSidebar() {
               <div className="flex gap-2">
                 <select
                   value={newTaskType}
-                  onChange={(e) => setNewTaskType(e.target.value as any)}
+                  onChange={(e) => setNewTaskType(e.target.value as "homework" | "deadline" | "other")}
                   className="flex-1 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
                 >
                   <option value="homework">Homework</option>
@@ -473,7 +473,7 @@ export default function CalendarSidebar() {
                             <div className="flex gap-2">
                               <select
                                 value={newTaskType}
-                                onChange={(e) => setNewTaskType(e.target.value as any)}
+                                onChange={(e) => setNewTaskType(e.target.value as "homework" | "deadline" | "other")}
                                 className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
                               >
                                 <option value="homework">Homework</option>

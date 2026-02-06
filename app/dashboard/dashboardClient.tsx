@@ -3,14 +3,20 @@
 import { useState, useEffect } from "react";
 import { Semester, PlannedCourse } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
-import { logout, markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
-import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Calendar, Trash2, Download } from "lucide-react";
+import { markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
+import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { calculateTotalUnits } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import CourseItem from "@/components/CourseItem";
+
+interface SyncTask {
+  id: string;
+  label: string;
+  completed: boolean;
+}
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
@@ -30,8 +36,8 @@ interface DashboardClientProps {
     currentCollege: string | null;
   };
   targetCount: number;
-  initialIgetcTasks: any[] | null;
-  initialPatternTasks: any[] | null;
+  initialIgetcTasks: SyncTask[] | null;
+  initialPatternTasks: SyncTask[] | null;
 }
 
 // ... (SemesterAccordionItem remains same)
@@ -126,7 +132,7 @@ function CollapsibleSection({
   count?: number; 
   total?: number; 
   children: React.ReactNode; 
-  icon?: any;
+  icon?: React.ElementType;
   variant?: "default" | "warning";
 }) {
   const [isOpen, setIsOpen] = useState(true);
@@ -353,10 +359,6 @@ export default function DashboardClient({
     }
   };
 
-  // Security: Logout action
-  const handleLogout = async () => {
-    await logout();
-  };
 
   if (isEditing) {
     return (
@@ -723,7 +725,7 @@ export default function DashboardClient({
                 ))}
                 <div className="pt-2 border-t border-slate-100 mt-4">
                   <p className="text-xs text-slate-400 font-medium text-center italic">
-                    Don't know if you've fullfilled an IGETC requirement?{" "}
+                    Don&apos;t know if you&apos;ve fulfilled an IGETC requirement?{" "}
                     <a
                       href="https://assist.org"
                       target="_blank"
@@ -771,7 +773,7 @@ export default function DashboardClient({
                 ))}
                 <div className="pt-2 border-t border-slate-100 mt-4">
                   <p className="text-xs text-slate-400 font-medium text-center italic">
-                    Don't know if you've fullfilled a 7-course pattern
+                    Don&apos;t know if you&apos;ve fulfilled a 7-course pattern
                     requirement?{" "}
                     <a
                       href="https://assist.org"

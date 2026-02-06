@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { ChevronRight, CheckCircle2, Pencil, CheckSquare, Square, ChevronDown, LayoutDashboard, GraduationCap} from "lucide-react";
+import { ChevronRight, CheckCircle2, Pencil, CheckSquare, ChevronDown, LayoutDashboard, GraduationCap} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -347,7 +347,7 @@ export default function App() {
           <p
             className={`mb-12 text-center text-2xl font-bold uppercase tracking-[0.3em] text-black transition-all duration-700 ${universitiesVisible ? "opacity-100" : "opacity-0 translate-y-4"}`}
           >
-            Featuring all UC's and more!
+            Featuring all UC&apos;s and more!
           </p>
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-10 md:gap-x-20">
             {universities.map((uni, i) => (

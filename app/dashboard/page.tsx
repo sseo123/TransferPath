@@ -239,7 +239,6 @@ export default async function Dashboard() {
   const initialPatternTasks = dbUser.patternTasks
     ? JSON.parse(dbUser.patternTasks)
     : null;
-  const initialDeadlines = dbUser.deadlines ? JSON.parse(dbUser.deadlines) : [];
 
   return (
     <DashboardClient

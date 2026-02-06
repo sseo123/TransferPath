@@ -30,7 +30,7 @@ export default function CourseItem({
   const remainingUnis = allUnis.slice(3);
   const remainingCount = remainingUnis.length;
 
-  const getBadgeStyle = (code: string) => {
+  const getBadgeStyle = () => {
     return "bg-[#7ca1ad] text-white text-[10px] font-bold uppercase tracking-wider rounded-full";
   };
 
@@ -57,7 +57,7 @@ export default function CourseItem({
                   {allUnis.length > 0 ? (
                     <>
                       {displayedUnis.map((uni) => (
-                        <span key={uni} className={`px-2 py-0.5 border ${getBadgeStyle(uni)}`}>
+                        <span key={uni} className={`px-2 py-0.5 border ${getBadgeStyle()}`}>
                           {uni}
                         </span>
                       ))}

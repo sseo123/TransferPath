@@ -286,17 +286,28 @@ export async function saveCompletedCourses(
   }
 }
 
+interface SyncTask {
+  id: string;
+  label: string;
+  completed: boolean;
+}
+
 export async function syncUserData(data: {
-  igetcTasks?: any[];
-  patternTasks?: any[];
-  deadlines?: any[];
+  igetcTasks?: SyncTask[];
+  patternTasks?: SyncTask[];
+  deadlines?: { id: string; title: string; date: string }[];
 }) {
   const { user } = await validateRequest();
   if (!user) throw new Error("Unauthorized");
 
   const db = await getDb();
 
-  const updateData: any = {};
+  const updateData: {
+    igetcTasks?: string;
+    patternTasks?: string;
+    deadlines?: string;
+  } = {};
+  
   if (data.igetcTasks) updateData.igetcTasks = JSON.stringify(data.igetcTasks);
   if (data.patternTasks)
     updateData.patternTasks = JSON.stringify(data.patternTasks);
