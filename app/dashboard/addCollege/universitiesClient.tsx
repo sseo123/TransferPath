@@ -291,17 +291,17 @@ export default function UniversitiesClient({
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="w-full flex flex-col items-center justify-center p-8 border-none rounded-2xl bg-gradient-to-br from-[#6366f1] to-[#a855f7] hover:from-[#4f46e5] hover:to-[#9333ea] shadow-xl shadow-indigo-500/30 transition-all group mt-8 disabled:opacity-70 active:scale-[0.98]"
+              className="w-full flex flex-col items-center justify-center p-8 border-none rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 hover:from-amber-400 hover:to-amber-600 shadow-xl shadow-amber-500/30 transition-all group mt-8 disabled:opacity-70 active:scale-[0.98]"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                  <CheckCircle size={24} className="text-white" />
+                <div className="w-10 h-10 bg-amber-950/10 rounded-xl flex items-center justify-center group-hover:bg-amber-950/20 transition-colors">
+                  <CheckCircle size={24} className="text-amber-800" />
                 </div>
                 <div className="text-left">
-                  <span className="text-lg font-bold text-white block">
+                  <span className="text-lg font-bold text-amber-950 block">
                     Save Changes
                   </span>
-                  <span className="text-sm font-medium text-white/80">
+                  <span className="text-sm font-medium text-amber-900/80">
                     Apply updates to your transfer plan
                   </span>
                 </div>

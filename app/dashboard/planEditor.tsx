@@ -980,7 +980,7 @@ export default function PlanEditor({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center justify-center gap-2 px-6 py-2 bg-primary text-primary-foreground font-bold rounded-xl shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 whitespace-nowrap flex-1 sm:flex-none"
+                className="flex items-center justify-center gap-2 px-6 py-2 bg-amber-400 text-amber-950 font-bold rounded-xl shadow-lg shadow-amber-500/20 hover:bg-amber-500 transition-all disabled:opacity-50 whitespace-nowrap flex-1 sm:flex-none"
               >
                 <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
               </button>
