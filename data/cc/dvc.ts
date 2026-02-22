@@ -36,7 +36,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
 
   //Business Classes
   { localCode: "BUS-109", canonicalId: CANONICAL_COURSES.INTRO_BUSINESS, title: "Introduction to Business", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "BUS-240", canonicalId: CANONICAL_COURSES.BUSINESS_STATS, title: "Business Statistics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_1]  },
+  { localCode: "BUS-240", canonicalId: CANONICAL_COURSES.BUSINESS_STATS, title: "Business Statistics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
 
   //Econ
   { localCode: "ECON-200", canonicalId: CANONICAL_COURSES.INTRO_ECON, title: "Introduction to Economics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },

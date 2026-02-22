@@ -21,15 +21,15 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
   const [state, formAction, isPending] = useActionState(signup, null);
 
   return (
-    <div className="w-full max-w-[480px] bg-white rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-12 text-center">
+    <div className="w-full max-w-[480px] bg-white dark:bg-slate-800 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-xl border border-slate-100 dark:border-slate-700 p-12 text-center">
       <div className="flex flex-col items-center mb-10">
-        <div className="w-12 h-12 bg-teal-50 rounded-full flex items-center justify-center mb-4">
+        <div className="w-12 h-12 bg-teal-50 dark:bg-[#82A7A6]/20 rounded-full flex items-center justify-center mb-4">
           <GraduationCap className="w-6 h-6 text-[#82A7A6]" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
           Create Account
         </h1>
-        <p className="text-slate-500 mt-2 font-medium">
+        <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
           Final step to see your plan
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
 
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
               First Name
             </label>
             <input
@@ -64,11 +64,11 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
               placeholder="First"
               required
               maxLength={50}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white dark:bg-slate-700"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-slate-700 ml-1">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
               Last Name
             </label>
             <input
@@ -76,13 +76,13 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
               placeholder="Last"
               required
               maxLength={50}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white dark:bg-slate-700"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-700 ml-1">
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
             Email
           </label>
           <input
@@ -91,12 +91,12 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
             placeholder="Enter your email"
             required
             maxLength={254}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white dark:bg-slate-700"
           />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-sm font-semibold text-slate-700 ml-1">
+          <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
             Password
           </label>
           <input
@@ -106,9 +106,9 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
             required
             minLength={8}
             maxLength={128}
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6] transition-all bg-white dark:bg-slate-700"
           />
-          <p className="text-xs text-slate-400 ml-1 mt-1">
+          <p className="text-xs text-slate-400 dark:text-slate-500 ml-1 mt-1">
             Must include uppercase, lowercase, and a number
           </p>
         </div>
@@ -128,8 +128,8 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
         </button>
       </form>
 
-      <div className="mt-8 pt-8 border-t border-slate-100">
-        <p className="text-slate-500 text-sm font-medium">
+      <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-700">
+        <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
           Already have an account?{" "}
           <Link
             href="/signin"
@@ -140,7 +140,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
         </p>
       </div>
 
-      <p className="mt-12 text-slate-400 text-xs font-medium uppercase tracking-widest leading-relaxed">
+      <p className="mt-12 text-slate-400 dark:text-slate-500 text-xs font-medium uppercase tracking-widest leading-relaxed">
         Built for community college students who are planning to transfer
       </p>
     </div>

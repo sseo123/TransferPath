@@ -154,6 +154,47 @@ export async function removeTargetCollege(targetId: string) {
   revalidatePath("/dashboard");
 }
 
+/** Batch save: replace all user targets with the given list. Clears plans/custom/completed and revalidates. */
+export async function saveTargetUniversities(
+  finalTargets: { university: string; major: string }[]
+) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const db = await getDb();
+
+  if (!Array.isArray(finalTargets)) {
+    throw new Error("Invalid targets");
+  }
+
+  // Clear existing targets and all dependent data
+  await db.delete(userTargetsTable).where(eq(userTargetsTable.userId, user.id));
+  await db.batch([
+    db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
+    db.delete(customCoursesTable).where(eq(customCoursesTable.userId, user.id)),
+    db
+      .delete(completedCoursesTable)
+      .where(eq(completedCoursesTable.userId, user.id)),
+    db
+      .delete(completedSemestersTable)
+      .where(eq(completedSemestersTable.userId, user.id)),
+  ]);
+
+  // Insert new targets
+  for (const t of finalTargets) {
+    if (!t.university || !t.major) continue;
+    await db.insert(userTargetsTable).values({
+      id: crypto.randomUUID(),
+      userId: user.id,
+      university: t.university,
+      major: t.major,
+    });
+  }
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/addCollege");
+}
+
 export async function logout() {
   const { session } = await validateRequest();
 

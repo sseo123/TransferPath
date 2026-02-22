@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveOnboardingData } from "./actions";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -47,27 +48,28 @@ export default function OnboardingPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#F9FAFB] flex flex-col relative overflow-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[var(--background)] flex flex-col relative overflow-hidden">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-7">
           <h1
             onClick={() => router.push("/")}
-            className="text-xl font-bold text-black tracking-tight cursor-pointer"
+            className="text-xl font-bold text-black dark:text-white tracking-tight cursor-pointer"
           >
             Transfer<span className="text-[#82A7A6]">Path</span>
           </h1>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
+            <ThemeToggle />
             <button
               onClick={() => router.push("/signin")}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-transform hover:scale-105 active:scale-95"
+              className="text-sm font-semibold text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-transform hover:scale-105 active:scale-95"
             >
               Sign in
             </button>
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-100">
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-100 dark:bg-slate-800">
           <div
             className="h-full bg-[#82A7A6] transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
@@ -76,14 +78,14 @@ export default function OnboardingPage() {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6">
-        <div className="w-full max-w-[500px] bg-white border border-gray-200 rounded-2xl p-10 shadow-sm">
+        <div className="w-full max-w-[500px] bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-10 shadow-sm">
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-              <h2 className="text-2xl font-bold text-center">
+              <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white">
                 Which Community College <br /> do you attend?
               </h2>
               <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
+                className="w-full border border-gray-200 dark:border-slate-600 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                 onChange={(e) =>
                   setFormData({ ...formData, college: e.target.value })
                 }
@@ -137,16 +139,16 @@ export default function OnboardingPage() {
 
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-              <h2 className="text-2xl font-bold text-center">
+              <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white">
                 When are you starting?
               </h2>
-              <p className="text-slate-500 text-center -mt-4 text-sm">
+              <p className="text-slate-500 dark:text-slate-400 text-center -mt-4 text-sm">
                 We&apos;ll build your plan starting from your first semester.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
                     Season
                   </label>
                   <select
@@ -154,7 +156,7 @@ export default function OnboardingPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, startSeason: e.target.value })
                     }
-                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#82A7A6] bg-white"
+                    className="w-full p-4 border border-gray-200 dark:border-slate-600 rounded-lg outline-none focus:border-[#82A7A6] bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   >
                     <option value="fall">Fall</option>
                     <option value="spring">Spring</option>
@@ -163,7 +165,7 @@ export default function OnboardingPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700">
+                  <label className="text-sm font-bold text-slate-700 dark:text-slate-300">
                     Year
                   </label>
                   <input
@@ -177,7 +179,7 @@ export default function OnboardingPage() {
                         startYear: parseInt(e.target.value),
                       })
                     }
-                    className="w-full p-4 border border-gray-200 rounded-lg outline-none focus:border-[#82A7A6]"
+                    className="w-full p-4 border border-gray-200 dark:border-slate-600 rounded-lg outline-none focus:border-[#82A7A6] bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
               </div>
@@ -186,12 +188,12 @@ export default function OnboardingPage() {
         </div>
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t p-6">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-gray-100 dark:border-slate-800 p-6">
         <div className="max-w-[500px] mx-auto flex justify-between">
           <button
             onClick={() => setStep(step - 1)}
             disabled={step === 1}
-            className="px-8 py-3 border rounded-xl disabled:opacity-0 transition-opacity"
+            className="px-8 py-3 border border-gray-200 dark:border-slate-600 rounded-xl disabled:opacity-0 transition-opacity text-slate-700 dark:text-slate-300"
           >
             Back
           </button>
@@ -201,7 +203,7 @@ export default function OnboardingPage() {
             className={`px-8 py-3 font-bold rounded-xl transition-all ${
               isStepComplete() && !isSubmitting
                 ? "bg-[#82A7A6] text-white"
-                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-slate-500 cursor-not-allowed"
             }`}
           >
             {isSubmitting 

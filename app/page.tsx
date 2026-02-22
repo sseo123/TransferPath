@@ -1,8 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { ChevronRight, CheckCircle2, Pencil, CheckSquare, ChevronDown, LayoutDashboard, GraduationCap} from "lucide-react";
+import { ChevronRight, CheckCircle2, Briefcase, BookOpen, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { TransferPathDemo } from "@/components/TransferPathDemo";
 
 const universities = [
   { name: "UC Berkeley", logo: "/ucblogo.png" },
@@ -70,7 +72,7 @@ const Logo = () => {
         </svg>
         <div className="absolute bottom-1.5 w-4 h-[2.5px] bg-[#82A7A6] rounded-full" />
       </div>
-      <span className="text-xl font-bold text-black tracking-tight">
+      <span className="text-xl font-bold text-black dark:text-white tracking-tight">
         Transfer<span className="text-[#82A7A6]">Path</span>
       </span>
     </div>
@@ -78,7 +80,6 @@ const Logo = () => {
 };
 
 export default function App() {
-  const [email, setEmail] = useState("");
   const [scrollY, setScrollY] = useState(0);
   const router = useRouter();
 
@@ -98,16 +99,21 @@ export default function App() {
   const handleGetStarted = () => router.push("/onboarding");
   const handleSignIn = () => router.push("/signin");
 
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-white font-sans overflow-x-hidden text-slate-900">
-      {/* 1. KEEPING YOUR HEADBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-md">
+    <div className="min-h-screen bg-white dark:bg-[var(--background)] font-sans overflow-x-hidden text-slate-900 dark:text-slate-100">
+      {/* 1. HEADER WITH THEME TOGGLE */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1440px] items-center justify-between px-10 py-5">
           <Logo />
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
+            <ThemeToggle />
             <button
               onClick={handleSignIn}
-              className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-transform hover:scale-105 active:scale-95"
+              className="text-sm font-semibold text-gray-600 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-transform hover:scale-105 active:scale-95"
             >
               Sign in
             </button>
@@ -121,60 +127,62 @@ export default function App() {
         </div>
       </nav>
 
-      {/* 2. HERO SECTION WITH PAGE STRUCTURE & LAPTOP */}
+      {/* 2. HERO SECTION: TWO-COLUMN LAYOUT */}
       <section
-        className="relative pt-32 pb-20 px-10 mt-10"
-        style={{
-          background:
-            "linear-gradient(0deg, rgba(130, 167, 166, 0.15) 0%, rgba(255, 255, 255, 1) 50%)",
-        }}
+        ref={heroRef}
+        className="relative pt-28 pb-24 px-6 sm:px-8 md:px-10 mt-8 bg-gradient-to-b from-[rgba(130,167,166,0.12)] to-white dark:from-[rgba(130,167,166,0.06)] dark:to-[var(--background)]"
       >
-        <div className="mx-auto max-w-[1440px]">
-          <div
-            ref={heroRef}
-            className={`text-center max-w-4xl mx-auto mb-16 transition-all duration-1000 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-          >
-            <h2 className="mb-8 text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight text-gray-900">
-              The transfer blueprint
-              <br />
-              <span className="text-[#82A7A6]">tailored to your goals.</span>
-            </h2>
-            <p className="mb-10 max-w-2xl mx-auto text-xl leading-relaxed text-gray-500">
-              Never miss a hidden requirement or lose a year to a planning
-              mistake
-              <br />
-              - let TransferPath save you the work
-              <br />
-            </p>
-
-            <div className="mb-8 flex flex-col sm:flex-row justify-center max-w-xl mx-auto gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 rounded-xl border border-gray-200 px-5 py-4 outline-none focus:ring-2 focus:ring-[#82A7A6]/50 bg-white shadow-sm"
-              />
-              <button
-                onClick={handleGetStarted}
-                className="rounded-xl bg-[#82A7A6] px-8 py-4 font-bold text-white transition-all hover:scale-105 active:scale-95 hover:shadow-xl"
-              >
-                Get started
-              </button>
+        <div className="mx-auto max-w-[1280px] px-0">
+          <div className="grid lg:grid-cols-[0.42fr_0.58fr] gap-14 lg:gap-20 items-center min-h-0">
+            {/* LEFT: Pills, headline, description, CTAs */}
+            <div
+              className={`max-w-[540px] transition-all duration-1000 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+            >
+              <div className="flex flex-wrap gap-2.5 mb-8">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#82A7A6] px-4 py-2 text-sm font-medium text-[#82A7A6]">
+                  <Briefcase className="w-4 h-4 shrink-0" /> Transfer Planning
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#82A7A6] px-4 py-2 text-sm font-medium text-[#82A7A6]">
+                  <BookOpen className="w-4 h-4 shrink-0" /> UC Articulation
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#82A7A6] px-4 py-2 text-sm font-medium text-[#82A7A6]">
+                  <CheckCircle className="w-4 h-4 shrink-0" /> Real-time Requirements
+                </span>
+              </div>
+              <h2 className="mb-5 text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] font-bold leading-[1.1] tracking-tight text-gray-900 dark:text-white">
+                The transfer blueprint{" "}
+                <span className="text-[#82A7A6]">tailored to your goals.</span>
+              </h2>
+              <p className="mb-8 max-w-[32rem] text-base sm:text-lg leading-relaxed text-gray-500 dark:text-slate-400">
+                Never miss a hidden requirement or lose a year to a planning mistake—let TransferPath save you the work.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={handleGetStarted}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#82A7A6] px-7 py-3.5 text-base font-bold text-white transition-all hover:scale-105 active:scale-95 hover:shadow-xl"
+                >
+                  Get started <ChevronRight className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => scrollToSection("universities")}
+                  className="rounded-xl border-2 border-gray-300 dark:border-slate-600 px-7 py-3.5 text-base font-bold text-gray-700 dark:text-slate-300 hover:border-[#82A7A6] hover:text-[#82A7A6] transition-all"
+                >
+                  Learn more
+                </button>
+              </div>
             </div>
-          </div>
 
+            {/* RIGHT: Laptop mockup */}
+            <div
+              className={`relative transition-all duration-1000 delay-200 ${heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
+              style={{
+                transform: heroVisible
+                  ? `translateY(${scrollY * 0.02}px)`
+                  : "translateY(40px)",
+              }}
+            >
 {/* THE LAPTOP MOCKUP (REPLICATING DASHBOARD) */}
-<div 
-  className={`relative mx-auto max-w-6xl transition-all duration-1000 delay-200 ${
-    heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"
-  }`}
-  style={{
-    transform: heroVisible
-      ? `translateY(${scrollY * 0.02}px)`
-      : "translateY(40px)",
-  }}
->
+<div className="max-w-full">
   
   {/* 1. LAPTOP SCREEN/BEZEL */}
   <div className="relative rounded-[1.5rem] bg-[#0F172A] p-3 shadow-2xl border-[1px] border-slate-700">
@@ -185,146 +193,9 @@ export default function App() {
       <div className="w-1 h-1 rounded-full bg-blue-900/50" />
     </div>
 
-    {/* The Dashboard Content (The Screen) */}
-    <div className="relative bg-white rounded-xl overflow-hidden flex min-h-[600px] h-[700px]">
-      
-      {/* Left Sidebar */}
-      <div className="w-52 border-r border-gray-100 p-6 flex flex-col justify-between shrink-0 bg-white">
-        <div className="space-y-6">
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-bold text-slate-800">Transfer<span className="text-[#82A7A6]">Path</span></h1>
-            <ChevronDown size={16} className="text-gray-400" />
-          </div>
-          <nav className="space-y-2 mt-8">
-            <div className="flex items-center gap-3 bg-[#82A7A6]/15 text-[#82A7A6] px-3 py-2.5 rounded-lg font-semibold text-sm">
-              <LayoutDashboard size={18} /> Dashboard
-            </div>
-            <div className="flex items-center gap-3 text-gray-400 px-3 py-2.5 font-semibold text-sm hover:text-gray-600 transition-colors cursor-pointer">
-              <GraduationCap size={18} /> Universities
-            </div>
-          </nav>
-        </div>
-        <div className="text-red-500 font-semibold text-sm flex items-center gap-2 cursor-pointer mt-auto hover:text-red-600 transition-colors">
-          Sign Out
-        </div>
-      </div>
-
-      {/* Main Dashboard Content */}
-      <div className="flex-1 bg-[#F9FBFA] p-8">
-        {/* Header */}
-        <div className="flex justify-between items-start mb-6">
-          <div>
-            <h2 className="text-3xl font-bold text-slate-900">Welcome!</h2>
-            <div className="flex items-center gap-2 mt-1">
-              <p className="text-gray-500 text-sm">Here is your transfer plan</p>
-              <span className="bg-[#D1E7E6] text-[#4A6B6A] text-[10px] px-2 py-0.5 rounded-md font-semibold">Saved to Cloud</span>
-            </div>
-          </div>
-          <button className="bg-[#82A7A6] text-white px-4 py-2.5 rounded-lg font-semibold text-sm shadow-sm hover:bg-[#6d8d8c] transition-all">
-            + Add Another University
-          </button>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-4 gap-3 mb-6">
-          {[
-            { label: "Expected Completion", val: "Summer 2028", icon: "📅" },
-            { label: "Progress", val: "0%", icon: "📈" },
-            { label: "Total Units", val: "52", icon: "🎯" },
-            { label: "Your Current College", val: "Community College", icon: "" },
-          ].map((card, i) => (
-            <div key={i} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <div className="flex justify-between items-start mb-3">
-                <span className="text-2xl">{card.icon}</span>
-                <span className="text-xl font-bold text-slate-900">{card.val}</span>
-              </div>
-              <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">{card.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Timeline and Sidebar Row */}
-        <div className="flex gap-4">
-          <div className="flex-1 bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-slate-900">Your Strategic Timeline</h3>
-              <button className="flex items-center gap-2 bg-[#82A7A6] text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-[#6d8d8c] transition-all">
-                <Pencil size={14} /> Edit Plan
-              </button>
-            </div>
-
-            <div className="border border-gray-200 rounded-xl overflow-hidden bg-gray-50/30 flex flex-col h-full">
-              <div className="bg-gray-50 px-4 py-3 flex justify-between items-center border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <ChevronDown size={18} className="text-gray-400" />
-                  <span className="font-bold text-slate-800 text-sm">Fall 2026</span>
-                  <span className="text-gray-400 text-xs">· 15 Units</span>
-                </div>
-                <div className="w-5 h-5 rounded border-2 border-gray-300 bg-white" />
-              </div>
-              
-              <div className="divide-y divide-gray-100 bg-white flex-1 overflow-y-auto">
-                {[
-                  { code: 'CHEM-120', title: 'General Chemistry I', units: '3', tags: ['UCB', 'UCLA'] },
-                  { code: 'MATH-192', title: 'Calculus I', units: '4', tags: ['UCB', 'UCSD', 'UCD', '+2 more'] },
-                  { code: 'ENGL-C1000', title: 'Academic Reading and Writing', units: '3', tags: ['UCB', 'UCD', 'UCLA', '+1 more'] },
-                  { code: 'COMSC-140', title: 'Python Programming', units: '3', tags: ['UCB'] },
-                  { code: 'PHYS-129', title: 'Mechanics', units: '3', tags: ['UCB', 'UCLA', 'UCSD'] }
-                ].map((course) => (
-                  <div key={course.code} className="px-4 py-4 flex justify-between items-center hover:bg-gray-50 transition-colors">
-                     <div>
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-slate-900 text-sm">{course.code}</span>
-                          {course.tags.map((tag, i) => (
-                            <span key={i} className={`${tag.startsWith('+') ? 'bg-gray-200 text-gray-600' : 'bg-[#82A7A6] text-white'} text-[9px] px-1.5 py-0.5 rounded font-bold uppercase`}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-0.5">{course.title}</p>
-                     </div>
-                     <span className="font-bold text-slate-700 text-xs uppercase tracking-wide">{course.units} UNITS</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="w-72 space-y-3 shrink-0">
-            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
-              <div className="flex justify-between items-center mb-4">
-                 <div className="flex items-center gap-2 font-bold text-sm">
-                   <CheckSquare size={16}/> IGETC
-                 </div>
-                 <div className="flex items-center gap-1 bg-white/20 px-2.5 py-1 rounded-md text-[10px] font-bold">
-                   3/7 <ChevronRight size={12}/>
-                 </div>
-              </div>
-            </div>
-            
-            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 font-bold text-sm">
-                  <CheckSquare size={16}/> 7-Course Pattern
-                </div>
-                <div className="flex items-center gap-1 bg-white/20 px-2.5 py-1 rounded-md text-[10px] font-bold">
-                  1/5 <ChevronRight size={12}/>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#82A7A6] rounded-2xl p-5 text-white">
-              <div className="flex items-center gap-2 font-bold text-sm mb-3">
-                <span className="text-lg">📅</span> Important Deadlines
-              </div>
-              <p className="text-xs text-white/60 italic text-center py-4">No deadlines added</p>
-              <button className="w-full mt-2 text-xs font-semibold text-white/80 hover:text-white transition-colors">
-                + Add New Deadline
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+    {/* The Dashboard Content (The Screen) - AutoPlanSimulation */}
+    <div className="relative rounded-xl overflow-hidden flex min-h-[600px] h-[700px]">
+      <TransferPathDemo />
     </div>
   </div>
 
@@ -334,14 +205,17 @@ export default function App() {
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-2 bg-slate-400/50 rounded-b-lg" />
   </div>
 </div>
+            </div>
+          </div>
         </div>
       </section>
 
 
       {/* 3. KEEPING YOUR UNIVERSITIES SECTION WITH ANIMATION */}
       <div
+        id="universities"
         ref={universitiesRef}
-        className="mx-auto max-w-8xl px-10 md:px-20 bg-white"
+        className="mx-auto max-w-8xl px-10 md:px-20 bg-white dark:bg-[var(--background)]"
       >
         <section className="py-24">
           <p

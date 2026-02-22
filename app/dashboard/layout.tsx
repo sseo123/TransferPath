@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, GraduationCap, ChevronLeft, ChevronRight, LogOut, } from "lucide-react";
+import { LayoutDashboard, GraduationCap, ChevronLeft, ChevronRight, LogOut } from "lucide-react";
 import { logout } from "./actions";
-import CalendarSidebar from "./components/CalendarSidebar"; // ADD THIS
+import CalendarSidebar from "./components/CalendarSidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function DashboardLayout({
   children,
@@ -54,9 +55,9 @@ export default function DashboardLayout({
   ];
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-white dark:bg-[var(--background)]">
       <aside
-        className={`fixed top-0 left-0 h-screen bg-white border-r border-slate-200 transition-all duration-300 flex flex-col z-50 
+        className={`fixed top-0 left-0 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-all duration-300 flex flex-col z-50 
           ${isCollapsed ? "w-0 lg:w-16 overflow-hidden border-none lg:border-solid" : "w-64"}
         `}
       >
@@ -64,15 +65,17 @@ export default function DashboardLayout({
           className={`flex items-center p-4 min-h-[80px] ${isCollapsed ? "justify-center" : "justify-between"}`}
         >
           {!isCollapsed && (
-            <h1 className="text-xl font-black text-slate-900 tracking-tight whitespace-nowrap px-2">
+            <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight whitespace-nowrap px-2">
               Transfer<span className="text-[#82A7A6]">Path</span>
             </h1>
           )}
 
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
           <button
             onClick={toggleSidebar}
-            className={`p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 border border-slate-200 rounded-lg transition-all
-              ${isCollapsed ? "fixed left-4 top-6 bg-white shadow-sm lg:static lg:shadow-none" : "static"}
+            className={`p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg transition-all
+              ${isCollapsed ? "fixed left-4 top-6 bg-white dark:bg-slate-900 shadow-sm lg:static lg:shadow-none" : "static"}
             `}
           >
             {isCollapsed ? (
@@ -81,6 +84,7 @@ export default function DashboardLayout({
               <ChevronLeft size={20} />
             )}
           </button>
+          </div>
         </div>
 
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -94,7 +98,7 @@ export default function DashboardLayout({
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-103 active:scale-100 hover:shadow-l ${
                   isActive
                     ? "bg-[#82A7A6] text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-50"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
                 } ${isCollapsed ? "lg:justify-center lg:px-0" : ""}`}
               >
                 <Icon size={20} className="flex-shrink-0" />
@@ -113,10 +117,10 @@ export default function DashboardLayout({
           )}
         </nav>
 
-        <div className="p-4 border-t border-slate-200">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-800">
           <form action={logout}>
             <button
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all ${
                 isCollapsed ? "lg:justify-center lg:px-0" : ""
               }`}
             >
@@ -134,7 +138,7 @@ export default function DashboardLayout({
       </aside>
 
       <main
-        className={`flex-1 transition-all duration-300 min-w-0 ${isCollapsed ? "ml-0 lg:ml-16" : "ml-64"}`}
+        className={`flex-1 transition-all duration-300 min-w-0 bg-white dark:bg-[var(--background)] ${isCollapsed ? "ml-0 lg:ml-16" : "ml-64"}`}
       >
         <div className={`p-8 ${isCollapsed ? "pt-24 lg:pt-8" : "pt-8"}`}>
           {children}

@@ -11,7 +11,7 @@ export default async function SignupPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F9FAFB] flex items-center justify-center p-6 font-sans">
+    <main className="min-h-screen bg-[#F9FAFB] dark:bg-[var(--background)] flex items-center justify-center p-6 font-sans">
       <SignupForm onboardingData={onboardingData} />
     </main>
   );

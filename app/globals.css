@@ -5,6 +5,11 @@
   --foreground: #171717;
 }
 
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -12,11 +17,28 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes demo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+@keyframes demo-progress {
+  0% { width: 0%; }
+  70% { width: 24%; }
+  100% { width: 24%; }
+}
+@keyframes demo-highlight {
+  0%, 100% { background-color: transparent; }
+  15% { background-color: rgba(130, 167, 166, 0.12); }
+  30% { background-color: transparent; }
+}
+
+.animate-demo-pulse {
+  animation: demo-pulse 2s ease-in-out infinite;
+}
+.animate-demo-progress {
+  animation: demo-progress 4s ease-out infinite;
 }
 
 body {
