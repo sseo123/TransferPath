@@ -40,9 +40,20 @@ export default function UniversitiesClient({
 
   const displayTargets = useMemo(() => {
     const kept = serverTargets.filter((t) => !pendingDeletes.has(t.id));
+    // Filter pendingAdds to exclude any that might have just been saved/refreshed into serverTargets
+    // although handleSave clears pendingAdds, this provides an extra layer of UI safety
+    const filteredPending = pendingAdds.filter(
+      (p) => !kept.some((k) => k.university === p.university && k.major === p.major)
+    );
+
     return [
       ...kept.map((t) => ({ ...t, pending: false as const })),
-      ...pendingAdds.map((p) => ({ id: `pending-${p.university}-${p.major}`, university: p.university, major: p.major, pending: true as const })),
+      ...filteredPending.map((p) => ({
+        id: `pending-${p.university}-${p.major}`,
+        university: p.university,
+        major: p.major,
+        pending: true as const,
+      })),
     ];
   }, [serverTargets, pendingDeletes, pendingAdds]);
 
@@ -179,7 +190,7 @@ export default function UniversitiesClient({
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto p-8 font-sans text-slate-900 dark:text-slate-100">
+      <div className="max-w-5xl mx-auto p-8 font-sans text-slate-900 dark:text-slate-100">
         <header className="mb-12">
           <div className="flex justify-between items-start mb-6">
             <div>
@@ -191,15 +202,6 @@ export default function UniversitiesClient({
               </p>
             </div>
             <div className="flex gap-3">
-              {hasPendingChanges && (
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="px-6 py-2.5 bg-slate-800 hover:bg-slate-900 text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 disabled:opacity-70"
-                >
-                  Save changes
-                </button>
-              )}
               <button
                 onClick={() => setIsAddTargetOpen(true)}
                 className="px-6 py-2 bg-[#82A7A6] hover:bg-[#6B8A89] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
@@ -251,7 +253,7 @@ export default function UniversitiesClient({
               displayTargets.map((target) => (
                 <div
                   key={target.id}
-                  className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-600 transition-colors group"
+                  className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-600 group"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 bg-[#82a79d] rounded-xl flex items-center justify-center flex-shrink-0">
@@ -285,19 +287,41 @@ export default function UniversitiesClient({
               ))
             )}
           </div>
-          <button
-            onClick={() => setIsAddTargetOpen(true)}
-            className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/50 rounded-2xl bg-white/10 hover:bg-white/20 transition-all group mt-8"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                <Plus size={24} className="text-white" />
+          {hasPendingChanges ? (
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full flex flex-col items-center justify-center p-8 border-none rounded-2xl bg-gradient-to-br from-[#6366f1] to-[#a855f7] hover:from-[#4f46e5] hover:to-[#9333ea] shadow-xl shadow-indigo-500/30 transition-all group mt-8 disabled:opacity-70 active:scale-[0.98]"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                  <CheckCircle size={24} className="text-white" />
+                </div>
+                <div className="text-left">
+                  <span className="text-lg font-bold text-white block">
+                    Save Changes
+                  </span>
+                  <span className="text-sm font-medium text-white/80">
+                    Apply updates to your transfer plan
+                  </span>
+                </div>
               </div>
-              <span className="text-lg font-bold text-white">
-                Add another university
-              </span>
-            </div>
-          </button>
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsAddTargetOpen(true)}
+              className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-white/50 rounded-2xl bg-white/10 hover:bg-white/20 transition-all group mt-8"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                  <Plus size={24} className="text-white" />
+                </div>
+                <span className="text-lg font-bold text-white">
+                  Add another university
+                </span>
+              </div>
+            </button>
+          )}
         </div>
       </div>
     </div>

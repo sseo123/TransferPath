@@ -37,7 +37,7 @@ export default function DashboardSidebar({
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen bg-card border-r border-border transition-all duration-300 flex flex-col z-50 
+      className={`fixed top-0 left-0 h-screen bg-card border-r border-border transition-[width] duration-300 flex flex-col z-50 
         ${isCollapsed ? "w-0 lg:w-16 overflow-hidden lg:overflow-visible border-none lg:border-solid" : "w-64"}
       `}
     >
@@ -53,7 +53,7 @@ export default function DashboardSidebar({
         <div className="flex items-center gap-2">
           <button
             onClick={toggleSidebar}
-            className={`p-2 text-muted-foreground hover:text-foreground hover:bg-muted border border-border rounded-lg transition-all
+            className={`p-2 text-muted-foreground hover:text-foreground hover:bg-muted border border-border rounded-lg transition-[background-color,color,transform] duration-200 active:scale-95
               ${isCollapsed ? "fixed left-4 top-6 bg-card shadow-sm lg:static lg:shadow-none" : "static"}
             `}
           >
@@ -74,7 +74,7 @@ export default function DashboardSidebar({
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all hover:scale-103 active:scale-100 hover:shadow-l ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-[transform,box-shadow,background-color] duration-200 hover:scale-[1.03] active:scale-100 hover:shadow-md ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-muted"

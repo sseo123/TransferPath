@@ -36,7 +36,7 @@ export default function CourseItem({
 
   if (variant === "row") {
     return (
-      <div className="group flex items-center justify-between p-6 hover:bg-muted/50 transition-colors cursor-pointer">
+      <div className="group flex items-center justify-between p-6 hover:bg-muted/50 transition-[background-color] duration-200 cursor-pointer">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
@@ -106,7 +106,7 @@ export default function CourseItem({
   // Card Variant (default - used in PlanEditor)
   return (
     <div
-      className={`p-4 border-2 rounded-2xl shadow-sm transition-all group relative ${
+      className={`p-4 border-2 rounded-2xl shadow-sm transition-[box-shadow,transform] duration-200 group relative ${
         isOverlay ? "cursor-grabbing shadow-xl scale-105 z-50" : "cursor-grab"
       } ${
         isSidebar
@@ -124,7 +124,7 @@ export default function CourseItem({
             e.stopPropagation();
             onDelete();
           }}
-          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:bg-red-600 active:scale-95"
+          className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-[opacity,background-color] duration-200 z-20 hover:bg-red-600 active:scale-95"
           title="Delete course"
         >
           <Trash2 size={12} />

@@ -47,7 +47,7 @@ export function ThemeToggle() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-10 h-10 rounded-[10px] border border-border bg-card flex items-center justify-center text-foreground hover:border-primary hover:text-primary transition-colors shadow-sm"
+        className="w-10 h-10 rounded-[10px] border border-border bg-card flex items-center justify-center text-foreground hover:border-primary hover:text-primary transition-[color,border-color,background-color] duration-200 shadow-sm"
         aria-label="Theme"
         aria-expanded={open}
         aria-haspopup="true"
@@ -68,7 +68,7 @@ export function ThemeToggle() {
                 setTheme(opt.value);
                 setOpen(false);
               }}
-              className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
+              className={`w-full text-left px-4 py-2 text-sm font-medium transition-[background-color,color] duration-200 ${
                 (theme || "system") === opt.value
                   ? "text-primary bg-primary/10"
                   : "text-foreground hover:bg-muted"

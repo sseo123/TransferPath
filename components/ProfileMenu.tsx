@@ -58,7 +58,7 @@ export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: bo
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-3 w-full p-2 rounded-xl transition-all hover:bg-muted ${isCollapsed ? "justify-center" : ""}`}
+        className={`flex items-center gap-3 w-full p-2 rounded-xl transition-[background-color] duration-200 hover:bg-muted ${isCollapsed ? "justify-center" : ""}`}
       >
         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm flex-shrink-0">
           {initials}
@@ -99,7 +99,7 @@ export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: bo
                     <button
                       key={val}
                       onClick={() => setTheme(val)}
-                      className={`flex flex-col items-center justify-center p-2 rounded-md transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-md transition-[background-color,color] duration-200 ${
                         theme === val
                           ? "bg-card text-primary shadow-sm"
                           : "text-muted-foreground hover:text-foreground"
@@ -143,7 +143,7 @@ export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: bo
             <div className="p-2 border-t border-border/50">
               <button
                 onClick={() => logout()}
-                className="flex items-center gap-3 w-full px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-colors"
+                className="flex items-center gap-3 w-full px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-xl transition-[background-color]"
               >
                 <LogOut size={16} />
                 <span>Log out</span>
