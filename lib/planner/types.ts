@@ -94,3 +94,9 @@ export interface PlanningResult {
   semesters: Semester[];
   diagnostics: PlanDiagnostics;
 }
+
+export interface SyncTask {
+  id: string;
+  label: string;
+  completed: boolean;
+}

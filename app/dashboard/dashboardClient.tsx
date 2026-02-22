@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Semester, PlannedCourse } from "@/lib/planner/types";
+import { Semester, PlannedCourse, SyncTask } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
 import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Download } from "lucide-react";
@@ -12,11 +12,6 @@ import { calculateTotalUnits } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import CourseItem from "@/components/CourseItem";
 
-interface SyncTask {
-  id: string;
-  label: string;
-  completed: boolean;
-}
 
 interface DashboardClientProps {
   initialSemesters: Semester[];
@@ -203,7 +198,7 @@ export default function DashboardClient({
       { id: "1", label: "English Communication", completed: false },
       {
         id: "2",
-        label: "Matmatical Concepts and Quantitative Reasoning",
+        label: "Mathematical Concepts and Quantitative Reasoning",
         completed: false,
       },
       { id: "3", label: "Arts and Humanities", completed: false },
@@ -368,6 +363,8 @@ export default function DashboardClient({
         initialCompletedCourses={initialCompletedCourses}
         initialCustomCourses={initialCustomCourses}
         targetUniversities={targetUniversities}
+        startSeason={dbUser.startSeason || "fall"}
+        startYear={dbUser.startYear || new Date().getFullYear()}
         onExit={() => setIsEditing(false)}
       />
     );

@@ -8,6 +8,7 @@ import { studentPlansTable, userTable, completedSemestersTable, completedCourses
 import { eq, and, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { userTargetsTable } from "@/db/schema";
+import { SyncTask } from "@/lib/planner/types";
 
 export async function setStartTerm(
   season: "fall" | "spring" | "summer",
@@ -21,6 +22,38 @@ export async function setStartTerm(
   await db
     .update(userTable)
     .set({ startSeason: season, startYear: year })
+    .where(eq(userTable.id, user.id));
+
+  revalidatePath("/dashboard");
+}
+
+export async function setCurrentCollege(college: string) {
+  const { user } = await validateRequest();
+  if (!user) throw new Error("Unauthorized");
+
+  const db = await getDb();
+
+  const [dbUser] = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.id, user.id));
+
+  const now = Math.floor(Date.now() / 1000);
+  const cooldownHours = 24;
+  const cooldownSeconds = cooldownHours * 60 * 60;
+
+  if (dbUser.lastCollegeChange && now - dbUser.lastCollegeChange < cooldownSeconds) {
+    const remainingSeconds = cooldownSeconds - (now - dbUser.lastCollegeChange);
+    const remainingHours = Math.ceil(remainingSeconds / 3600);
+    throw new Error(`Please wait ${remainingHours} more hours before switching colleges again.`);
+  }
+
+  await db
+    .update(userTable)
+    .set({ 
+      currentCollege: college,
+      lastCollegeChange: now
+    })
     .where(eq(userTable.id, user.id));
 
   revalidatePath("/dashboard");
@@ -168,28 +201,22 @@ export async function saveTargetUniversities(
   }
 
   // Clear existing targets and all dependent data
-  await db.delete(userTargetsTable).where(eq(userTargetsTable.userId, user.id));
   await db.batch([
+    db.delete(userTargetsTable).where(eq(userTargetsTable.userId, user.id)),
     db.delete(studentPlansTable).where(eq(studentPlansTable.userId, user.id)),
     db.delete(customCoursesTable).where(eq(customCoursesTable.userId, user.id)),
-    db
-      .delete(completedCoursesTable)
-      .where(eq(completedCoursesTable.userId, user.id)),
-    db
-      .delete(completedSemestersTable)
-      .where(eq(completedSemestersTable.userId, user.id)),
-  ]);
-
-  // Insert new targets
-  for (const t of finalTargets) {
-    if (!t.university || !t.major) continue;
-    await db.insert(userTargetsTable).values({
-      id: crypto.randomUUID(),
-      userId: user.id,
-      university: t.university,
-      major: t.major,
-    });
-  }
+    db.delete(completedCoursesTable).where(eq(completedCoursesTable.userId, user.id)),
+    db.delete(completedSemestersTable).where(eq(completedSemestersTable.userId, user.id)),
+    ...finalTargets
+      .filter(t => t.university && t.major)
+      .map(t => db.insert(userTargetsTable).values({
+        id: crypto.randomUUID(),
+        userId: user.id,
+        university: t.university,
+        major: t.major,
+      }))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ] as unknown as [any, ...any[]]);
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/addCollege");
@@ -304,20 +331,20 @@ export async function saveCompletedCourses(
   const db = await getDb();
 
   try {
-    await db
-      .delete(completedCoursesTable)
-      .where(eq(completedCoursesTable.userId, user.id));
-
-    if (courseCodes.length > 0) {
-      await db.insert(completedCoursesTable).values(
-        courseCodes.map((courseCode, index) => ({
-          id: crypto.randomUUID(),
-          userId: user.id,
-          courseCode,
-          order: index,
-        })),
-      );
-    }
+    await db.batch([
+      db.delete(completedCoursesTable).where(eq(completedCoursesTable.userId, user.id)),
+      ...(courseCodes.length > 0 ? [
+        db.insert(completedCoursesTable).values(
+          courseCodes.map((courseCode, index) => ({
+            id: crypto.randomUUID(),
+            userId: user.id,
+            courseCode,
+            order: index,
+          }))
+        )
+      ] : [])
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as unknown as [any, ...any[]]);
 
     revalidatePath("/dashboard");
     return { success: true };
@@ -327,11 +354,6 @@ export async function saveCompletedCourses(
   }
 }
 
-interface SyncTask {
-  id: string;
-  label: string;
-  completed: boolean;
-}
 
 export async function syncUserData(data: {
   igetcTasks?: SyncTask[];

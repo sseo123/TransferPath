@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { LogOut, Sun, Moon, Monitor, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { logout, setStartTerm } from "@/app/dashboard/actions";
+import { logout, setStartTerm, setCurrentCollege } from "@/app/dashboard/actions";
 
 interface User {
   id: string;
@@ -13,6 +13,7 @@ interface User {
   lastName: string | null;
   startSeason: string | null;
   startYear: number | null;
+  currentCollege: string | null;
 }
 
 export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
@@ -51,6 +52,15 @@ export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: bo
       await setStartTerm(season as "fall" | "spring" | "summer", year);
     } catch (error) {
       console.error("Failed to set start term:", error);
+    }
+  };
+    
+  const handleSetCollege = async (college: string) => {
+    try {
+      await setCurrentCollege(college);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Failed to set community college");
+      console.error("Failed to set community college:", error);
     }
   };
 
@@ -135,6 +145,23 @@ export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: bo
                     {years.map((y) => (
                       <option key={y} value={y}>{y}</option>
                     ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Community College Selector */}
+              <div className="px-3 py-2">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <Monitor size={10} /> Community College
+                </p>
+                <div className="flex gap-2">
+                  <select
+                    value={user.currentCollege || ""}
+                    onChange={(e) => handleSetCollege(e.target.value)}
+                    className="flex-1 bg-secondary text-xs p-2 rounded-lg border-none focus:ring-1 focus:ring-primary outline-none text-foreground"
+                  >
+                    <option value="" disabled>Select College</option>
+                    <option value="Diablo Valley College">Diablo Valley College</option>
                   </select>
                 </div>
               </div>

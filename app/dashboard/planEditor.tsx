@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { Save, Trash2, Info } from "lucide-react";
-import { Semester, PlannedCourse } from "@/lib/planner/types";
+import { Semester, PlannedCourse, Season } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { calculateTotalUnits, getUnitLimit } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
@@ -36,6 +36,8 @@ interface PlanEditorProps {
   initialCompletedCourses: PlannedCourse[];
   initialCustomCourses: PlannedCourse[];
   targetUniversities: { name: string; code: string }[];
+  startSeason: string;
+  startYear: number;
   onExit: () => void;
 }
 
@@ -644,6 +646,8 @@ export default function PlanEditor({
   initialCompletedCourses,
   initialCustomCourses,
   targetUniversities,
+  startSeason,
+  startYear,
   onExit,
 }: PlanEditorProps) {
   const [semesters, setSemesters] = useState<Semester[]>(initialSemesters);
@@ -925,7 +929,7 @@ export default function PlanEditor({
       const latest =
         prev.length > 0
           ? prev[prev.length - 1]
-          : { season: "fall" as const, year: 2024 };
+          : { season: startSeason as Season, year: startYear };
 
       let nextSeason: "fall" | "spring" | "summer";
       let nextYear: number;
@@ -954,7 +958,7 @@ export default function PlanEditor({
         },
       ];
     });
-  }, []);
+  }, [startSeason, startYear]);
 
   return (
     <DndContext

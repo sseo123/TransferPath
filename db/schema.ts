@@ -14,6 +14,7 @@ export const userTable = sqliteTable("user", {
   igetcTasks: text("igetc_tasks"), // Stringified JSON
   patternTasks: text("pattern_tasks"), // Stringified JSON
   deadlines: text("deadlines"), // Stringified JSON
+  lastCollegeChange: integer("last_college_change"), // Timestamp
 });
 
 // ADD THIS TABLE - Lucia requires it
@@ -23,14 +24,6 @@ export const sessionTable = sqliteTable("session", {
     .notNull()
     .references(() => userTable.id),
   expiresAt: integer("expires_at").notNull(),
-});
-
-export const requestTable = sqliteTable("request", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => userTable.id),
-  body: text("body").notNull(),
 });
 
 export const studentPlansTable = sqliteTable("student_plans", {
