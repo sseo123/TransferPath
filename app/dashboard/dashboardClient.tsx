@@ -57,24 +57,24 @@ function SemesterAccordionItem({
   const totalUnits = calculateTotalUnits(semester.courses);
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-4">
+    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden mb-4">
       {/* Header */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between py-5 px-8 cursor-pointer hover:bg-slate-50 transition-colors"
+        className="flex items-center justify-between py-5 px-8 cursor-pointer hover:bg-muted/50 transition-colors"
       >
         <div className="flex items-center gap-6">
-          <button className="text-slate-400">
+          <button className="text-muted-foreground">
             {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
           </button>
 
           <h2
-            className={`text-lg font-semibold flex items-center gap-3 ${isCompleted ? "line-through text-slate-400" : "text-slate-800"}`}
+            className={`text-lg font-semibold flex items-center gap-3 ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}
           >
             {semester.name}
-            <span className="text-slate-300">·</span>
+            <span className="text-border">·</span>
             <span
-              className={`font-medium ${isCompleted ? "line-through text-slate-400" : "text-slate-500"}`}
+              className={`font-medium ${isCompleted ? "line-through text-muted-foreground" : "text-muted-foreground"}`}
             >
               {totalUnits} Units
             </span>
@@ -86,10 +86,10 @@ function SemesterAccordionItem({
             e.stopPropagation();
             onToggleComplete();
           }}
-          className="text-slate-400 hover:text-[#82A7A6] p-2 transition-colors"
+          className="text-muted-foreground hover:text-primary p-2 transition-colors"
         >
           {isCompleted ? (
-            <CheckSquare size={20} className="text-[#82A7A6]" />
+            <CheckSquare size={20} className="text-primary" />
           ) : (
             <Square size={20} />
           )}
@@ -97,13 +97,13 @@ function SemesterAccordionItem({
       </div>
 
       {isOpen && (
-        <div className="border-t border-slate-100">
+        <div className="border-t border-border/50">
           {semester.courses.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-sm italic">
+            <div className="p-8 text-center text-muted-foreground text-sm italic">
               No courses planned
             </div>
           ) : (
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-border/50">
               {semester.courses.map((course, idx) => (
                 <CourseItem
                   key={`${course.canonicalId}-${idx}`}
@@ -137,18 +137,18 @@ function CollapsibleSection({
 }) {
   const [isOpen, setIsOpen] = useState(true);
   
-  const bgClass = variant === "warning" ? "bg-amber-400 hover:bg-amber-500" : "bg-[#82A7A6] hover:bg-[#6B8A89]";
-  const textClass = variant === "warning" ? "text-amber-950" : "text-white";
-  const badgeClass = variant === "warning" ? "bg-amber-950/10 text-amber-950" : "bg-white/20 text-white";
+  const bgClass = variant === "warning" ? "bg-amber-400 hover:bg-amber-500" : "bg-primary hover:bg-primary/90";
+  const textClass = variant === "warning" ? "text-amber-950" : "text-primary-foreground";
+  const badgeClass = variant === "warning" ? "bg-amber-950/10 text-amber-950" : "bg-primary-foreground/20 text-primary-foreground";
 
   return (
-    <div className={`bg-white rounded-3xl border shadow-sm overflow-hidden ${variant === "warning" ? "border-amber-200" : "border-slate-200"}`}>
+    <div className={`bg-card rounded-3xl border shadow-sm overflow-hidden ${variant === "warning" ? "border-amber-200" : "border-border"}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center justify-between p-6 transition-colors ${bgClass} ${textClass}`}
       >
         <div className="flex items-center gap-3 flex-1">
-          {Icon && <Icon size={24} className={variant === "warning" ? "text-amber-900/80" : "text-white/80"} />}
+          {Icon && <Icon size={24} className={variant === "warning" ? "text-amber-900/80" : "text-primary-foreground/80"} />}
           <span className="font-bold text-xl tracking-tight">{title}</span>
         </div>
 
@@ -165,7 +165,7 @@ function CollapsibleSection({
       </button>
 
       {isOpen && (
-        <div className="p-6 pt-5 border-t border-slate-100 space-y-3">
+        <div className="p-6 pt-5 border-t border-border/50 space-y-3">
           {children}
         </div>
       )}
@@ -418,7 +418,7 @@ export default function DashboardClient({
       : "TBD";
 
   return (
-    <div className="min-h-screen bg-blue">
+    <div className="min-h-screen bg-background">
       {showConfetti && (
         <Confetti
           width={typeof window !== "undefined" ? window.innerWidth : 0}
@@ -445,23 +445,23 @@ export default function DashboardClient({
           }}
         />
       )}
-      <div className="max-w-8xl mx-auto p-8 font-sans text-slate-900">
-        <header className="mb-12 border-b border-slate-100 pb-8">
+      <div className="max-w-8xl mx-auto p-8 font-sans text-foreground">
+        <header className="mb-12 border-b border-border pb-8">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+              <h1 className="text-4xl font-black text-foreground tracking-tight">
                 Welcome, {dbUser.firstName}!
               </h1>
               <div className="flex items-center gap-2 mt-2">
-                <p className="text-slate-500 text-lg font-medium">
+                <p className="text-muted-foreground text-lg font-medium">
                   Here is your transfer plan
                 </p>
                 {isHydrated && (
                   <span
                     className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300 ${
                       isSyncing
-                        ? "bg-amber-50 text-amber-800 border border-amber-50 animate-pulse"
-                        : "bg-emerald-50 text-emerald-800 border border-emerald-50"
+                        ? "bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse"
+                        : "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
                     }`}
                   >
                     {isSyncing ? "Syncing..." : "Saved to Cloud"}
@@ -473,7 +473,7 @@ export default function DashboardClient({
             <div className="flex items-center gap-4">
               <button
                 onClick={handleDownloadCSV}
-                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-white border border-slate-200 text-slate-700 rounded-xl shadow-sm transition-all hover:bg-slate-50 hover:scale-105 active:scale-95"
+                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-card border border-border text-foreground rounded-xl shadow-sm transition-all hover:bg-muted hover:scale-105 active:scale-95"
               >
                 <Download size={18} />
                 Download CSV
@@ -482,8 +482,8 @@ export default function DashboardClient({
                 onClick={handleTopRightAction}
                 className={`px-4 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl ${
                   hasTargets
-                    ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
-                    : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
+                    ? "bg-primary hover:bg-primary/90 text-primary-foreground"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
                 }`}
               >
                 {hasTargets
@@ -496,106 +496,106 @@ export default function DashboardClient({
         {/* Summary Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           {/* Expected Completion Card */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+          <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-orange-600 text-xl">📅</span>
               </div>
               {/* Dynamic Semester Name */}
-              <span className="text-2xl font-bold text-slate-900">
+              <span className="text-2xl font-bold text-foreground">
                 {completionSemester}
               </span>
             </div>
             <div>
-              <p className="text-slate-500 text-sm font-medium">
+              <p className="text-muted-foreground text-sm font-medium">
                 Expected Completion
               </p>
             </div>
           </div>
 
           {/* Progress Card */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+          <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-blue-600 text-xl">📈</span>
               </div>
-              <span className="text-2xl font-bold text-slate-900">
+              <span className="text-2xl font-bold text-foreground">
                 {progressPercentage}%
               </span>
             </div>
             <div>
-              <p className="text-slate-500 text-sm font-medium">Progress</p>
+              <p className="text-muted-foreground text-sm font-medium">Progress</p>
             </div>
           </div>
 
           {/* Total Units Card */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+          <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-teal-600 text-xl">🎯</span>
               </div>
               {/* Dynamic Unit Total */}
-              <span className="text-2xl font-bold text-slate-900">
+              <span className="text-2xl font-bold text-foreground">
                 {totalUnits}
               </span>
             </div>
             <div>
-              <p className="text-slate-500 text-sm font-medium">Total Units</p>
+              <p className="text-muted-foreground text-sm font-medium">Total Units</p>
             </div>
           </div>
 
           {/* Quote Card */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
+          <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center">
                 <span className="text-blue-600 text-xl">🏫</span>
               </div>
-              <span className="text-2xl font-bold text-slate-900">
+              <span className="text-2xl font-bold text-foreground">
                 {dbUser.currentCollege || "Community College"}
               </span>
             </div>
             <div>
-              <p className="text-slate-500 text-sm font-medium">
+              <p className="text-muted-foreground text-sm font-medium">
                 Your Current College
               </p>
             </div>
           </div>
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-9 bg-[#82A7A6] rounded-[32px] p-8 border border-slate-200/60 shadow-inner">
+          <div className="lg:col-span-9 bg-primary rounded-[32px] p-8 border border-border shadow-inner">
             <div className="flex justify-between items-center mb-8 px-2">
-              <h2 className="text-3xl font-bold text-white">
+              <h2 className="text-3xl font-bold text-primary-foreground">
                 Your Strategic Timeline
               </h2>
               <button
                 onClick={handleAction}
                 className={`flex items-center gap-2 px-4 py-3 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold ${
                   hasTargets
-                    ? "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
-                    : "bg-[#82A7A6] hover:bg-[#6B8A89] text-white"
+                    ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary-foreground/20"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground border-primary-foreground/20"
                 }`}
               >
                 {hasTargets ? (
                   <>
-                    <PenIcon size={16} className="text-slate-6" />
+                    <PenIcon size={16} className="text-primary-foreground/80" />
                     Edit Plan
                   </>
                 ) : (
                   <>
-                    <Plus size={16} className="text-slate-6" />
+                    <Plus size={16} className="text-primary-foreground/80" />
                     Add University
                   </>
                 )}
               </button>
             </div>
             <div className="mb-6 px-2">
-              <p className="text-sm text-white font-medium flex items-center gap-1">
+              <p className="text-sm text-primary-foreground/90 font-medium flex items-center gap-1">
                 Always feel free to double-check your course articulations on
                 <a
                   href="https://assist.org" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-blue-600 font-bold hover:underline decoration-2"
+                  className="text-primary-foreground font-black hover:underline decoration-2"
                 >
                   assist.org
                 </a>
@@ -617,13 +617,13 @@ export default function DashboardClient({
                   ))}
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-slate-200 rounded-[24px] bg-white hover:bg-slate-50 hover:border-slate-400 transition-all group mt-4"
+                    className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-border/50 rounded-[24px] bg-card hover:bg-muted hover:border-primary/50 transition-all group mt-4"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[#f1f5f9] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors">
-                        <Plus size={24} className="text-slate-600" />
+                      <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center group-hover:bg-background transition-colors">
+                        <Plus size={24} className="text-muted-foreground" />
                       </div>
-                      <span className="text-lg font-bold text-slate-600">
+                      <span className="text-lg font-bold text-muted-foreground">
                         Add Semester
                       </span>
                     </div>
@@ -631,19 +631,19 @@ export default function DashboardClient({
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-400">
+                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4 text-muted-foreground/50">
                     <GraduationCap size={32} />
                   </div>
-                  <h3 className="text-lg font-bold text-white">
+                  <h3 className="text-lg font-bold text-primary-foreground">
                     No universities targeted yet
                   </h3>
-                  <p className="text-white max-w-xs mt-2 mb-6">
+                  <p className="text-primary-foreground/80 max-w-xs mt-2 mb-6">
                     Select your target colleges so we can build your
                     requirements.
                   </p>
                   <button
                     onClick={() => router.push("/dashboard/addCollege")}
-                    className="px-8 py-3 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
+                    className="px-8 py-3 bg-primary-foreground text-primary font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95"
                   >
                     Go to Universities
                   </button>
@@ -660,28 +660,28 @@ export default function DashboardClient({
                 variant="warning"
               >
                 <div className="space-y-4">
-                  <p className="text-slate-500 text-sm font-medium">
+                  <p className="text-muted-foreground text-sm font-medium">
                     {initialUnassigned.length} course
                     {initialUnassigned.length !== 1 ? "s" : ""}{" "}
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="text-[#82A7A6] font-bold hover:underline underline-offset-2"
+                      className="text-amber-950 dark:text-amber-50 font-bold hover:underline underline-offset-2"
                     >
                       needs scheduling
                     </button>
                   </p>
 
                   {/* Course List Scrollbox */}
-                  <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent space-y-2 pr-2">
+                  <div className="max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-amber-200 scrollbar-track-transparent space-y-2 pr-2">
                     {initialUnassigned.map((course) => (
                       <div
                         key={course.canonicalId}
-                        className="px-4 py-3 bg-slate-50 rounded-2xl border border-slate-200 flex justify-between items-center hover:bg-slate-100 transition-colors"
+                        className="px-4 py-3 bg-amber-500/10 rounded-2xl border border-amber-500/20 flex justify-between items-center hover:bg-amber-500/20 transition-colors"
                       >
-                        <span className="font-bold text-slate-800 text-lg tracking-tight">
+                        <span className="font-bold text-amber-950 text-lg tracking-tight">
                           {course.localCode}
                         </span>
-                        <span className="text-sm text-slate-500 font-bold px-3 py-1 bg-white rounded-full border border-slate-100">
+                        <span className="text-sm text-amber-900 font-bold px-3 py-1 bg-amber-400/20 rounded-full border border-amber-500/20">
                           {course.units} units
                         </span>
                       </div>
@@ -708,29 +708,29 @@ export default function DashboardClient({
                     {task.completed ? (
                       <CheckSquare
                         size={16}
-                        className="flex-shrink-0 text-[#82A7A6]"
+                        className="flex-shrink-0 text-primary"
                       />
                     ) : (
                       <Square
                         size={16}
-                        className="flex-shrink-0 text-slate-300 group-hover:text-slate-400"
+                        className="flex-shrink-0 text-muted group-hover:text-muted-foreground"
                       />
                     )}
                     <span
-                      className={`text-sm font-semibold ${task.completed ? "text-slate-400 line-through" : "text-slate-600"}`}
+                      className={`text-sm font-semibold ${task.completed ? "text-muted-foreground line-through" : "text-foreground"}`}
                     >
                       {task.label}
                     </span>
                   </div>
                 ))}
-                <div className="pt-2 border-t border-slate-100 mt-4">
-                  <p className="text-xs text-slate-400 font-medium text-center italic">
+                <div className="pt-2 border-t border-border/50 mt-4">
+                  <p className="text-xs text-muted-foreground font-medium text-center italic">
                     Don&apos;t know if you&apos;ve fulfilled an IGETC requirement?{" "}
                     <a
                       href="https://assist.org"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#82A7A6] font-bold hover:underline"
+                      className="text-primary font-bold hover:underline"
                     >
                       Check assist.org
                     </a>
@@ -756,30 +756,30 @@ export default function DashboardClient({
                     {task.completed ? (
                       <CheckSquare
                         size={16}
-                        className="flex-shrink-0 text-[#82A7A6]"
+                        className="flex-shrink-0 text-primary"
                       />
                     ) : (
                       <Square
                         size={16}
-                        className="flex-shrink-0 text-slate-300 group-hover:text-slate-400"
+                        className="flex-shrink-0 text-muted group-hover:text-muted-foreground"
                       />
                     )}
                     <span
-                      className={`text-sm font-semibold ${task.completed ? "text-slate-400 line-through" : "text-slate-600"}`}
+                      className={`text-sm font-semibold ${task.completed ? "text-muted-foreground line-through" : "text-foreground"}`}
                     >
                       {task.label}
                     </span>
                   </div>
                 ))}
-                <div className="pt-2 border-t border-slate-100 mt-4">
-                  <p className="text-xs text-slate-400 font-medium text-center italic">
+                <div className="pt-2 border-t border-border/50 mt-4">
+                  <p className="text-xs text-muted-foreground font-medium text-center italic">
                     Don&apos;t know if you&apos;ve fulfilled a 7-course pattern
                     requirement?{" "}
                     <a
                       href="https://assist.org"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#82A7A6] font-bold hover:underline"
+                      className="text-primary font-bold hover:underline"
                     >
                       Check assist.org
                     </a>

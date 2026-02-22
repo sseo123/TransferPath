@@ -170,8 +170,8 @@ export default function CalendarSidebar() {
   };
 
   const taskColors = {
-    homework: "bg-[#82A7A6]",
-    deadline: "bg-red-500",
+    homework: "bg-primary",
+    deadline: "bg-destructive",
     other: "bg-purple-500",
   };
 
@@ -194,9 +194,9 @@ export default function CalendarSidebar() {
         <button
           key={day}
           onClick={() => handleDateClick(day)}
-          className={`${cellClass} aspect-square rounded-lg transition-all hover:bg-slate-100 flex flex-col items-center justify-center relative
-            ${isToday ? 'bg-[#82A7A6] text-white hover:bg-[#6B8A89]' : ''}
-            ${isSelected ? 'ring-2 ring-[#82A7A6] bg-[#82A7A6]/10' : ''}
+          className={`${cellClass} aspect-square rounded-lg transition-all hover:bg-muted flex flex-col items-center justify-center relative
+            ${isToday ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''}
+            ${isSelected ? 'ring-2 ring-primary bg-primary/10' : ''}
           `}
         >
           <span className={`${isModal ? 'text-base' : 'text-xs'} font-medium`}>{day}</span>
@@ -216,8 +216,8 @@ export default function CalendarSidebar() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm h-64 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#82A7A6]"></div>
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-sm h-64 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -225,27 +225,27 @@ export default function CalendarSidebar() {
   return (
     <>
       {/* Sidebar Calendar Widget */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-slate-800">
+          <h3 className="text-sm font-bold text-foreground">
             {monthNames[month]} {year}
           </h3>
           <div className="flex items-center gap-1">
             <button
               onClick={handlePrevMonth}
-              className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors"
+              className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={handleNextMonth}
-              className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded transition-colors"
+              className="p-1 text-muted-foreground hover:text-foreground hover:bg-muted rounded transition-colors"
             >
               <ChevronRight size={16} />
             </button>
             <button
               onClick={() => setIsExpanded(true)}
-              className="p-1 text-slate-400 hover:text-[#82A7A6] hover:bg-slate-100 rounded transition-colors ml-1"
+              className="p-1 text-muted-foreground hover:text-primary hover:bg-muted rounded transition-colors ml-1"
             >
               <Maximize2 size={16} />
             </button>
@@ -255,7 +255,7 @@ export default function CalendarSidebar() {
         {/* Day labels */}
         <div className="grid grid-cols-7 gap-1 mb-2">
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
-            <div key={idx} className="text-center text-[10px] font-medium text-slate-400">
+            <div key={idx} className="text-center text-[10px] font-medium text-muted-foreground">
               {day}
             </div>
           ))}
@@ -268,20 +268,20 @@ export default function CalendarSidebar() {
 
         {/* Quick add or upcoming tasks */}
         {selectedDate ? (
-          <div className="border-t border-slate-200 pt-3 space-y-2">
+          <div className="border-t border-border pt-3 space-y-2">
             <form onSubmit={handleAddTask} className="space-y-2">
               <input
                 type="text"
                 placeholder="Task title..."
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
-                className="w-full px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
+                className="w-full px-2 py-1.5 text-xs bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               />
               <div className="flex gap-2">
                 <select
                   value={newTaskType}
                   onChange={(e) => setNewTaskType(e.target.value as "homework" | "deadline" | "other")}
-                  className="flex-1 px-2 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
+                  className="flex-1 px-2 py-1.5 text-xs bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                 >
                   <option value="homework">Homework</option>
                   <option value="deadline">Deadline</option>
@@ -289,7 +289,7 @@ export default function CalendarSidebar() {
                 </select>
                 <button
                   type="submit"
-                  className="px-3 py-1.5 bg-[#82A7A6] text-white text-xs font-medium rounded-lg hover:bg-[#6B8A89] transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 bg-primary text-primary-foreground text-xs font-medium rounded-lg hover:bg-primary/90 transition-colors flex items-center gap-1"
                 >
                   <Plus size={12} />
                   Add
@@ -298,33 +298,33 @@ export default function CalendarSidebar() {
             </form>
             <button
               onClick={() => setSelectedDate(null)}
-              className="w-full text-xs text-slate-500 hover:text-slate-700 py-1"
+              className="w-full text-xs text-muted-foreground hover:text-foreground py-1"
             >
               Cancel
             </button>
           </div>
         ) : (
-          <div className="border-t border-slate-200 pt-3">
-            <h4 className="text-xs font-bold text-slate-700 mb-2">Upcoming Tasks</h4>
+          <div className="border-t border-border pt-3">
+            <h4 className="text-xs font-bold text-foreground mb-2">Upcoming Tasks</h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
               {getUpcomingTasks().length === 0 ? (
-                <p className="text-xs text-slate-400 italic">No upcoming tasks</p>
+                <p className="text-xs text-muted-foreground italic">No upcoming tasks</p>
               ) : (
                 getUpcomingTasks().map((task) => (
                   <div
                     key={task.id}
-                    className="group flex items-start gap-2 hover:bg-slate-50 p-1.5 rounded-lg transition-colors"
+                    className="group flex items-start gap-2 hover:bg-muted p-1.5 rounded-lg transition-colors"
                   >
                     <div className={`w-1.5 h-1.5 rounded-full ${taskColors[task.type]} mt-1.5 flex-shrink-0`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-800 truncate">{task.title}</p>
-                      <p className="text-[10px] text-slate-500">
+                      <p className="text-xs font-medium text-foreground truncate">{task.title}</p>
+                      <p className="text-[10px] text-muted-foreground">
                         {new Date(task.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       </p>
                     </div>
                     <button
                       onClick={() => handleDeleteTask(task.id)}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 transition-all"
+                      className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive transition-all"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -355,37 +355,37 @@ export default function CalendarSidebar() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-6xl h-[85vh] bg-white rounded-3xl shadow-2xl z-[70] overflow-hidden flex flex-col"
+              className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-6xl h-[85vh] bg-card rounded-3xl shadow-2xl z-[70] overflow-hidden flex flex-col"
             >
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-slate-200">
+              <div className="flex items-center justify-between p-6 border-b border-border">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#82A7A6]/10 rounded-xl flex items-center justify-center">
+                  <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
                     <span className="text-xl">📅</span>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold text-slate-800">
+                    <h2 className="text-xl font-bold text-foreground">
                       {monthNames[month]} {year}
                     </h2>
-                    <p className="text-sm text-slate-500">Plan your semester</p>
+                    <p className="text-sm text-muted-foreground">Plan your semester</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handlePrevMonth}
-                    className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={handleNextMonth}
-                    className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
                   >
                     <ChevronRight size={20} />
                   </button>
                   <button
                     onClick={() => setIsExpanded(false)}
-                    className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors ml-2"
+                    className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors ml-2"
                   >
                     <X size={20} />
                   </button>
@@ -398,7 +398,7 @@ export default function CalendarSidebar() {
                 <div className="flex-1 p-6 overflow-y-auto">
                   <div className="grid grid-cols-7 gap-2 mb-4">
                     {['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map((day) => (
-                      <div key={day} className="text-center text-sm font-semibold text-slate-600">
+                      <div key={day} className="text-center text-sm font-semibold text-muted-foreground">
                         {day}
                       </div>
                     ))}
@@ -416,43 +416,43 @@ export default function CalendarSidebar() {
                       animate={{ x: 0, opacity: 1 }}
                       exit={{ x: 384, opacity: 0 }}
                       transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                      className="w-96 border-l border-slate-200 bg-slate-50/30 overflow-y-auto"
+                      className="w-96 border-l border-border bg-muted/30 overflow-y-auto"
                     >
                       <div className="p-6 space-y-6">
                         {/* Date Header */}
-                        <div className="border-b border-slate-200 pb-4">
-                          <h3 className="text-lg font-bold text-slate-800">
+                        <div className="border-b border-border pb-4">
+                          <h3 className="text-lg font-bold text-foreground">
                             {new Date(selectedDate).toLocaleDateString('en-US', { 
                               weekday: 'long', 
                               month: 'long', 
                               day: 'numeric' 
                             })}
                           </h3>
-                          <p className="text-sm text-slate-500 mt-1">
+                          <p className="text-sm text-muted-foreground mt-1">
                             {getTasksForDate(selectedDate).length} tasks, {getNotesForDate(selectedDate).length} notes
                           </p>
                         </div>
 
                         {/* Tasks Section */}
                         <div>
-                          <h4 className="text-sm font-bold text-slate-700 mb-3">Tasks</h4>
+                          <h4 className="text-sm font-bold text-foreground mb-3">Tasks</h4>
                           <div className="space-y-2 mb-4">
                             {getTasksForDate(selectedDate).map((task) => (
                               <div
                                 key={task.id}
-                                className="group bg-slate-900/5 rounded-xl p-3 hover:bg-slate-900/10 transition-colors"
+                                className="group bg-foreground/5 rounded-xl p-3 hover:bg-foreground/10 transition-colors"
                               >
                                 <div className="flex items-start justify-between gap-2">
                                   <div className="flex items-start gap-2 flex-1">
                                     <div className={`w-2 h-2 rounded-full ${taskColors[task.type]} mt-1.5 flex-shrink-0`} />
                                     <div className="flex-1 min-w-0">
-                                      <p className="text-sm font-medium text-slate-800">{task.title}</p>
-                                      <p className="text-xs text-slate-500 capitalize mt-0.5">{task.type}</p>
+                                      <p className="text-sm font-medium text-foreground">{task.title}</p>
+                                      <p className="text-xs text-muted-foreground capitalize mt-0.5">{task.type}</p>
                                     </div>
                                   </div>
                                   <button
                                     onClick={() => handleDeleteTask(task.id)}
-                                    className="opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 transition-all"
+                                    className="opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive transition-all"
                                   >
                                     <Trash2 size={14} />
                                   </button>
@@ -468,13 +468,13 @@ export default function CalendarSidebar() {
                               placeholder="New task title..."
                               value={newTaskTitle}
                               onChange={(e) => setNewTaskTitle(e.target.value)}
-                              className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
+                              className="w-full px-3 py-2 text-sm bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                             />
                             <div className="flex gap-2">
                               <select
                                 value={newTaskType}
                                 onChange={(e) => setNewTaskType(e.target.value as "homework" | "deadline" | "other")}
-                                className="flex-1 px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#82A7A6]/20 focus:border-[#82A7A6]"
+                                className="flex-1 px-3 py-2 text-sm bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                               >
                                 <option value="homework">Homework</option>
                                 <option value="deadline">Deadline</option>
@@ -482,7 +482,7 @@ export default function CalendarSidebar() {
                               </select>
                               <button
                                 type="submit"
-                                className="px-4 py-2 bg-[#82A7A6] text-white text-sm font-medium rounded-xl hover:bg-[#6B8A89] transition-colors flex items-center gap-2"
+                                className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-xl hover:bg-primary/90 transition-colors flex items-center gap-2"
                               >
                                 <Plus size={16} />
                                 Add Task
@@ -493,17 +493,17 @@ export default function CalendarSidebar() {
 
                         {/* Notes Section */}
                         <div>
-                          <h4 className="text-sm font-bold text-slate-700 mb-3">Notes</h4>
+                          <h4 className="text-sm font-bold text-foreground mb-3">Notes</h4>
                           <div className="space-y-2 mb-4">
                             {getNotesForDate(selectedDate).map((note) => (
                               <div
                                 key={note.id}
                                 className="group bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-3 relative"
                               >
-                                <p className="text-sm text-slate-700 pr-6">{note.content}</p>
+                                <p className="text-sm text-foreground/80 pr-6">{note.content}</p>
                                 <button
                                   onClick={() => handleDeleteNote(note.id)}
-                                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-500 transition-all"
+                                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-muted-foreground hover:text-destructive transition-all"
                                 >
                                   <Trash2 size={14} />
                                 </button>
@@ -518,7 +518,7 @@ export default function CalendarSidebar() {
                               value={newNoteContent}
                               onChange={(e) => setNewNoteContent(e.target.value)}
                               rows={3}
-                              className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 resize-none"
+                              className="w-full px-3 py-2 text-sm bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500/20 focus:border-yellow-500 resize-none"
                             />
                             <button
                               type="submit"

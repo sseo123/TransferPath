@@ -65,7 +65,6 @@ export function AutoPlanSimulation() {
   // Phase 1: cursor + selection
   useEffect(() => {
     if (phase !== 0) return;
-    const steps = [0, 1, 2]; // cursor at 0, 1, 2; select berkeley at 1, ucla at 2
     const t = setInterval(() => {
       setCursorIndex((i) => {
         const next = i + 1;

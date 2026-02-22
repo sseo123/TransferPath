@@ -19,6 +19,7 @@ export function ThemeToggle() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -35,7 +36,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-10 h-10 rounded-[10px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800" aria-hidden />
+      <div className="w-10 h-10 rounded-[10px] border border-border bg-card" aria-hidden />
     );
   }
 
@@ -46,7 +47,7 @@ export function ThemeToggle() {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-10 h-10 rounded-[10px] border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-gray-700 dark:text-slate-300 hover:border-[#82A7A6] hover:text-[#82A7A6] dark:hover:border-[#82A7A6] dark:hover:text-[#82A7A6] transition-colors shadow-sm"
+        className="w-10 h-10 rounded-[10px] border border-border bg-card flex items-center justify-center text-foreground hover:border-primary hover:text-primary transition-colors shadow-sm"
         aria-label="Theme"
         aria-expanded={open}
         aria-haspopup="true"
@@ -55,7 +56,7 @@ export function ThemeToggle() {
       </button>
       {open && (
         <div
-          className="absolute top-full left-0 mt-1.5 min-w-[120px] py-1.5 rounded-[10px] bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-lg z-50"
+          className="absolute top-full left-0 mt-1.5 min-w-[120px] py-1.5 rounded-[10px] bg-card border border-border shadow-lg z-50"
           role="menu"
         >
           {options.map((opt) => (
@@ -69,8 +70,8 @@ export function ThemeToggle() {
               }}
               className={`w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
                 (theme || "system") === opt.value
-                  ? "text-[#82A7A6] bg-[#82A7A6]/10 dark:bg-[#82A7A6]/20"
-                  : "text-gray-700 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                  ? "text-primary bg-primary/10"
+                  : "text-foreground hover:bg-muted"
               }`}
             >
               {opt.label}

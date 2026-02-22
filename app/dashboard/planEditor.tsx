@@ -255,40 +255,40 @@ function CreateCourseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="p-8 border-b border-slate-100 flex justify-between items-center bg-purple-50/50">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+      <div className="bg-card rounded-3xl w-full max-w-lg shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div className="p-8 border-b border-border flex justify-between items-center bg-secondary/50">
           <div>
-            <h2 className="text-2xl font-black text-slate-800">Add Custom Course</h2>
-            <p className="text-slate-500 text-sm mt-1">Courses not found in the DVC catalog</p>
+            <h2 className="text-2xl font-black text-foreground">Add Custom Course</h2>
+            <p className="text-muted-foreground text-sm mt-1">Courses not found in the DVC catalog</p>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 transition-colors">
+          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
             <Trash2 size={24} className="rotate-45" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
-          <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl flex gap-3">
-            <Info size={20} className="text-amber-600 shrink-0 mt-0.5" />
-            <p className="text-xs text-amber-700 font-medium leading-relaxed">
+          <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3">
+            <Info size={20} className="text-amber-500 shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-500 font-medium leading-relaxed">
               Note: Custom courses won&apos;t have prerequisite validation. Please ensure you&apos;ve met any requirements before enrolling.
             </p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Course Code</label>
+              <label className="text-xs font-black text-muted-foreground uppercase tracking-wider">Course Code</label>
               <input
                 autoFocus
                 type="text"
                 value={localCode}
                 onChange={(e) => setLocalCode(e.target.value)}
                 placeholder="e.g., MATH 999"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+                className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-foreground"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Units</label>
+              <label className="text-xs font-black text-muted-foreground uppercase tracking-wider">Units</label>
               <input
                 type="number"
                 min="0"
@@ -296,28 +296,28 @@ function CreateCourseModal({
                 step="1"
                 value={units}
                 onChange={(e) => setUnits(parseFloat(e.target.value))}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+                className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-foreground"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Course Title</label>
+            <label className="text-xs font-black text-muted-foreground uppercase tracking-wider">Course Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Advanced Calculus"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 outline-none transition-all font-bold text-slate-800"
+              className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-foreground"
             />
           </div>
 
           {targetUniversities.length > 0 && (
             <div className="space-y-3">
-              <label className="text-xs font-black text-slate-400 uppercase tracking-wider">Required By Universities</label>
+              <label className="text-xs font-black text-muted-foreground uppercase tracking-wider">Required By Universities</label>
               <div className="grid grid-cols-2 gap-2">
                 {targetUniversities.map((uni) => (
-                  <label key={uni.code} className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+                  <label key={uni.code} className="flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-xl cursor-pointer hover:bg-muted transition-colors">
                     <input
                       type="checkbox"
                       checked={requiredBy.includes(uni.code)}
@@ -328,9 +328,9 @@ function CreateCourseModal({
                           setRequiredBy(requiredBy.filter(c => c !== uni.code));
                         }
                       }}
-                      className="w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                      className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
                     />
-                    <span className="text-xs font-bold text-slate-700">{uni.name}</span>
+                    <span className="text-xs font-bold text-foreground/80">{uni.name}</span>
                   </label>
                 ))}
               </div>
@@ -343,13 +343,13 @@ function CreateCourseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-4 bg-slate-50 text-slate-500 font-bold rounded-2xl hover:bg-slate-100 transition-all active:scale-95"
+              className="flex-1 py-4 bg-muted text-muted-foreground font-bold rounded-2xl hover:bg-muted/80 transition-all active:scale-95"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-[2] py-4 bg-purple-600 text-white font-bold rounded-2xl shadow-lg shadow-purple-200 hover:bg-purple-700 hover:shadow-xl transition-all active:scale-95"
+              className="flex-[2] py-4 bg-primary text-primary-foreground font-bold rounded-2xl shadow-lg hover:bg-primary/90 transition-all active:scale-95"
             >
               Create Course
             </button>
@@ -436,29 +436,29 @@ function DroppableSemester({
   return (
     <div
       ref={setNodeRef}
-      className={`relative bg-white rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${
+      className={`relative bg-card rounded-3xl border-2 transition-all duration-200 overflow-hidden flex flex-col min-h-[350px] ${
         isOver
-          ? "border-[#82A7A6] ring-4 ring-teal-50"
+          ? "border-primary ring-4 ring-primary/10"
           : isOverLimit
-            ? "border-red-400 ring-4 ring-red-50"
-            : "border-slate-200"
+            ? "border-destructive ring-4 ring-destructive/10"
+            : "border-border"
       }`}
     >
       {isOver && (
-        <div className="absolute inset-0 z-10 bg-teal-50/40 flex items-center justify-center pointer-events-none">
-          <div className="bg-white px-4 py-2 rounded-full border-2 border-dashed border-[#82A7A6] text-[#82A7A6] font-bold text-sm shadow-sm">
+        <div className="absolute inset-0 z-10 bg-primary/10 flex items-center justify-center pointer-events-none">
+          <div className="bg-background px-4 py-2 rounded-full border-2 border-dashed border-primary text-primary font-bold text-sm shadow-sm">
             Drop Course Here
           </div>
         </div>
       )}
-      <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+      <div className="p-5 border-b border-border/50 flex justify-between items-center bg-muted/30">
         <div className="flex flex-col">
-          <h3 className="font-black text-slate-800 leading-none">
+          <h3 className="font-black text-foreground leading-none">
             {semester.name}
           </h3>
           <span
             className={`text-[10px] font-bold mt-1 uppercase tracking-wider ${
-              isOverLimit ? "text-red-600" : "text-slate-400"
+              isOverLimit ? "text-destructive" : "text-muted-foreground"
             }`}
           >
             {totalUnits} / {maxUnits} Units
@@ -466,13 +466,13 @@ function DroppableSemester({
         </div>
         <button
           onClick={onDelete}
-          className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+          className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-all"
         >
           <Trash2 size={16} />
         </button>
       </div>
       {isOverLimit && (
-        <div className="p-3 bg-red-50 border-b border-red-200 text-red-600 text-xs font-bold text-center">
+        <div className="p-3 bg-destructive/10 border-b border-destructive/20 text-destructive text-xs font-bold text-center">
           ⚠️ Counselor approval is needed for more than {maxUnits} units
         </div>
       )}
@@ -482,7 +482,7 @@ function DroppableSemester({
           strategy={verticalListSortingStrategy}
         >
           {semester.courses.length === 0 ? (
-            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-32 flex items-center justify-center text-slate-300 text-xs font-medium">
+            <div className="border-2 border-dashed border-border/50 rounded-2xl h-32 flex items-center justify-center text-muted-foreground/50 text-xs font-medium">
               Drop courses here
             </div>
           ) : (
@@ -505,11 +505,11 @@ function DroppableSemester({
 
               if (!catalogData) {
                 return (
-                  <div key={course.canonicalId} className="p-4 border-2 border-red-200 bg-red-50 rounded-2xl mb-3">
-                    <p className="text-xs font-bold text-red-600 uppercase">
+                  <div key={course.canonicalId} className="p-4 border-2 border-destructive/20 bg-destructive/10 rounded-2xl mb-3">
+                    <p className="text-xs font-bold text-destructive uppercase">
                       ⚠️ Missing from Catalog
                     </p>
-                    <p className="text-sm font-bold text-slate-800">
+                    <p className="text-sm font-bold text-foreground">
                       {course.localCode}
                     </p>
                   </div>
@@ -554,11 +554,11 @@ function Sidebar({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[400px] w-65 bg-white rounded-3xl border-2 p-5 transition-all ${
-        isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
+      className={`flex flex-col h-fit min-h-[400px] w-65 bg-card rounded-3xl border-2 p-5 transition-all ${
+        isOver ? "border-primary ring-4 ring-primary/10" : "border-border"
       }`}
     >
-      <h3 className="font-black text-slate-800 text-lg mb-4">
+      <h3 className="font-black text-foreground text-lg mb-4">
         Required Courses
       </h3>
       <div className="space-y-3 flex-1">
@@ -567,7 +567,7 @@ function Sidebar({
           strategy={verticalListSortingStrategy}
         >
           {courses.length === 0 ? (
-            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-50 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-2">
+            <div className="border-2 border-dashed border-border/50 rounded-2xl h-50 flex items-center justify-center text-muted-foreground/50 text-xs font-medium text-center p-2">
               Deleted courses will appear here. Drag and drop to add them back or delete them.
             </div>
           ) : (
@@ -604,11 +604,11 @@ function CompletedCoursesBox({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[400px] w-65 bg-white rounded-3xl border-2 p-5 transition-all mt-4 ${
-        isOver ? "border-[#82A7A6] ring-4 ring-teal-50" : "border-slate-200"
+      className={`flex flex-col h-fit min-h-[400px] w-65 bg-card rounded-3xl border-2 p-5 transition-all mt-4 ${
+        isOver ? "border-primary ring-4 ring-primary/10" : "border-border"
       }`}
     >
-      <h3 className="font-black text-slate-800 text-lg mb-2">
+      <h3 className="font-black text-foreground text-lg mb-2">
         Completed Courses
       </h3>
       <div className="space-y-3 flex-1">
@@ -617,7 +617,7 @@ function CompletedCoursesBox({
           strategy={verticalListSortingStrategy}
         >
           {courses.length === 0 ? (
-            <div className="border-2 border-dashed border-slate-100 rounded-2xl h-50 flex items-center justify-center text-slate-300 text-xs font-medium text-center p-2">
+            <div className="border-2 border-dashed border-border/50 rounded-2xl h-50 flex items-center justify-center text-muted-foreground/50 text-xs font-medium text-center p-2">
               Drag completed courses here: Courses you&apos;ve already taken, AP credits, etc.
             </div>
           ) : (
@@ -963,14 +963,14 @@ export default function PlanEditor({
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="min-h-screen bg-white p-4 md:p-8 font-sans">
+      <div className="min-h-screen bg-background p-4 md:p-8 font-sans">
         {/* HEADER FIX: Added flex-wrap and items-start for small screens */}
-        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-card p-6 rounded-2xl border border-border shadow-sm">
           <div>
-            <h1 className="text-2xl font-black text-slate-800">
+            <h1 className="text-2xl font-black text-foreground">
               Course Planning
             </h1>
-            <p className="text-slate-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Draft your plan. Changes only save when you click &quot;Save
               Changes&quot;.
             </p>
@@ -980,20 +980,20 @@ export default function PlanEditor({
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="flex items-center justify-center gap-2 px-6 py-2 bg-[#82A7A6] text-white font-bold rounded-xl shadow-lg hover:bg-[#6B8A89] transition-all disabled:opacity-50 whitespace-nowrap flex-1 sm:flex-none"
+                className="flex items-center justify-center gap-2 px-6 py-2 bg-primary text-primary-foreground font-bold rounded-xl shadow-lg hover:bg-primary/90 transition-all disabled:opacity-50 whitespace-nowrap flex-1 sm:flex-none"
               >
                 <Save size={18} /> {isSaving ? "Saving..." : "Save Changes"}
               </button>
             )}
             <button
               onClick={() => setShowCreateCourseModal(true)}
-              className="px-6 py-2 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition-all whitespace-nowrap flex-1 sm:flex-none"
+              className="px-6 py-2 bg-primary text-primary-foreground font-bold rounded-xl shadow-lg hover:bg-primary/90 transition-all whitespace-nowrap flex-1 sm:flex-none"
             >
               + Add Custom Course
             </button>
             <button
               onClick={onExit}
-              className="px-6 py-2 bg-white border border-slate-200 font-bold rounded-xl hover:bg-slate-50 transition-all whitespace-nowrap flex-1 sm:flex-none"
+              className="px-6 py-2 bg-card border border-border text-foreground font-bold rounded-xl hover:bg-muted transition-all whitespace-nowrap flex-1 sm:flex-none"
             >
               Escape Edit Mode
             </button>
@@ -1030,13 +1030,13 @@ export default function PlanEditor({
 
             <button
               onClick={handleAddTerm}
-              className="w-full py-4 border-2 border-dashed border-slate-200 rounded-3xl text-slate-400 font-bold hover:bg-white hover:border-slate-300 transition-all mb-10"
+              className="w-full py-4 border-2 border-dashed border-border rounded-3xl text-muted-foreground font-bold hover:bg-card hover:border-primary/50 transition-all mb-10"
             >
               + Add Term
             </button>
 
             <footer className="w-full text-center pb-6">
-              <p className="text-[12px] text-slate-500/80 font-medium tracking-tight">
+              <p className="text-[12px] text-muted-foreground/60 font-medium tracking-tight">
                 Academic departments may not offer summer courses for all
                 requirements. Verify availability with a counselor and confirm
                 articulation on{" "}
@@ -1044,7 +1044,7 @@ export default function PlanEditor({
                   href="https://assist.org"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline decoration-slate-300 underline-offset-2 hover:text-slate-800 transition-colors"
+                  className="underline decoration-border underline-offset-2 hover:text-foreground transition-colors"
                 >
                   Assist.org
                 </a>

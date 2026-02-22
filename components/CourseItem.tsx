@@ -31,20 +31,20 @@ export default function CourseItem({
   const remainingCount = remainingUnis.length;
 
   const getBadgeStyle = () => {
-    return "bg-[#7ca1ad] text-white text-[10px] font-bold uppercase tracking-wider rounded-full";
+    return "bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-wider rounded-full";
   };
 
   if (variant === "row") {
     return (
-      <div className="group flex items-center justify-between p-6 hover:bg-slate-50/50 transition-colors cursor-pointer">
+      <div className="group flex items-center justify-between p-6 hover:bg-muted/50 transition-colors cursor-pointer">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <span className={`text-lg font-bold leading-tight ${isCompleted ? "line-through text-slate-400" : "text-slate-900"}`}>
+              <span className={`text-lg font-bold leading-tight ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}>
                 {course.localCode}
               </span>
               {isCustom && (
-                <span className="bg-purple-100 text-purple-600 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
+                <span className="bg-primary/10 text-primary text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
                   Custom
                 </span>
               )}
@@ -52,7 +52,7 @@ export default function CourseItem({
 
             {(course.isCritical || course.isCustom) && (
               <div className="flex items-center gap-2">
-                <span className="text-slate-300 font-bold">·</span>
+                <span className="text-muted/50 font-bold">·</span>
                 <div className="flex gap-1.5 items-center">
                   {allUnis.length > 0 ? (
                     <>
@@ -64,23 +64,23 @@ export default function CourseItem({
                       
                       {remainingCount > 0 && (
                         <div className="relative group/tooltip">
-                          <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full cursor-help">
+                          <span className="text-[10px] font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-full cursor-help">
                             +{remainingCount} more
                           </span>
                           
-                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:flex flex-col gap-1 bg-[#82A7A6] text-white p-2 rounded-lg shadow-xl z-50 min-w-[120px]">
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:flex flex-col gap-1 bg-primary text-primary-foreground p-2 rounded-lg shadow-xl z-50 min-w-[120px]">
                             {remainingUnis.map(uni => (
-                              <span key={uni} className="text-[10px] font-bold border-b border-white/10 last:border-0 pb-1 last:pb-0">
+                              <span key={uni} className="text-[10px] font-bold border-b border-primary-foreground/10 last:border-0 pb-1 last:pb-0">
                                 {uni}
                               </span>
                             ))}
-                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[#82A7A6]" />
+                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-primary" />
                           </div>
                         </div>
                       )}
                     </>
                   ) : course.isCritical ? (
-                    <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-[10px] font-bold uppercase tracking-wider rounded-full border border-teal-200">
+                    <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded-full border border-primary/20">
                       Required
                     </span>
                   ) : null}
@@ -89,13 +89,13 @@ export default function CourseItem({
             )}
           </div>
 
-          <span className={`font-medium ${isCompleted ? "line-through text-slate-400" : "text-slate-500"}`}>
+          <span className={`font-medium ${isCompleted ? "line-through text-muted-foreground" : "text-muted-foreground"}`}>
             {course.title}
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full text-slate-500">
+          <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full text-muted-foreground">
             {course.units} Units
           </span>
         </div>
@@ -110,12 +110,12 @@ export default function CourseItem({
         isOverlay ? "cursor-grabbing shadow-xl scale-105 z-50" : "cursor-grab"
       } ${
         isSidebar
-          ? "bg-slate-50 border-slate-200"
+          ? "bg-muted/50 border-border"
           : isCustom
-            ? "border-purple-100 bg-white"
+            ? "border-primary/20 bg-card"
             : isValid
-              ? "border-emerald-100 bg-white"
-              : "border-red-200 bg-white"
+              ? "border-emerald-500/20 bg-card"
+              : "border-destructive/20 bg-card"
       }`}
     >
       {!isOverlay && onDelete && (
@@ -135,31 +135,31 @@ export default function CourseItem({
           <span
             className={`text-[10px] font-black uppercase ${
               isSidebar
-                ? "text-slate-400"
+                ? "text-muted-foreground"
                 : isCustom
-                  ? "text-purple-500"
+                  ? "text-primary"
                   : isValid
                     ? "text-emerald-500"
-                    : "text-red-500"
+                    : "text-destructive"
             }`}
           >
             {course.localCode}
           </span>
           {isCustom && (
-            <span className="bg-purple-100 text-purple-600 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
+            <span className="bg-primary/10 text-primary text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
               Custom
             </span>
           )}
         </div>
-        <span className="text-[10px] font-bold text-slate-300">
+        <span className="text-[10px] font-bold text-muted-foreground/50">
           {course.units} Units
         </span>
       </div>
-      <h4 className="font-bold text-slate-800 text-sm leading-tight pr-4">
+      <h4 className="font-bold text-foreground text-sm leading-tight pr-4">
         {course.title}
       </h4>
       {!isCustom && !isValid && !isSidebar && missing.length > 0 && (
-        <p className="text-[9px] font-black text-red-500 uppercase mt-2">
+        <p className="text-[9px] font-black text-destructive uppercase mt-2">
           ⚠️ Missing: {missing.join(", ")}
         </p>
       )}
