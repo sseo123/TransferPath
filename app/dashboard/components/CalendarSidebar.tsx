@@ -18,6 +18,12 @@ interface Note {
   date: string;
 }
 
+const CALIFORNIA_TZ = "America/Los_Angeles";
+
+function getTodayInCalifornia(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: CALIFORNIA_TZ });
+}
+
 export default function CalendarSidebar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -55,7 +61,7 @@ export default function CalendarSidebar() {
   const month = currentDate.getMonth();
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const today = new Date().toISOString().split('T')[0];
+  const today = getTodayInCalifornia();
 
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
@@ -69,7 +75,7 @@ export default function CalendarSidebar() {
   };
 
   const getUpcomingTasks = () => {
-    const now = new Date().toISOString().split('T')[0];
+    const now = getTodayInCalifornia();
     return tasks
       .filter(task => task.date >= now)
       .sort((a, b) => a.date.localeCompare(b.date))
@@ -319,7 +325,7 @@ export default function CalendarSidebar() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-foreground truncate">{task.title}</p>
                       <p className="text-[10px] text-muted-foreground">
-                        {new Date(task.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {new Date(task.date + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: CALIFORNIA_TZ })}
                       </p>
                     </div>
                     <button
@@ -422,10 +428,11 @@ export default function CalendarSidebar() {
                         {/* Date Header */}
                         <div className="border-b border-border pb-4">
                           <h3 className="text-lg font-bold text-foreground">
-                            {new Date(selectedDate).toLocaleDateString('en-US', { 
-                              weekday: 'long', 
-                              month: 'long', 
-                              day: 'numeric' 
+                            {new Date(selectedDate + "T12:00:00").toLocaleDateString("en-US", {
+                              weekday: "long",
+                              month: "long",
+                              day: "numeric",
+                              timeZone: CALIFORNIA_TZ,
                             })}
                           </h3>
                           <p className="text-sm text-muted-foreground mt-1">
