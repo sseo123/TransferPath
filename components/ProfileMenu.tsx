@@ -5,16 +5,8 @@ import { useTheme } from "next-themes";
 import { LogOut, Sun, Moon, Monitor, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { logout, setStartTerm, setCurrentCollege } from "@/app/dashboard/actions";
+import { User } from "@/lib/types/user";
 
-interface User {
-  id: string;
-  username: string;
-  firstName: string | null;
-  lastName: string | null;
-  startSeason: string | null;
-  startYear: number | null;
-  currentCollege: string | null;
-}
 
 export function ProfileMenu({ user, isCollapsed }: { user: User; isCollapsed: boolean }) {
   const [isOpen, setIsOpen] = useState(false);

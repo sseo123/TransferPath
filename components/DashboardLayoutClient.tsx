@@ -2,15 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import DashboardSidebar from "./DashboardSidebar";
+import { User } from "@/lib/types/user";
 
-interface User {
-  id: string;
-  username: string;
-  firstName: string | null;
-  lastName: string | null;
-  startSeason: string | null;
-  startYear: number | null;
-}
 
 export default function DashboardLayoutClient({
   children,

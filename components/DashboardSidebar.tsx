@@ -5,15 +5,8 @@ import { usePathname } from "next/navigation";
 import { LayoutDashboard, GraduationCap, ChevronLeft, ChevronRight } from "lucide-react";
 import CalendarSidebar from "@/app/dashboard/components/CalendarSidebar";
 import { ProfileMenu } from "@/components/ProfileMenu";
+import { User } from "@/lib/types/user";
 
-interface User {
-  id: string;
-  username: string;
-  firstName: string | null;
-  lastName: string | null;
-  startSeason: string | null;
-  startYear: number | null;
-}
 
 export default function DashboardSidebar({ 
   user, 

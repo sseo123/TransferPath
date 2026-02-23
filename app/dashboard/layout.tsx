@@ -4,15 +4,7 @@ import { getDb } from "@/lib/db";
 import { userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import DashboardLayoutClient from "@/components/DashboardLayoutClient";
-
-interface User {
-  id: string;
-  username: string;
-  firstName: string | null;
-  lastName: string | null;
-  startSeason: string | null;
-  startYear: number | null;
-}
+import { User } from "@/lib/types/user";
 
 export default async function DashboardLayout({
   children,
