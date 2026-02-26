@@ -109,7 +109,7 @@ export default async function Dashboard() {
 
   const requirementsMap = new Map<
     string,
-    { isCritical: boolean; requiredBy: Set<string> }
+    { isCritical: boolean; stronglyRecommended: boolean; requiredBy: Set<string> }
   >();
 
   targetRequirementGraphs.forEach((graph) => {
@@ -117,11 +117,13 @@ export default async function Dashboard() {
       if (!requirementsMap.has(req.canonicalId)) {
         requirementsMap.set(req.canonicalId, {
           isCritical: false,
+          stronglyRecommended: false,
           requiredBy: new Set(),
         });
       }
       const entry = requirementsMap.get(req.canonicalId)!;
       if (req.isCritical) entry.isCritical = true;
+      if (req.stronglyRecommended) entry.stronglyRecommended = true;
       if (req.origin) entry.requiredBy.add(req.origin);
     });
   });

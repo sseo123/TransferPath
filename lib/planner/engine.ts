@@ -13,12 +13,19 @@ function getFullRequirementList(
     if (finalRequirements.has(node.canonicalId)) {
       const existing = finalRequirements.get(node.canonicalId)!;
       existing.isCritical = existing.isCritical || node.isCritical;
+      existing.stronglyRecommended = existing.stronglyRecommended || node.stronglyRecommended;
     } else {
       finalRequirements.set(node.canonicalId, node);
     }
   };
 
   universityReqs.forEach((req) => addOrUpdateRequirement(req));
+
+  // Courses explicitly listed as strongly recommended (isCritical: false) should stay that way
+  // and not be upgraded to required when they appear as prerequisites of other courses.
+  const explicitStronglyRecommended = new Set(
+    universityReqs.filter((r) => !r.isCritical).map((r) => r.canonicalId)
+  );
 
   let head = 0;
   while (head < queue.length) {
@@ -32,14 +39,16 @@ function getFullRequirementList(
           const newNode: RequirementNode = {
             canonicalId: prereqId,
             category: "PREP",
-            isCritical: true, // Prerequisites are usually critical
+            isCritical: explicitStronglyRecommended.has(prereqId) ? false : true, // Respect explicit strongly recommended
             origin: currentReq.origin, // Propagate origin
           };
           finalRequirements.set(prereqId, newNode);
           queue.push(newNode);
         } else {
           const existing = finalRequirements.get(prereqId)!;
-          existing.isCritical = existing.isCritical || currentReq.isCritical;
+          if (!explicitStronglyRecommended.has(prereqId)) {
+            existing.isCritical = existing.isCritical || currentReq.isCritical;
+          }
           if (currentReq.origin && !existing.origin?.includes(currentReq.origin)) {
             existing.origin = existing.origin
               ? `${existing.origin},${currentReq.origin}`

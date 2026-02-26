@@ -39,7 +39,9 @@ export interface RequirementNode {
   canonicalId: string;
   category: CourseCategory;
   isCritical: boolean;
-  origin?: string; 
+  /** If true, course is strongly recommended for transfer (not strictly required). */
+  stronglyRecommended?: boolean;
+  origin?: string;
 }
 
 // Category-based requirements (breadth, electives, etc.)
@@ -63,6 +65,7 @@ export interface PlannedCourse {
   canonicalId: string;
   title: string;
   units: number;
+  /** If true, required for transfer; if false, strongly recommended. */
   isCritical: boolean;
   requiredBy?: string[]; // List of university codes
   isCustom?: boolean;

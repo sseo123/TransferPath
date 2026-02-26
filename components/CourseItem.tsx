@@ -50,7 +50,7 @@ export default function CourseItem({
               )}
             </div>
 
-            {(course.isCritical || course.isCustom) && (
+            {(course.isCritical || course.isCustom || (!course.isCritical && (course.requiredBy?.length ?? 0) > 0)) && (
               <div className="flex items-center gap-2">
                 <span className="text-muted/50 font-bold">·</span>
                 <div className="flex gap-1.5 items-center">
@@ -79,11 +79,15 @@ export default function CourseItem({
                         </div>
                       )}
                     </>
-                  ) : course.isCritical ? (
+                  ) : course.isCritical || (course.requiredBy?.length ?? 0) > 0 ? (
                     <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded-full border border-primary/20">
                       Required
                     </span>
-                  ) : null}
+                  ) : (
+                    <span className="px-2 py-0.5 bg-muted text-muted-foreground text-[10px] font-bold uppercase tracking-wider rounded-full border border-border">
+                      Strongly recommended
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -151,9 +155,21 @@ export default function CourseItem({
             </span>
           )}
         </div>
-        <span className="text-[10px] font-bold text-muted-foreground/50">
-          {course.units} Units
-        </span>
+        <div className="flex items-center gap-1.5">
+          {!isCustom && course.isCritical && (
+            <span className="text-[8px] font-bold text-primary uppercase tracking-wider rounded px-1.5 py-0.5 border border-primary/20 bg-primary/10">
+              Required
+            </span>
+          )}
+          {!isCustom && !course.isCritical && (course.requiredBy?.length ?? 0) > 0 && (
+              <span className="text-[8px] font-bold text-primary uppercase tracking-wider rounded px-1.5 py-0.5 border border-primary/20 bg-primary/10">
+              Strongly recommended
+            </span>
+          )}
+          <span className="text-[10px] font-bold text-muted-foreground/50">
+            {course.units} Units
+          </span>
+        </div>
       </div>
       <h4 className="font-bold text-foreground text-sm leading-tight pr-4">
         {course.title}
