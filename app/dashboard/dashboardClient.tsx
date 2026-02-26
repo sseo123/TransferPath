@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Semester, PlannedCourse, SyncTask } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
-import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Download } from "lucide-react";
+import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
@@ -370,32 +370,36 @@ export default function DashboardClient({
     );
   }
 
-  const handleDownloadCSV = () => {
-    const headers = ["Semester", "Course Code", "Course Title", "Units", "Status"];
-    
-    const rows = initialSemesters.flatMap((semester) =>
-      semester.courses.map((course) => [
-        semester.name,
-        `"${course.localCode}"`,
-        `"${course.title}"`,
-        course.units,
-        completedSemesters.has(semester.name) ? "Completed" : "Planned"
-      ])
-    );
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-    const csvContent = [headers, ...rows]
-      .map((e) => e.join(","))
-      .join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", `${dbUser.firstName}_Transfer_Plan.csv`);
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleCounselorViewPDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      const { pdf } = await import("@react-pdf/renderer");
+      const { default: CounselorViewPDF } = await import("./CounselorViewPDF");
+      const blob = await pdf(
+        <CounselorViewPDF
+          dbUser={dbUser}
+          semesters={initialSemesters}
+          completedSemesters={completedSemesters}
+          targetUniversities={targetUniversities}
+        />
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `${dbUser.firstName ?? "Student"}_Transfer_Plan_Counselor_View.pdf`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const totalUnits = calculateTotalUnits(initialSemesters.flatMap(s => s.courses));
@@ -469,11 +473,12 @@ export default function DashboardClient({
 
             <div className="flex items-center gap-4">
               <button
-                onClick={handleDownloadCSV}
-                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-card border border-border text-foreground rounded-xl shadow-sm transition-all hover:bg-muted hover:scale-105 active:scale-95"
+                onClick={handleCounselorViewPDF}
+                disabled={isGeneratingPDF}
+                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-card border border-border text-foreground rounded-xl shadow-sm transition-all hover:bg-muted hover:scale-105 active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
               >
-                <Download size={18} />
-                Download CSV
+                <Printer size={18} />
+                {isGeneratingPDF ? "Generating…" : "Counselor View"}
               </button>
               <button
                 onClick={handleTopRightAction}
