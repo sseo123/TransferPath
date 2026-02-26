@@ -3,6 +3,8 @@ import type { RequirementGraph } from "@/lib/planner/types";
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
 import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_eecs";
+import { UCB_DS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ds";
+
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
 // import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
 // import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
@@ -56,6 +58,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCB_EECS_REQUIREMENTS,
         universityCode: "UCB",
       },
+      "Data Science": {
+        displayName: "Data Science",
+        requirements: UCB_DS_REQUIREMENTS,
+        universityCode: "UCB",
+      }
       // "Test": {
       //   displayName: "TEST CASE",
       //   requirements: UCB_TEST_REQUIREMENTS,

@@ -19,6 +19,8 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "COMSC-200", canonicalId: CANONICAL_COURSES.OBJECT_ORIENTED_PROGRAMMING, title: "Object Oriented Programming C++", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS] },
   { localCode: "COMSC-210", canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, title: "Program Design and Data Structures", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
   { localCode: "COMSC-260", canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, title: "Assembly Language Programming/Computer Organization", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
+  { localCode: "COMSC-156", canonicalId: CANONICAL_COURSES.INTRO_DS, title: "Introduction to Data Science", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+
 
   // Physics
   { localCode: "PHYS-129", canonicalId: CANONICAL_COURSES.PRE_PHYSICS, title: "Introduction to Physics for Engineers", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
@@ -48,7 +50,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "ENGIN-230", canonicalId: CANONICAL_COURSES.ENGINEERING_CIRCUITS_AND_ELECTRONICS, title: "Engineering Circuits and Devices", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.PHYSICS_2, CANONICAL_COURSES.DIFF_EQ] }, 
   { localCode: "ENGIN-136", canonicalId: CANONICAL_COURSES.ENGINEERING_USING_MATLAB, title: "Computer Programming for Engineers Using MATLAB", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_1] },
   { localCode: "ENGIN-257", canonicalId: CANONICAL_COURSES.ENGINEERING_STATICS, title: "Statics and Strength of Materials", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2, CANONICAL_COURSES.PHYSICS_1] },
-  { localCode: "ENGIN-210", canonicalId: CANONICAL_COURSES.ENGINEERING_STATICS, title: "Thermodynamics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1, CANONICAL_COURSES.PHYSICS_2] },
+  { localCode: "ENGIN-210", canonicalId: CANONICAL_COURSES.ENGINEERING_THERMODYNAMICS, title: "Thermodynamics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1, CANONICAL_COURSES.PHYSICS_2] },
 
 
 
