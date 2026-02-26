@@ -24,11 +24,14 @@ import { UCLA_MECHE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_meche";
 import { UCLA_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_stats_ds";
 import { UCLA_APMATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_apmath";
 import { UCLA_MATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_math";
-
-
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
+
 import { UCSD_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_cs";
+import { UCSD_MATH_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_math_cs";
+import { UCSD_CE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ce";
+import { UCSD_EE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ee";
+
 
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
 
@@ -168,9 +171,24 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC San Diego": {
     displayName: "UC San Diego",
     majors: {
+      "Computer Engineering": {
+        displayName: "Computer Engineering",
+        requirements: UCSD_CE_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCSD_CS_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCSD_EE_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
+      "Mathematics/Computer Science": {
+        displayName: "Mathematics/Computer Science",
+        requirements: UCSD_MATH_CS_REQUIREMENTS,
         universityCode: "UCSD",
       },
     },
