@@ -3,9 +3,11 @@ import type { RequirementGraph } from "@/lib/planner/types";
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
 import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_eecs";
-import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
-import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
-import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
+// import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
+// import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
+// import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
+
+
 
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
@@ -54,21 +56,21 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCB_EECS_REQUIREMENTS,
         universityCode: "UCB",
       },
-      "Test": {
-        displayName: "TEST CASE",
-        requirements: UCB_TEST_REQUIREMENTS,
-        universityCode: "UCB",
-      },
-      "Business Administration": {
-        displayName: "Business Administration",
-        requirements: UCB_BUSINESS_REQUIREMENTS,
-        universityCode: "UCB",
-      },
-      "Economics": {
-        displayName: "Economics",
-        requirements: UCB_ECON_REQUIREMENTS,
-        universityCode: "UCB",
-      },
+      // "Test": {
+      //   displayName: "TEST CASE",
+      //   requirements: UCB_TEST_REQUIREMENTS,
+      //   universityCode: "UCB",
+      // },
+      // "Business Administration": {
+      //   displayName: "Business Administration",
+      //   requirements: UCB_BUSINESS_REQUIREMENTS,
+      //   universityCode: "UCB",
+      // },
+      // "Economics": {
+      //   displayName: "Economics",
+      //   requirements: UCB_ECON_REQUIREMENTS,
+      //   universityCode: "UCB",
+      // },
     },
   },
   "UCLA": {

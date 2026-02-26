@@ -13,9 +13,15 @@ export const UCB_EECS_REQUIREMENTS: RequirementGraph = {
     { canonicalId: CANONICAL_COURSES.PHYSICS_3, category: "PHYSICS", isCritical: true },
     { canonicalId: CANONICAL_COURSES.ENGL_COMP_1, category: "ENGLISH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.ENGL_COMP_2, category: "ENGLISH", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.PYTHON_CS, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: true },
+
+  
+    { canonicalId: CANONICAL_COURSES.PYTHON_CS, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.ENGINEERING_CIRCUITS_AND_ELECTRONICS, category: "ENGINEERING", isCritical: false },
+
+
+    
   ],
   categories: {}, 
 };

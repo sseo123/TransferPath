@@ -14,9 +14,15 @@ export const UCB_MECHE_REQUIREMENTS: RequirementGraph = {
     { canonicalId: CANONICAL_COURSES.PHYSICS_3, category: "PHYSICS", isCritical: true },
     { canonicalId: CANONICAL_COURSES.ENGL_COMP_1, category: "ENGLISH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.ENGL_COMP_2, category: "ENGLISH", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.PYTHON_CS, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: true },
+
+    { canonicalId: CANONICAL_COURSES.ENGINEERING_USING_MATLAB, category: "ENGINEERING", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.ENGINEERING_GRAPHICS, category: "ENGINEERING", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.ENGINEERING_GRAPHICS, category: "ENGINEERING", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.ENGINEERING_STATICS, category: "ENGINEERING", isCritical: false },
+
   ],
   categories: {}, 
 };
+
+
+//last updated feb 25, 2026

@@ -7,9 +7,9 @@ export const UCB_CS_REQUIREMENTS: RequirementGraph = {
     { canonicalId: CANONICAL_COURSES.CALC_2, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.LINEAR_ALGEBRA, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.DIFF_EQ, category: "MATH", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.PYTHON_CS, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: true },
-    { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.PYTHON_CS, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, category: "CS", isCritical: false },
     ],
   categories: {}, 
 };
