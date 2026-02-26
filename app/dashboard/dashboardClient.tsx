@@ -224,6 +224,7 @@ export default function DashboardClient({
   );
 
   const [isHydrated, setIsHydrated] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Security: Debounced Database Synchronization
   useEffect(() => {
@@ -369,8 +370,6 @@ export default function DashboardClient({
       />
     );
   }
-
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const handleCounselorViewPDF = async () => {
     setIsGeneratingPDF(true);

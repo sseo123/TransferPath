@@ -4,6 +4,7 @@ export type CourseCategory =
   | "CS"
   | "PHYSICS"
   | "CHEMISTRY"
+  | "BIOLOGY"
   | "ENGLISH"
   | "ENGINEERING"
   | "HISTORY"

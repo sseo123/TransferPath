@@ -19,4 +19,4 @@ export const UCSD_CE_REQUIREMENTS: RequirementGraph = {
   categories: {}, 
 };
 
-//accurate: last checked feb 26, 2026
+//accurate: last checked feb 26, 2026s
