@@ -1,6 +1,5 @@
 import type { RequirementGraph } from "@/lib/planner/types";
 
-
 //UC BERKELEY
 import { UCB_AE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ae";
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
@@ -27,10 +26,12 @@ import { UCLA_MATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_math";
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
 
+//UCSD
 import { UCSD_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_cs";
 import { UCSD_MATH_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_math_cs";
 import { UCSD_CE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ce";
 import { UCSD_EE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ee";
+import { UCSD_MECHE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_meche";
 
 
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
@@ -189,6 +190,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Mathematics/Computer Science": {
         displayName: "Mathematics/Computer Science",
         requirements: UCSD_MATH_CS_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
+      "Mechanical Engineering": {
+        displayName: "Mechanical Engineering",
+        requirements: UCSD_MECHE_REQUIREMENTS,
         universityCode: "UCSD",
       },
     },
