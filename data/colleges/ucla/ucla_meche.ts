@@ -5,7 +5,6 @@ export const UCLA_MECHE_REQUIREMENTS: RequirementGraph = {
   requiredChains: [
     { canonicalId: CANONICAL_COURSES.GENERAL_CHEM_1, category: "CHEMISTRY", isCritical: true },
     { canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, category: "CHEMISTRY", isCritical: true },
-
     { canonicalId: CANONICAL_COURSES.CALC_1, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.CALC_2, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.CALC_3, category: "MATH", isCritical: true },

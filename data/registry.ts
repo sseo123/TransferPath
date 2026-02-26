@@ -21,6 +21,10 @@ import { UCLA_AE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ae";
 import { UCLA_CE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ce";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
 import { UCLA_MECHE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_meche";
+import { UCLA_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_stats_ds";
+
+
+
 
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
@@ -137,6 +141,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Mechanical Engineering": {
         displayName: "Mechanical Engineering",
         requirements: UCLA_MECHE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
+      "Statistics and Data Science": {
+        displayName: "Statistics and Data Science",
+        requirements: UCLA_STATS_DS_REQUIREMENTS,
         universityCode: "UCLA",
       },
       // "Test": {
