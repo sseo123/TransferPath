@@ -11,6 +11,8 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "MATH-294", canonicalId: CANONICAL_COURSES.DIFF_EQ, title: "Differential Equations", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_3, CANONICAL_COURSES.LINEAR_ALGEBRA]  },
   { localCode: "MATH-182", canonicalId: CANONICAL_COURSES.BUSINESS_CALC_1, title: "Calculus for Management, Life Science, and Social Science I", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "MATH-183", canonicalId: CANONICAL_COURSES.BUSINESS_CALC_2, title: "Calculus for Management, Life Science, and Social Science II", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.BUSINESS_CALC_1]  },
+  { localCode: "STAT-C1000", canonicalId: CANONICAL_COURSES.INTRO_STATS, title: "Introduction to Statistics", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+
 
   // Computer Science
   { localCode: "COMSC-110", canonicalId: CANONICAL_COURSES.INTRO_CS, title: "Introduction to Programming", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [] },

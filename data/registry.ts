@@ -8,7 +8,7 @@ import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_eecs";
 import { UCB_DS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ds";
 import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
 import { UCB_APMATH_REQUIREMENTS } from "@/data/colleges/ucb/ucb_apmath";
-
+import { UCB_STATS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_stats";
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
 
 
@@ -85,7 +85,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCB_MECHE_REQUIREMENTS,
         universityCode: "UCB",
       },
- 
+      "Introduction to Statistics": {
+        displayName: "Introduction to Statistics",
+        requirements: UCB_STATS_REQUIREMENTS,
+        universityCode: "UCB",
+      },
   
       // "Test": {
       //   displayName: "TEST CASE",
