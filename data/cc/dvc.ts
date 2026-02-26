@@ -32,7 +32,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
 
   // Chemistry
   { localCode: "CHEM-120", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_1, title: "General Chemistry I", units: 5, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "CHEM-121", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, title: "General Chemistry II", units: 5, offerings: ["fall", "spring"], prerequisites: []  },
+  { localCode: "CHEM-121", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, title: "General Chemistry II", units: 5, offerings: ["fall", "spring"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1]  },
 
   // English
   { localCode: "ENGL-C1000", canonicalId: CANONICAL_COURSES.ENGL_COMP_1, title: "Academic Reading and Writing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },

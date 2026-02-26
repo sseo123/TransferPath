@@ -1,5 +1,7 @@
 import type { RequirementGraph } from "@/lib/planner/types";
 
+
+//UC BERKELEY
 import { UCB_AE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ae";
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
@@ -12,14 +14,14 @@ import { UCB_STATS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_stats";
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
 
 
+//UCLA
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_CSE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cse";
 import { UCLA_AE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ae";
 import { UCLA_CE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ce";
+import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
+import { UCLA_MECHE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_meche";
 
-
-
-// import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
 import { UCSD_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_cs";
@@ -127,11 +129,16 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCLA_CSE_REQUIREMENTS,
         universityCode: "UCLA",
       },
-      // "Electrical Engineering": {
-      //   displayName: "Electrical Engineering",
-      //   requirements: UCLA_EE_REQUIREMENTS,
-      //   universityCode: "UCLA",
-      // },
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCLA_EE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
+      "Mechanical Engineering": {
+        displayName: "Mechanical Engineering",
+        requirements: UCLA_MECHE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
       // "Test": {
       //   displayName: "TEST CASE",
       //   requirements: UCLA_TEST_REQUIREMENTS,
