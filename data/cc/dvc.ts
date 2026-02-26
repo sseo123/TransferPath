@@ -29,10 +29,16 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "PHYS-130", canonicalId: CANONICAL_COURSES.PHYSICS_1, title: "Physics for Engineers: Mechanics and Wave Motion", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.PRE_PHYSICS]  },
   { localCode: "PHYS-230", canonicalId: CANONICAL_COURSES.PHYSICS_2, title: "Physics for Engineers: Heat and Electromagnetism", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.PHYSICS_1]  },
   { localCode: "PHYS-231", canonicalId: CANONICAL_COURSES.PHYSICS_3, title: "Physics for Engineers: Optics and Modern Physics", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.PHYSICS_2]  },
+  { localCode: "PHYS-120", canonicalId: CANONICAL_COURSES.PHYSICS_GENERAL_1, title: "General College Physics I", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "PHYS-121", canonicalId: CANONICAL_COURSES.PHYSICS_GENERAL_2, title: "General College Physics II", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.PHYSICS_GENERAL_1]  },
 
   // Chemistry
   { localCode: "CHEM-120", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_1, title: "General Chemistry I", units: 5, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "CHEM-121", canonicalId: CANONICAL_COURSES.GENERAL_CHEM_2, title: "General Chemistry II", units: 5, offerings: ["fall", "spring"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1]  },
+
+  //Biology
+  { localCode: "BIOSC-130", canonicalId: CANONICAL_COURSES.MOLECULAR_BIO, title: "Principles of Cellular and Molecular Biology", units: 5, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1]  },
+
 
   // English
   { localCode: "ENGL-C1000", canonicalId: CANONICAL_COURSES.ENGL_COMP_1, title: "Academic Reading and Writing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },

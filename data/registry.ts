@@ -22,8 +22,8 @@ import { UCLA_CE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ce";
 import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
 import { UCLA_MECHE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_meche";
 import { UCLA_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_stats_ds";
-
-
+import { UCLA_APMATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_apmath";
+import { UCLA_MATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_math";
 
 
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
@@ -118,6 +118,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCLA_AE_REQUIREMENTS,
         universityCode: "UCLA",
       },
+      "Applied Mathematics": {
+        displayName: "Applied Mathematics",
+        requirements: UCLA_APMATH_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
       "Computer Engineering": {
         displayName: "Computer Engineering",
         requirements: UCLA_CE_REQUIREMENTS,
@@ -136,6 +141,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Electrical Engineering": {
         displayName: "Electrical Engineering",
         requirements: UCLA_EE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
+      "Mathematics": {
+        displayName: "Mathematics",
+        requirements: UCLA_MATH_REQUIREMENTS,
         universityCode: "UCLA",
       },
       "Mechanical Engineering": {
