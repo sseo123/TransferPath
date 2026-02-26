@@ -33,6 +33,7 @@ import { UCSD_CE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ce";
 import { UCSD_EE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ee";
 import { UCSD_MECHE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_meche";
 import { UCSD_AE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ae";
+import { UCSD_DS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ds";
 
 
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
@@ -186,6 +187,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCSD_CS_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
+      "Data Science": {
+        displayName: "Data Science",
+        requirements: UCSD_DS_REQUIREMENTS,
         universityCode: "UCSD",
       },
       "Electrical Engineering": {

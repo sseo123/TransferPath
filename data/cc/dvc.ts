@@ -50,7 +50,10 @@ export const DVC_CATALOG: CollegeCourse[] = [
 
   //Econ
   { localCode: "ECON-200", canonicalId: CANONICAL_COURSES.INTRO_ECON, title: "Introduction to Economics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "ECON 220", canonicalId: CANONICAL_COURSES.MICROECONOMICS, title: "Principles of Macroeconomics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "ECON 221", canonicalId: CANONICAL_COURSES.MICROECONOMICS, title: "Principles of Microeconomics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
 
+  
   //Engineering
   { localCode: "ENGIN-110", canonicalId: CANONICAL_COURSES.INTRO_ENGINEERING, title: "Introduction to Engineering", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "ENGIN-120", canonicalId: CANONICAL_COURSES.ENGINEERING_GRAPHICS, title: "Engineering Drawing", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
