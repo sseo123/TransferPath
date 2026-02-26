@@ -32,6 +32,7 @@ import { UCSD_MATH_CS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_math_cs";
 import { UCSD_CE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ce";
 import { UCSD_EE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ee";
 import { UCSD_MECHE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_meche";
+import { UCSD_AE_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ae";
 
 
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
@@ -172,6 +173,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC San Diego": {
     displayName: "UC San Diego",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCSD_AE_REQUIREMENTS,
+        universityCode: "UCSD",
+      },
       "Computer Engineering": {
         displayName: "Computer Engineering",
         requirements: UCSD_CE_REQUIREMENTS,
