@@ -4,9 +4,10 @@ import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
 import { UCB_EECS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_eecs";
 import { UCB_DS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ds";
+import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
+import { UCB_APMATH_REQUIREMENTS } from "@/data/colleges/ucb/ucb_apmath";
 
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
-// import { UCB_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_business";
 // import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
 
 
@@ -43,14 +44,24 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Berkeley": {
     displayName: "UC Berkeley",
     majors: {
+      "Mathematics/Applied Mathematics": {
+        displayName: "Mathematics/Applied Mathematics",
+        requirements: UCB_APMATH_REQUIREMENTS,
+        universityCode: "UCB",
+      },
+      "Business Administration": {
+        displayName: "Business Administration",
+        requirements: UCB_BUSINESS_REQUIREMENTS,
+        universityCode: "UCB",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCB_CS_REQUIREMENTS,
         universityCode: "UCB",
       },
-      "Mechanical Engineering": {
-        displayName: "Mechanical Engineering",
-        requirements: UCB_MECHE_REQUIREMENTS,
+      "Data Science": {
+        displayName: "Data Science",
+        requirements: UCB_DS_REQUIREMENTS,
         universityCode: "UCB",
       },
       "Electrical Engineering and Computer Science": {
@@ -58,19 +69,16 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCB_EECS_REQUIREMENTS,
         universityCode: "UCB",
       },
-      "Data Science": {
-        displayName: "Data Science",
-        requirements: UCB_DS_REQUIREMENTS,
+      "Mechanical Engineering": {
+        displayName: "Mechanical Engineering",
+        requirements: UCB_MECHE_REQUIREMENTS,
         universityCode: "UCB",
-      }
+      },
+ 
+  
       // "Test": {
       //   displayName: "TEST CASE",
       //   requirements: UCB_TEST_REQUIREMENTS,
-      //   universityCode: "UCB",
-      // },
-      // "Business Administration": {
-      //   displayName: "Business Administration",
-      //   requirements: UCB_BUSINESS_REQUIREMENTS,
       //   universityCode: "UCB",
       // },
       // "Economics": {
