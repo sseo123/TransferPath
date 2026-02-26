@@ -12,9 +12,11 @@ import { UCB_STATS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_stats";
 // import { UCB_TEST_REQUIREMENTS } from "@/data/colleges/ucb/ucb_test";
 
 
-
 import { UCLA_CS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cs";
 import { UCLA_CSE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_cse";
+import { UCLA_AE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ae";
+
+
 // import { UCLA_EE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_ee";
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
@@ -103,6 +105,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UCLA": {
     displayName: "UCLA",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCLA_AE_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCLA_CS_REQUIREMENTS,
