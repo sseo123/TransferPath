@@ -1,5 +1,6 @@
 import type { RequirementGraph } from "@/lib/planner/types";
 
+import { UCB_AE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_ae";
 import { UCB_CS_REQUIREMENTS } from "@/data/colleges/ucb/ucb_cs";
 import { UCB_MECHE_REQUIREMENTS } from "@/data/colleges/ucb/ucb_meche";
 import { UCB_ECON_REQUIREMENTS } from "@/data/colleges/ucb/ucb_econ";
@@ -44,6 +45,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Berkeley": {
     displayName: "UC Berkeley",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCB_AE_REQUIREMENTS,
+        universityCode: "UCB",
+      },
       "Business Administration": {
         displayName: "Business Administration",
         requirements: UCB_BUSINESS_REQUIREMENTS,
