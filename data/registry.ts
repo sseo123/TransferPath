@@ -261,6 +261,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
         requirements: UCI_EE_REQUIREMENTS,
         universityCode: "UCI",
       },
+      "Mathematics": {
+        displayName: "Mathematics",
+        requirements: UCI_MATH_REQUIREMENTS,
+        universityCode: "UCI",
+      },
       "Mechanical Engineering": {
         displayName: "Mechanical Engineering",
         requirements: UCI_MECHE_REQUIREMENTS,
