@@ -49,9 +49,12 @@ import { UCI_DS_REQUIREMENTS } from "@/data/colleges/uci/uci_ds";
 import { UCI_MATH_REQUIREMENTS } from "@/data/colleges/uci/uci_math";
 
 
-
-
+//UCD
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
+import { UCD_CE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ce";
+
+
+
 
 import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
 
@@ -282,6 +285,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Davis": {
     displayName: "UC Davis",
     majors: {
+      "Computer Engineering": {
+        displayName: "Computer Engineering",
+        requirements: UCD_CS_REQUIREMENTS,
+        universityCode: "UCD",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCD_CS_REQUIREMENTS,
