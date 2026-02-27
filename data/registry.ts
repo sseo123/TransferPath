@@ -287,12 +287,17 @@ const REGISTRY: Record<string, UniversityEntry> = {
     majors: {
       "Computer Engineering": {
         displayName: "Computer Engineering",
-        requirements: UCD_CS_REQUIREMENTS,
+        requirements: UCD_CE_REQUIREMENTS,
         universityCode: "UCD",
       },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCD_CS_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Mechanical Engineering": {
+        displayName: "Mechanical Engineering",
+        requirements: UCD_MECHE_REQUIREMENTS,
         universityCode: "UCD",
       },
     },

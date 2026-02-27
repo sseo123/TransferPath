@@ -3,10 +3,10 @@ import type { RequirementGraph } from "@/lib/planner/types";
 
 export const UCI_SWE_REQUIREMENTS: RequirementGraph = {
   requiredChains: [
-    { canonicalId: CANONICAL_COURSES.INTRO_CS, category: "CS", isCritical: false },
-    { canonicalId: CANONICAL_COURSES.ADVANCED_CS, category: "CS", isCritical: false },
-    { canonicalId: CANONICAL_COURSES.OBJECT_ORIENTED_PROGRAMMING, category: "CS", isCritical: false },
-    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: false },
+    { canonicalId: CANONICAL_COURSES.INTRO_CS, category: "CS", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.ADVANCED_CS, category: "CS", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.OBJECT_ORIENTED_PROGRAMMING, category: "CS", isCritical: true },
+    { canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, category: "CS", isCritical: true },
   ],
   categories: {}, 
 };
