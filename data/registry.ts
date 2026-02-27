@@ -46,6 +46,7 @@ import { UCI_SWE_REQUIREMENTS } from "@/data/colleges/uci/uci_swe";
 import { UCI_CSE_REQUIREMENTS } from "@/data/colleges/uci/uci_cse";
 import { UCI_APMATH_REQUIREMENTS } from "@/data/colleges/uci/uci_apmath";
 import { UCI_DS_REQUIREMENTS } from "@/data/colleges/uci/uci_ds";
+import { UCI_MATH_REQUIREMENTS } from "@/data/colleges/uci/uci_math";
 
 
 
