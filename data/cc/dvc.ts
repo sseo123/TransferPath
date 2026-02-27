@@ -22,6 +22,8 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "COMSC-210", canonicalId: CANONICAL_COURSES.DATA_STRUCTURES, title: "Program Design and Data Structures", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
   { localCode: "COMSC-260", canonicalId: CANONICAL_COURSES.COMPUTER_ARCHITECTURE, title: "Assembly Language Programming/Computer Organization", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.ADVANCED_CS]  },
   { localCode: "COMSC-156", canonicalId: CANONICAL_COURSES.INTRO_DS, title: "Introduction to Data Science", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+  { localCode: "COMSC-256", canonicalId: CANONICAL_COURSES.INTRO_DS, title: "Advanced Java Programming", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
+
 
 
   // Physics

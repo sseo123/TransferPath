@@ -37,9 +37,16 @@ import { UCSD_DS_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_ds";
 import { UCSD_APMATH_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_apmath";
 
 
+//UCI
+import { UCI_CS_REQUIREMENTS } from "@/data/colleges/uci/uci_cs";
+import { UCI_CE_REQUIREMENTS } from "@/data/colleges/uci/uci_ce";
+import { UCI_EE_REQUIREMENTS } from "@/data/colleges/uci/uci_ee";
+
+
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
 
-import { UCI_CS_REQUIREMENTS } from "@/data/colleges/uci/uci_cs";
+
+
 
 import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
 
@@ -220,6 +227,16 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Irvine": {
     displayName: "UC Irvine",
     majors: {
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCI_EE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+      "Computer Engineering": {
+        displayName: "Computer Engineering",
+        requirements: UCI_CE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCI_CS_REQUIREMENTS,
