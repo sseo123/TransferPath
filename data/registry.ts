@@ -41,12 +41,16 @@ import { UCSD_APMATH_REQUIREMENTS } from "@/data/colleges/ucsd/ucsd_apmath";
 import { UCI_CS_REQUIREMENTS } from "@/data/colleges/uci/uci_cs";
 import { UCI_CE_REQUIREMENTS } from "@/data/colleges/uci/uci_ce";
 import { UCI_EE_REQUIREMENTS } from "@/data/colleges/uci/uci_ee";
+import { UCI_MECHE_REQUIREMENTS } from "@/data/colleges/uci/uci_meche";
+import { UCI_SWE_REQUIREMENTS } from "@/data/colleges/uci/uci_swe";
+import { UCI_CSE_REQUIREMENTS } from "@/data/colleges/uci/uci_cse";
+import { UCI_APMATH_REQUIREMENTS } from "@/data/colleges/uci/uci_apmath";
+import { UCI_DS_REQUIREMENTS } from "@/data/colleges/uci/uci_ds";
+
+
 
 
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
-
-
-
 
 import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
 
@@ -227,9 +231,9 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Irvine": {
     displayName: "UC Irvine",
     majors: {
-      "Electrical Engineering": {
-        displayName: "Electrical Engineering",
-        requirements: UCI_EE_REQUIREMENTS,
+      "Applied and Computational Mathematics": {
+        displayName: "Applied and Computational Mathematics",
+        requirements: UCI_APMATH_REQUIREMENTS,
         universityCode: "UCI",
       },
       "Computer Engineering": {
@@ -240,6 +244,31 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCI_CS_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+      "Computer Science and Engineering": {
+        displayName: "Computer Science and Engineering",
+        requirements: UCI_CSE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+      "Data Science": {
+        displayName: "Data Science",
+        requirements: UCI_DS_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCI_EE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+      "Mechanical Engineering": {
+        displayName: "Mechanical Engineering",
+        requirements: UCI_MECHE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
+       "Software Engineering": {
+        displayName: "Software Engineering",
+        requirements: UCI_SWE_REQUIREMENTS,
         universityCode: "UCI",
       },
     },
