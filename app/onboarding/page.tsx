@@ -14,7 +14,7 @@ export default function OnboardingPage() {
     major: "",
     dreamUni: "",
     startSeason: "fall",
-    startYear: new Date().getFullYear(),
+    startYear: "" as number | string,
     ack1: false,
     ack2: false,
     ack3: false,
@@ -25,9 +25,10 @@ export default function OnboardingPage() {
 
   const isStepComplete = () => {
     if (step === 1) return formData.college !== "";
-    // if (step === 2) return formData.major !== "";
-    // if (step === 3) return formData.dreamUni !== "";
-    if (step === 2) return true;
+    if (step === 2) {
+      const yearStr = formData.startYear.toString();
+      return yearStr.length === 4 && !isNaN(Number(formData.startYear));
+    }
     if (step === 3) return formData.ack1 && formData.ack2 && formData.ack3;
     return false;
   };
@@ -40,7 +41,10 @@ export default function OnboardingPage() {
         // Security: Store data in secure httpOnly cookie instead of URL
         setIsSubmitting(true);
         try {
-          await saveOnboardingData(formData);
+          await saveOnboardingData({
+            ...formData,
+            startYear: Number(formData.startYear),
+          });
           router.push("/signup");
         } catch (error) {
           console.error("Failed to save onboarding data:", error);
@@ -137,11 +141,12 @@ export default function OnboardingPage() {
                     type="number"
                     min={2020}
                     max={2035}
+                    placeholder={new Date().getFullYear().toString()}
                     value={formData.startYear}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        startYear: parseInt(e.target.value),
+                        startYear: e.target.value ? parseInt(e.target.value) : "",
                       })
                     }
                     className="w-full p-4 border border-gray-200 dark:border-slate-600 rounded-lg outline-none focus:border-[#82A7A6] bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
