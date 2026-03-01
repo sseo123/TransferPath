@@ -50,7 +50,7 @@ export default function CourseItem({
               )}
             </div>
 
-            {(course.isCritical || course.isCustom || (!course.isCritical && (course.requiredBy?.length ?? 0) > 0)) && (
+            {(course.isCritical || (course.requiredBy?.length ?? 0) > 0) && (
               <div className="flex items-center gap-2">
                 <span className="text-muted/50 font-bold">·</span>
                 <div className="flex gap-1.5 items-center">
@@ -149,11 +149,6 @@ export default function CourseItem({
           >
             {course.localCode}
           </span>
-          {isCustom && (
-            <span className="bg-primary/10 text-primary text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
-              Custom
-            </span>
-          )}
         </div>
         <div className="flex items-center gap-1.5">
           {!isCustom && course.isCritical && (
@@ -164,6 +159,11 @@ export default function CourseItem({
           {!isCustom && !course.isCritical && (course.requiredBy?.length ?? 0) > 0 && (
               <span className="text-[8px] font-bold text-primary uppercase tracking-wider rounded px-1.5 py-0.5 border border-primary/20 bg-primary/10">
               Strongly recommended
+            </span>
+          )}
+          {isCustom && (
+            <span className="bg-primary/10 text-primary text-[8px] font-black px-1.5 py-0.5 rounded uppercase">
+              Custom
             </span>
           )}
           <span className="text-[10px] font-bold text-muted-foreground/50">
