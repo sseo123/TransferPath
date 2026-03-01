@@ -769,12 +769,6 @@ export function DashboardDemo() {
       {/* Top bar */}
       <div className="flex shrink-0 items-center justify-between border-b border-border bg-background/80 px-4 py-2.5 backdrop-blur-sm">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-6 w-6 items-center justify-center rounded-md border-2 border-[#82A7A6]">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#82A7A6" strokeWidth="3.5"
-              strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </div>
           <span className="text-xs font-bold text-foreground">
             Transfer<span style={{ color: TEAL }}>Path</span>
           </span>
