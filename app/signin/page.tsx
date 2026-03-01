@@ -74,7 +74,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-700">
+        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
             Don&apos;t have an account?{" "}
             <Link
@@ -86,7 +86,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <p className="mt-12 text-slate-400 text-xs font-medium uppercase tracking-widest leading-relaxed">
+        <p className="mt-4 text-slate-400 text-xs font-medium uppercase tracking-widest leading-relaxed">
           Built for community college students who wish to transfer
         </p>
       </div>

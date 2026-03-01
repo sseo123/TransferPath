@@ -23,7 +23,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
   return (
     <div className="w-full max-w-[480px] bg-white dark:bg-slate-800 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-xl border border-slate-100 dark:border-slate-700 p-12 text-center">
       <div className="flex flex-col items-center mb-10">
-        <div className="w-12 h-12 bg-teal-50 dark:bg-[#82A7A6]/20 rounded-full flex items-center justify-center mb-4">
+        <div className="w-10 h-10 bg-teal-50 dark:bg-[#82A7A6]/20 rounded-full flex items-center justify-center mb-4">
           <GraduationCap className="w-6 h-6 text-[#82A7A6]" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -128,7 +128,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
         </button>
       </form>
 
-      <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-700">
+      <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
         <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
           Already have an account?{" "}
           <Link
@@ -140,7 +140,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
         </p>
       </div>
 
-      <p className="mt-12 text-slate-400 dark:text-slate-500 text-xs font-medium uppercase tracking-widest leading-relaxed">
+      <p className="mt-4 text-slate-400 dark:text-slate-500 text-xs font-medium uppercase tracking-widest leading-relaxed">
         Built for community college students who are planning to transfer
       </p>
     </div>
