@@ -17,6 +17,10 @@ const universities = [
   { name: "UC Merced", logo: "/ucm1.png" },
 ];
 
+const communityColleges = [
+  { name: "Diablo Valley College", logo: "/dvc.png" },
+];
+
 function useScrollAnimation() {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -54,6 +58,7 @@ export default function LandingPage() {
   const [detailsRef, detailsVisible] = useScrollAnimation();
   const [checkRef, checkVisible] = useScrollAnimation();
   const [ctaRef, ctaVisible] = useScrollAnimation();
+  const [ccRef, ccVisible] = useScrollAnimation();
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -112,7 +117,7 @@ export default function LandingPage() {
                 <BookOpen className="w-3.5 h-3.5 shrink-0" /> UC Articulation
               </span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[#82A7A6]/40 bg-[#82A7A6]/5 px-3 py-1.5 text-xs font-medium text-[#82A7A6]">
-                <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Real-time Requirements
+                <CheckCircle className="w-3.5 h-3.5 shrink-0" /> Customizable Plans
               </span>
             </div>
             <h1 className="mb-5 text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-foreground text-balance">
@@ -120,9 +125,7 @@ export default function LandingPage() {
               <span className="text-[#82A7A6]">tailored to your goals.</span>
             </h1>
             <p className="mb-8 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-xl mx-auto text-pretty">
-              Never miss a hidden requirement or lose a year to a planning
-              mistake. TransferPath maps your fastest path from community
-              college to your dream UC.
+              You should be spending your time studying, not planning. Let Transferpath save you the work.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a
@@ -190,7 +193,7 @@ export default function LandingPage() {
               universitiesVisible ? "opacity-100" : "opacity-0 translate-y-4"
             }`}
           >
-            Featuring all UC&apos;s and more
+            Featuring all UC&apos;s and soon to be more!
           </p>
           <div className="flex flex-wrap justify-center gap-x-10 gap-y-8 md:gap-x-14">
             {universities.map((uni, i) => (
@@ -218,6 +221,45 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* CC LOGOS */}
+      <section
+        id="community-colleges"
+        ref={ccRef}
+        className="py-20 px-6 border-t border-border"
+      >
+        <div className="mx-auto max-w-6xl">
+          <p
+            className={`mb-10 text-center text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground transition-all duration-700 ${
+              ccVisible ? "opacity-100" : "opacity-0 translate-y-4"
+            }`}
+          >
+            Current Community College Articulations
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-10 gap-y-8 md:gap-x-14">
+            {communityColleges.map((cc, i) => (
+              <div
+                key={cc.name}
+                style={{ transitionDelay: `${i * 80}ms` }}
+                className={`flex items-center gap-2 transition-all cursor-default group duration-700 ${
+                  ccVisible ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                }`}
+              >
+                <div className="relative h-14 w-20 overflow-hidden grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
+                  <img
+                    src={cc.logo}
+                    alt={`${cc.name} logo`}
+                    className="h-full w-full object-contain"
+                  />
+                </div>
+                <span className="text-sm font-semibold text-muted-foreground group-hover:text-[#82A7A6] transition-colors duration-300 whitespace-nowrap">
+                  {cc.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FEATURES SECTION */}
       <section id="features" ref={detailsRef} className="py-24 px-6" style={{ backgroundColor: "#82A7A6" }}>
         <div className="mx-auto max-w-6xl">
@@ -233,19 +275,19 @@ export default function LandingPage() {
                 {" "}community college students
               </h2>
               <p className="text-lg text-card/90 leading-relaxed max-w-lg">
-                Navigate the complex UC, CSU, and private university transfer
+                Navigate the complex community college transfer
                 requirements with trustworthy course planning and real-time
                 articulation data.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                "ASSIST.org integration",
+                "Edge courses covered",
                 "IGETC & Breadth requirements",
                 "Customizable transfer pace",
                 "Transfer admission insights",
                 "Compare every dream school",
-                "Edge courses covered",
+                "Clear roadmap of courses",
               ].map((text, i) => (
                 <div
                   key={i}
