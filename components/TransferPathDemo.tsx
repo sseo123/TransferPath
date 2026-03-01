@@ -315,7 +315,7 @@ function DashboardView({
 
         <div className="mt-auto flex items-center gap-2 border-t border-border px-2.5 py-2.5">
           <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-card" style={{ backgroundColor: TEAL }}>
-            N
+            S
           </div>
           <span className="truncate text-[9px] font-medium text-muted-foreground">student@gmail…</span>
         </div>

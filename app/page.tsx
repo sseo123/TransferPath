@@ -275,9 +275,12 @@ export default function LandingPage() {
                 {" "}community college students
               </h2>
               <p className="text-lg text-card/90 leading-relaxed max-w-lg">
-                Navigate the complex community college transfer
-                requirements with trustworthy course planning and real-time
-                articulation data.
+                TransferPath simplifies the transfer process 
+                by providing you with an interactive, customizable course roadmap tailored 
+                to your specific target universities and majors. By tracking 
+                critical milestones like IGETC requirements and utilizing articulation 
+                data, TransferPath eliminates the stress from course planning 
+                and ensures you stay on track for a successful transfer.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
