@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveOnboardingData } from "./actions";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -139,9 +139,9 @@ export default function OnboardingPage() {
                   </label>
                   <input
                     type="number"
-                    min={2020}
-                    max={2035}
-                    placeholder={new Date().getFullYear().toString()}
+                    min={2000}
+                    max={2999}
+                    placeholder={`e.g. ${new Date().getFullYear()}`}
                     value={formData.startYear}
                     onChange={(e) =>
                       setFormData({
