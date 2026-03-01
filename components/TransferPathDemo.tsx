@@ -765,7 +765,7 @@ export function DashboardDemo() {
     phase === "dashboard-ready" || phase === "click-edit";
 
   return (
-    <div ref={containerRef} className="relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+    <div ref={containerRef} className="relative flex h-full w-full flex-col overflow-hidden border border-border bg-card shadow-2xl">
       {/* Top bar */}
       <div className="flex shrink-0 items-center justify-between border-b border-border bg-background/80 px-4 py-2.5 backdrop-blur-sm">
         <div className="flex items-center gap-2.5">
