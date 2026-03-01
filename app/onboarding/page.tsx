@@ -15,9 +15,12 @@ export default function OnboardingPage() {
     dreamUni: "",
     startSeason: "fall",
     startYear: new Date().getFullYear(),
+    ack1: false,
+    ack2: false,
+    ack3: false,
   });
 
-  const totalSteps = 2;
+  const totalSteps = 3;
   const progress = (step / totalSteps) * 100;
 
   const isStepComplete = () => {
@@ -25,6 +28,7 @@ export default function OnboardingPage() {
     // if (step === 2) return formData.major !== "";
     // if (step === 3) return formData.dreamUni !== "";
     if (step === 2) return true;
+    if (step === 3) return formData.ack1 && formData.ack2 && formData.ack3;
     return false;
   };
 
@@ -182,6 +186,55 @@ export default function OnboardingPage() {
                     className="w-full p-4 border border-gray-200 dark:border-slate-600 rounded-lg outline-none focus:border-[#82A7A6] bg-white dark:bg-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
+              <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white">
+                Before We Begin
+              </h2>
+              <p className="text-slate-500 dark:text-slate-400 text-center -mt-4 text-sm">
+                Please acknowledge the following to proceed.
+              </p>
+
+              <div className="space-y-4">
+                <label className="flex items-start gap-3 p-4 border border-gray-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={formData.ack1}
+                    onChange={(e) => setFormData({ ...formData, ack1: e.target.checked })}
+                    className="mt-1 w-5 h-5 rounded border-gray-300 text-[#82A7A6] focus:ring-[#82A7A6]"
+                  />
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                    I acknowledge that this tool is not a replacement for meeting with a counselor.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 p-4 border border-gray-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={formData.ack2}
+                    onChange={(e) => setFormData({ ...formData, ack2: e.target.checked })}
+                    className="mt-1 w-5 h-5 rounded border-gray-300 text-[#82A7A6] focus:ring-[#82A7A6]"
+                  />
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                    I understand that this tool may contain errors and may not accurately reflect courses that officially articulate.
+                  </span>
+                </label>
+
+                <label className="flex items-start gap-3 p-4 border border-gray-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={formData.ack3}
+                    onChange={(e) => setFormData({ ...formData, ack3: e.target.checked })}
+                    className="mt-1 w-5 h-5 rounded border-gray-300 text-[#82A7A6] focus:ring-[#82A7A6]"
+                  />
+                  <span className="text-sm text-slate-700 dark:text-slate-300">
+                    I understand that the accuracy of this tool depends on the accuracy of the input provided by the user.
+                  </span>
+                </label>
               </div>
             </div>
           )}
