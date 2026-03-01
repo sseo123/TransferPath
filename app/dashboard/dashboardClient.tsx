@@ -454,7 +454,7 @@ export default function DashboardClient({
               </h1>
               <div className="flex items-center gap-2 mt-2">
                 <p className="text-muted-foreground text-lg font-medium">
-                  Here is your transfer plan
+                  Here is your TransferPlan
                 </p>
                 {isHydrated && (
                   <span

@@ -126,7 +126,7 @@ export default function UniversitiesClient({
           </div>
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">All set!</h1>
           <p className="text-slate-600 dark:text-slate-400 mb-8">
-            Your target universities have been saved. View your plan and all courses on the dashboard.
+            Your changes have been saved. View your plan and all courses on the dashboard.
           </p>
           <div className="flex flex-col gap-3">
             <button

@@ -232,7 +232,7 @@ function CreateCourseModal({
 }) {
   const [localCode, setLocalCode] = useState("");
   const [title, setTitle] = useState("");
-  const [units, setUnits] = useState(3.0);
+  const [units, setUnits] = useState<number | "">(3.0);
   const [requiredBy, setRequiredBy] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -244,11 +244,15 @@ function CreateCourseModal({
       setError("Course code and title are required.");
       return;
     }
-    if (units < 0.5 || units > 6) {
-      setError("Units must be between 0.5 and 6.");
+    if (units === "" || isNaN(units)) {
+      setError("Unit amount is required.");
       return;
     }
-    onCreate({ localCode: localCode.trim(), title: title.trim(), units, requiredBy });
+    if (units < 0.0 || units > 7.0) {
+      setError("Units must be between 0.0 and 7.0.");
+      return;
+    }
+    onCreate({ localCode: localCode.trim(), title: title.trim(), units: Number(units), requiredBy });
     setLocalCode("");
     setTitle("");
     setUnits(3.0);
@@ -293,11 +297,11 @@ function CreateCourseModal({
               <label className="text-xs font-black text-muted-foreground uppercase tracking-wider">Units</label>
               <input
                 type="number"
-                min="0"
-                max="10"
-                step="1"
+                min="0.0"
+                max="7.0"
+                step="0.5"
                 value={units}
-                onChange={(e) => setUnits(parseFloat(e.target.value))}
+                onChange={(e) => setUnits(e.target.value === "" ? "" : parseFloat(e.target.value))}
                 className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-bold text-foreground"
               />
             </div>
