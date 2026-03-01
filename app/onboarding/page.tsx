@@ -102,45 +102,6 @@ export default function OnboardingPage() {
               </select>
             </div>
           )}
-
-          {/* {step === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-              <h2 className="text-2xl font-bold text-center">
-                What&apos;s your field of study?
-              </h2>
-              <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
-                onChange={(e) =>
-                  setFormData({ ...formData, major: e.target.value })
-                }
-                value={formData.major}
-              >
-                <option value="">Select a major</option>
-                <option value="computer_science">Computer Science</option>
-                <option value="business">Business</option>
-              </select>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-              <h2 className="text-2xl font-bold text-center">
-                Where is your TARGET university?
-              </h2>
-              <select
-                className="w-full border border-gray-200 rounded-lg p-4 outline-none focus:border-[#82A7A6] bg-white"
-                onChange={(e) =>
-                  setFormData({ ...formData, dreamUni: e.target.value })
-                }
-                value={formData.dreamUni}
-              >
-                <option value="">Select target</option>
-                <option value="UC Berkeley">UC Berkeley</option>
-                <option value="UCLA">UCLA</option>
-              </select>
-            </div>
-          )} */}
-
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white">

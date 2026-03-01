@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { ChevronRight, CheckCircle2, Briefcase, BookOpen, CheckCircle } from "lucide-react";
 import { DashboardDemo } from "@/components/TransferPathDemo";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import Link from "next/link";
+import Image from "next/image";
 
 const universities = [
   { name: "UC Berkeley", logo: "/ucblogo.png" },
@@ -44,11 +46,11 @@ function useScrollAnimation() {
 
 function Logo() {
   return (
-    <a href="/" className="flex items-center gap-2.5 group select-none">
+    <Link href="/" className="flex items-center gap-2.5 group select-none">
       <span className="text-lg font-bold text-foreground tracking-tight">
         Transfer<span className="text-[#82A7A6]">Path</span>
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -205,11 +207,11 @@ export default function LandingPage() {
                 }`}
               >
                 <div className="relative h-14 w-20 overflow-hidden grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={uni.logo}
                     alt={`${uni.name} logo`}
-                    className="h-full w-full object-contain"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <span className="text-sm font-semibold text-muted-foreground group-hover:text-[#82A7A6] transition-colors duration-300 whitespace-nowrap">
@@ -245,10 +247,11 @@ export default function LandingPage() {
                 }`}
               >
                 <div className="relative h-14 w-20 overflow-hidden grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
-                  <img
+                  <Image
                     src={cc.logo}
                     alt={`${cc.name} logo`}
-                    className="h-full w-full object-contain"
+                    fill
+                    className="object-contain"
                   />
                 </div>
                 <span className="text-sm font-semibold text-muted-foreground group-hover:text-[#82A7A6] transition-colors duration-300 whitespace-nowrap">

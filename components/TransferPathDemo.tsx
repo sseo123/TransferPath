@@ -128,7 +128,10 @@ function DemoCursor({
 
   // Click animation logic remains the same...
   useEffect(() => {
-    if (!isVisible) { setClicking(false); return; }
+    if (!isVisible) {
+      const t = setTimeout(() => setClicking(false), 0);
+      return () => clearTimeout(t);
+    }
     const t1 = setTimeout(() => setClicking(true),  650);
     const t2 = setTimeout(() => setClicking(false), 950);
     return () => { clearTimeout(t1); clearTimeout(t2); };
