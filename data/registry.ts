@@ -52,6 +52,8 @@ import { UCI_MATH_REQUIREMENTS } from "@/data/colleges/uci/uci_math";
 //UCD
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
 import { UCD_CE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ce";
+import { UCD_MECHE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_meche";
+
 
 
 
