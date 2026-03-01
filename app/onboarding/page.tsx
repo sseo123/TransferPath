@@ -112,7 +112,7 @@ export default function OnboardingPage() {
                 When are you starting?
               </h2>
               <p className="text-slate-500 dark:text-slate-400 text-center -mt-4 text-sm">
-                We&apos;ll build your plan starting from your first semester.
+                We&apos;ll build your plan starting from your <strong>first semester</strong>.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
