@@ -58,6 +58,7 @@ import { UCD_EE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ee";
 import { UCD_DS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ds";
 import { UCD_APMATH_REQUIREMENTS } from "@/data/colleges/ucd/ucd_apmath";
 import { UCD_MATH_REQUIREMENTS } from "@/data/colleges/ucd/ucd_math";
+import { UCD_CIVENG_REQUIREMENTS } from "@/data/colleges/ucd/ucd_civeng";
 
 
 //UCSB
@@ -298,6 +299,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Applied Mathematics": {
         displayName: "Applied Mathematics",
         requirements: UCD_APMATH_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Civil Engineering": {
+        displayName: "Civil Engineering",
+        requirements: UCD_CIVENG_REQUIREMENTS,
         universityCode: "UCD",
       },
       "Computer Engineering": {

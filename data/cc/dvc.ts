@@ -64,6 +64,8 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "ENGIN-136", canonicalId: CANONICAL_COURSES.ENGINEERING_USING_MATLAB, title: "Computer Programming for Engineers Using MATLAB", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_1] },
   { localCode: "ENGIN-257", canonicalId: CANONICAL_COURSES.ENGINEERING_STATICS, title: "Statics and Strength of Materials", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2, CANONICAL_COURSES.PHYSICS_1] },
   { localCode: "ENGIN-210", canonicalId: CANONICAL_COURSES.ENGINEERING_THERMODYNAMICS, title: "Thermodynamics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1, CANONICAL_COURSES.PHYSICS_2] },
+  { localCode: "ENGIN-255", canonicalId: CANONICAL_COURSES.STATS, title: "Statics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2, CANONICAL_COURSES.PHYSICS_1] },
+
 
 
 
