@@ -44,6 +44,7 @@ next-env.d.ts
 # Cloudflare / Wrangler
 .wrangler/
 .dev.vars
+wrangler.toml
 
 # Drizzle / SQLite local data
 *.sqlite

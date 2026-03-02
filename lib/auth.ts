@@ -22,6 +22,7 @@ export async function getLucia() {
     getUserAttributes: (attributes) => {
       return {
         username: attributes.username,
+        googleId: attributes.googleId,
       };
     },
   });
@@ -68,6 +69,7 @@ declare module "lucia" {
     Lucia: Awaited<ReturnType<typeof getLucia>>;
     DatabaseUserAttributes: {
       username: string;
+      googleId: string | null;
     };
   }
 }

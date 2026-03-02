@@ -15,6 +15,7 @@
     "@lucia-auth/adapter-drizzle": "^1.1.0",
     "@opennextjs/cloudflare": "^1.14.7",
     "@react-pdf/renderer": "^4.0.4",
+    "arctic": "^3.7.0",
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.33.0",
     "lucia": "^3.2.2",
