@@ -54,6 +54,36 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 
+		// FIX: Check for existing user by email
+		const existingUserByEmail = await db
+			.select()
+			.from(userTable)
+			.where(eq(userTable.username, googleUser.email))
+			.get();
+
+		if (existingUserByEmail) {
+			// Link Google ID to existing user
+			await db
+				.update(userTable)
+				.set({
+					googleId: googleUser.sub,
+					firstName: googleUser.given_name,
+					lastName: googleUser.family_name
+				})
+				.where(eq(userTable.id, existingUserByEmail.id));
+
+			const lucia = await getLucia();
+			const session = await lucia.createSession(existingUserByEmail.id, {});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: "/dashboard"
+				}
+			});
+		}
+
 		const userId = generateIdFromEntropySize(10);
 		await db.insert(userTable).values({
 			id: userId,
