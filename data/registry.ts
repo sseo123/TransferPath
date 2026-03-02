@@ -57,6 +57,7 @@ import { UCD_AE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ae";
 import { UCD_EE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ee";
 import { UCD_DS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ds";
 import { UCD_APMATH_REQUIREMENTS } from "@/data/colleges/ucd/ucd_apmath";
+import { UCD_MATH_REQUIREMENTS } from "@/data/colleges/ucd/ucd_math";
 
 
 //UCSB
@@ -317,6 +318,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Electrical Engineering": {
         displayName: "Electrical Engineering",
         requirements: UCD_EE_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Mathematics": {
+        displayName: "Mathematics",
+        requirements: UCD_MATH_REQUIREMENTS,
         universityCode: "UCD",
       },
       "Mechanical Engineering": {
