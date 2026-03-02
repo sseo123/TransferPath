@@ -16,6 +16,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
+        {/* Cloudflare Web Analytics */}
+        <script
+          defer
+          src='https://static.cloudflareinsights.com/beacon.min.js'
+          data-cf-beacon='{"token": "YOUR_CLOUDFLARE_ANALYTICS_TOKEN"}'
+        />
       </body>
     </html>
   );

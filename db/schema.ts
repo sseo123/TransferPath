@@ -16,6 +16,12 @@ export const userTable = sqliteTable("user", {
   patternTasks: text("pattern_tasks"), // Stringified JSON
   deadlines: text("deadlines"), // Stringified JSON
   lastCollegeChange: integer("last_college_change"), // Timestamp
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .defaultNow(),
+  updatedAt: integer("updated_at", { mode: "timestamp" })
+    .notNull()
+    .defaultNow(),
 });
 
 // ADD THIS TABLE - Lucia requires it

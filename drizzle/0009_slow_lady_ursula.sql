@@ -1,0 +1,2 @@
+ALTER TABLE `user` ADD `created_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)) NOT NULL;--> statement-breakpoint
+ALTER TABLE `user` ADD `updated_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer)) NOT NULL;
