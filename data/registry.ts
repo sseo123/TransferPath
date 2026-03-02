@@ -63,6 +63,10 @@ import { UCD_CIVENG_REQUIREMENTS } from "@/data/colleges/ucd/ucd_civeng";
 
 //UCSB
 import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
+import { UCSB_CE_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_ce";
+import { UCSB_EE_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_ee";
+import { UCSB_MATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_math";
+import { UCSB_APMATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_apmath";
 
 
 export interface MajorEntry {
@@ -341,9 +345,29 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Santa Barbra": {
     displayName: "UC Santa Barbra",
     majors: {
+      "Applied Mathematics": {
+        displayName: "Applied Mathematics",
+        requirements: UCSB_APMATH_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCSB_CS_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
+      "Computer Engineering": {
+        displayName: "Computer Engineering",
+        requirements: UCSB_CE_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCSB_EE_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
+      "Mathematics": {
+        displayName: "Mathematics",
+        requirements: UCSB_MATH_REQUIREMENTS,
         universityCode: "UCSB",
       },
     },

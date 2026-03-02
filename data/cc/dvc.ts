@@ -11,6 +11,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "MATH-294", canonicalId: CANONICAL_COURSES.DIFF_EQ, title: "Differential Equations", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_3, CANONICAL_COURSES.LINEAR_ALGEBRA]  },
   { localCode: "MATH-182", canonicalId: CANONICAL_COURSES.BUSINESS_CALC_1, title: "Calculus for Management, Life Science, and Social Science I", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "MATH-183", canonicalId: CANONICAL_COURSES.BUSINESS_CALC_2, title: "Calculus for Management, Life Science, and Social Science II", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.BUSINESS_CALC_1]  },
+  { localCode: "MATH-289", canonicalId: CANONICAL_COURSES.UPPER_DIVISION_MATH, title: "Introduction to Upper Division Mathematics", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2]  },
   { localCode: "STAT-C1000", canonicalId: CANONICAL_COURSES.INTRO_STATS, title: "Introduction to Statistics", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
 
 
@@ -65,8 +66,6 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "ENGIN-257", canonicalId: CANONICAL_COURSES.ENGINEERING_STATICS, title: "Statics and Strength of Materials", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2, CANONICAL_COURSES.PHYSICS_1] },
   { localCode: "ENGIN-210", canonicalId: CANONICAL_COURSES.ENGINEERING_THERMODYNAMICS, title: "Thermodynamics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.GENERAL_CHEM_1, CANONICAL_COURSES.PHYSICS_2] },
   { localCode: "ENGIN-255", canonicalId: CANONICAL_COURSES.STATS, title: "Statics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.CALC_2, CANONICAL_COURSES.PHYSICS_1] },
-
-
 
 
 
