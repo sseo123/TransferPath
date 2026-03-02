@@ -769,9 +769,6 @@ export function DashboardDemo() {
       {/* Top bar */}
       <div className="flex shrink-0 items-center justify-between border-b border-border bg-background/80 px-4 py-2.5 backdrop-blur-sm">
         <div className="flex items-center gap-2.5">
-          <span className="text-xs font-bold text-foreground">
-            Transfer<span style={{ color: TEAL }}>Path</span>
-          </span>
         </div>
         <StepIndicator phase={phase} />
       </div>
