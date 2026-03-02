@@ -54,10 +54,11 @@ import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
 import { UCD_CE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ce";
 import { UCD_MECHE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_meche";
 import { UCD_AE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ae";
+import { UCD_EE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ee";
+import { UCD_DS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ds";
 
 
-
-
+//UCSB
 import { UCSB_CS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_cs";
 
 
@@ -300,6 +301,16 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Computer Science": {
         displayName: "Computer Science",
         requirements: UCD_CS_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Data Science": {
+        displayName: "Data Science",
+        requirements: UCD_DS_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Electrical Engineering": {
+        displayName: "Electrical Engineering",
+        requirements: UCD_EE_REQUIREMENTS,
         universityCode: "UCD",
       },
       "Mechanical Engineering": {
