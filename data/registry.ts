@@ -56,6 +56,7 @@ import { UCD_MECHE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_meche";
 import { UCD_AE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ae";
 import { UCD_EE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ee";
 import { UCD_DS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ds";
+import { UCD_APMATH_REQUIREMENTS } from "@/data/colleges/ucd/ucd_apmath";
 
 
 //UCSB
@@ -291,6 +292,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Aerospace Engineering": {
         displayName: "Aerospace Engineering",
         requirements: UCD_AE_REQUIREMENTS,
+        universityCode: "UCD",
+      },
+      "Applied Mathematics": {
+        displayName: "Applied Mathematics",
+        requirements: UCD_APMATH_REQUIREMENTS,
         universityCode: "UCD",
       },
       "Computer Engineering": {
