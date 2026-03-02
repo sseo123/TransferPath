@@ -68,6 +68,9 @@ import { UCSB_EE_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_ee";
 import { UCSB_MATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_math";
 import { UCSB_APMATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_apmath";
 import { UCSB_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_stats_ds";
+import { UCSB_CHEMENG_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_chemeng";
+
+
 
 export interface MajorEntry {
   displayName: string;
@@ -348,6 +351,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Applied Mathematics": {
         displayName: "Applied Mathematics",
         requirements: UCSB_APMATH_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
+      "Chemical Engineering": {
+        displayName: "Chemical Engineering",
+        requirements: UCSB_CHEMENG_REQUIREMENTS,
         universityCode: "UCSB",
       },
       "Computer Science": {
