@@ -67,7 +67,7 @@ import { UCSB_CE_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_ce";
 import { UCSB_EE_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_ee";
 import { UCSB_MATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_math";
 import { UCSB_APMATH_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_apmath";
-
+import { UCSB_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_stats_ds";
 
 export interface MajorEntry {
   displayName: string;
@@ -368,6 +368,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Mathematics": {
         displayName: "Mathematics",
         requirements: UCSB_MATH_REQUIREMENTS,
+        universityCode: "UCSB",
+      },
+      "Statistics and Data Science": {
+        displayName: "Statistics and Data Science",
+        requirements: UCSB_STATS_DS_REQUIREMENTS,
         universityCode: "UCSB",
       },
     },
