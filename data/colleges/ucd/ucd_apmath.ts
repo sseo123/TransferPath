@@ -1,7 +1,7 @@
 import { CANONICAL_COURSES } from "@/data/courses/allCourses";
 import type { RequirementGraph } from "@/lib/planner/types";
 
-export const UCDD_APMATH_REQUIREMENTS: RequirementGraph = {
+export const UCD_APMATH_REQUIREMENTS: RequirementGraph = {
   requiredChains: [
     { canonicalId: CANONICAL_COURSES.CALC_1, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.CALC_2, category: "MATH", isCritical: true },

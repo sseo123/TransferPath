@@ -10,7 +10,6 @@ export const UCSB_APMATH_REQUIREMENTS: RequirementGraph = {
     { canonicalId: CANONICAL_COURSES.CALC_3, category: "MATH", isCritical: true },
     { canonicalId: CANONICAL_COURSES.UPPER_DIVISION_MATH, category: "MATH", isCritical: true },
 
-
   ],
   categories: {}, 
 };
