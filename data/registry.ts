@@ -53,7 +53,7 @@ import { UCI_MATH_REQUIREMENTS } from "@/data/colleges/uci/uci_math";
 import { UCD_CS_REQUIREMENTS } from "@/data/colleges/ucd/ucd_cs";
 import { UCD_CE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ce";
 import { UCD_MECHE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_meche";
-
+import { UCD_AE_REQUIREMENTS } from "@/data/colleges/ucd/ucd_ae";
 
 
 
@@ -287,6 +287,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Davis": {
     displayName: "UC Davis",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCD_AE_REQUIREMENTS,
+        universityCode: "UCD",
+      },
       "Computer Engineering": {
         displayName: "Computer Engineering",
         requirements: UCD_CE_REQUIREMENTS,
