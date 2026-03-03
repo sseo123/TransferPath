@@ -71,6 +71,13 @@ import { UCSB_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_stats_ds";
 import { UCSB_CHEMENG_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_chemeng";
 
 
+//UCR
+import { UCR_CS_REQUIREMENTS } from "@/data/colleges/ucr/ucr_cs";
+//UCM
+import { UCM_CS_ENG_REQUIREMENTS } from "@/data/colleges/ucm/ucm_cs_eng";
+//UCSC
+import { UCSC_CS_REQUIREMENTS } from "@/data/colleges/ucsc/ucsc_cs";
+
 
 export interface MajorEntry {
   displayName: string;
@@ -385,6 +392,37 @@ const REGISTRY: Record<string, UniversityEntry> = {
       },
     },
   },
+    "UC Riverside": {
+    displayName: "UC Riverside",
+    majors: {
+      "Computer Science": {
+        displayName: "Computer Science",
+        requirements: UCR_CS_REQUIREMENTS,
+        universityCode: "UCR",
+      },
+    },
+  },
+    "UC Merced": {
+    displayName: "UC Merced",
+    majors: {
+      "Computer Science and Engineering": {
+        displayName: "Computer Science and Engineering",
+        requirements: UCM_CS_ENG_REQUIREMENTS,
+        universityCode: "UCM",
+      },
+    },
+  },
+    "UC Santa Cruz": {
+    displayName: "UC Santa Cruz",
+    majors: {
+      "Computer Science": {
+        displayName: "Computer Science",
+        requirements: UCSC_CS_REQUIREMENTS,
+        universityCode: "UCSC",
+      },
+    },
+  },
+  
 };
 
 // --- API FUNCTIONS ---
