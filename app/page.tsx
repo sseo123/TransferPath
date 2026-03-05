@@ -86,18 +86,18 @@ export default function LandingPage() {
             >
               Universities
             </button>
-            <a
+            <Link
               href="/signin"
               className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               Sign in
-            </a>
-            <a
+            </Link>
+            <Link
               href="/onboarding"
               className="rounded-lg bg-[#82A7A6] px-4 py-2 text-sm font-bold text-card shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-md"
             >
               Get started
-            </a>
+            </Link>
           </div>
         </div>
       </nav>

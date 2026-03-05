@@ -31,10 +31,19 @@ export async function login(_prevState: LoginState, formData: FormData) {
     .where(eq(userTable.username, username))
     .get();
 
-  if (
-    !existingUser ||
-    !(await verifyPassword(password, existingUser.passwordHash))
-  ) {
+  if (!existingUser) {
+    return { error: "Incorrect username or password" };
+  }
+
+  // If user signed up via Google and has no password
+  if (!existingUser.passwordHash) {
+    return {
+      error:
+        "This account uses Google Sign-In. Please use 'Continue with Google' instead.",
+    };
+  }
+
+  if (!(await verifyPassword(password, existingUser.passwordHash))) {
     return { error: "Incorrect username or password" };
   }
 
