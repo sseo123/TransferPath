@@ -365,7 +365,7 @@ export default function LandingPage() {
             Start planning your transfer today
           </h2>
           <p className="text-lg text-foreground/70 mb-10 max-w-xl mx-auto font-medium text-pretty">
-            Join hundreds of students who&apos;ve successfully transferred using
+            Join a community of students who&apos;ve successfully transferred using
             TransferPath.
           </p>
           <a
@@ -389,7 +389,7 @@ export default function LandingPage() {
               Transfer<span className="text-[#82A7A6]">Path</span>
             </span>
             <div className="flex justify-center gap-8 text-sm font-semibold text-muted-foreground">
-              <a href="https://discord.gg/BvuSNBep" className="hover:text-[#82A7A6] transition-colors">Discord</a>
+              {/* <a href="https://discord.gg/BvuSNBep" className="hover:text-[#82A7A6] transition-colors">Discord</a> */}
               {/* <a href="#" className="hover:text-[#82A7A6] transition-colors">Instagram</a>
               <a href="#" className="hover:text-[#82A7A6] transition-colors">Twitter</a> */}
             </div>

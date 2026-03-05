@@ -22,6 +22,9 @@ export const userTable = sqliteTable("user", {
   updatedAt: integer("updated_at", { mode: "timestamp" })
     .notNull()
     .defaultNow(),
+  lastActiveAt: integer("last_active_at", { mode: "timestamp" })
+    .notNull()
+    .defaultNow(),
 });
 
 // ADD THIS TABLE - Lucia requires it

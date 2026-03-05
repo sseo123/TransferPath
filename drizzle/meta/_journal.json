@@ -71,6 +71,13 @@
       "when": 1772425727816,
       "tag": "0009_slow_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1772749399214,
+      "tag": "0010_equal_sheva_callister",
+      "breakpoints": true
     }
   ]
 }

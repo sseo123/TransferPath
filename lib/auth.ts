@@ -6,6 +6,8 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { getDb } from "./db";
+import { eq } from "drizzle-orm";
 
 export async function getLucia() {
   const { env } = await getCloudflareContext({ async: true });
@@ -23,6 +25,7 @@ export async function getLucia() {
       return {
         username: attributes.username,
         googleId: attributes.googleId,
+        lastActiveAt: attributes.lastActiveAt,
       };
     },
   });
@@ -61,6 +64,24 @@ export const validateRequest = cache(async () => {
   } catch {
   }
 
+  if (result.user && result.session) {
+    try {
+      const db = await getDb();
+      const lastActive = result.user.lastActiveAt;
+      const now = new Date();
+      
+      // Update lastActiveAt if it's been more than 1 hour since the last recorded activity
+      if (!lastActive || now.getTime() - lastActive.getTime() > 60 * 60 * 1000) {
+        await db
+          .update(userTable)
+          .set({ lastActiveAt: now })
+          .where(eq(userTable.id, result.user.id));
+      }
+    } catch (e) {
+      console.error("Failed to update lastActiveAt:", e);
+    }
+  }
+
   return result;
 });
 
@@ -70,6 +91,7 @@ declare module "lucia" {
     DatabaseUserAttributes: {
       username: string;
       googleId: string | null;
+      lastActiveAt: Date | null;
     };
   }
 }
