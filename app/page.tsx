@@ -389,9 +389,9 @@ export default function LandingPage() {
               Transfer<span className="text-[#82A7A6]">Path</span>
             </span>
             <div className="flex justify-center gap-8 text-sm font-semibold text-muted-foreground">
-              <a href="#" className="hover:text-[#82A7A6] transition-colors">Discord</a>
-              <a href="#" className="hover:text-[#82A7A6] transition-colors">Instagram</a>
-              <a href="#" className="hover:text-[#82A7A6] transition-colors">Twitter</a>
+              <a href="https://discord.gg/BvuSNBep" className="hover:text-[#82A7A6] transition-colors">Discord</a>
+              {/* <a href="#" className="hover:text-[#82A7A6] transition-colors">Instagram</a>
+              <a href="#" className="hover:text-[#82A7A6] transition-colors">Twitter</a> */}
             </div>
             <p className="text-sm font-medium text-muted-foreground text-center md:text-right">
               &copy; 2026 TransferPath. All rights reserved.
