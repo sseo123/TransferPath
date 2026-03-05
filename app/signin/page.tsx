@@ -24,7 +24,7 @@ export default function LoginPage() {
             <GraduationCap className="w-6 h-6 text-[#82A7A6]" />
           </div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-            Transfer<span className="text-[#82A7A6]">Path</span>
+            Transfer<span className="text-[#82A7A6]">Pathway</span>
           </h1>
           <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
             Plan your transfer with confidence

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ChevronRight, CheckCircle2, Briefcase, BookOpen, CheckCircle } from "lucide-react";
-import { DashboardDemo } from "@/components/TransferPathDemo";
+import { DashboardDemo } from "@/components/TransferPathwayDemo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import Link from "next/link";
 import Image from "next/image";
@@ -127,7 +127,7 @@ export default function LandingPage() {
               <span className="text-[#82A7A6]">tailored to your goals.</span>
             </h1>
             <p className="mb-8 text-base sm:text-lg leading-relaxed text-muted-foreground max-w-xl mx-auto text-pretty">
-              You should be spending your time studying, not planning. Let Transferpath save you the work.
+              You should be spending your time studying, not planning. Let Transferpathway save you the work.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a
@@ -160,7 +160,7 @@ export default function LandingPage() {
                   <div className="h-2.5 w-2.5 rounded-full bg-[#febc2e]" />
                   <div className="h-2.5 w-2.5 rounded-full bg-[#28c840]" />
                   <div className="ml-4 flex-1 rounded-md bg-[#2a2a3e] px-3 py-1 text-center">
-                    <span className="text-[10px] text-[#666] font-mono">transferpath.com/dashboard</span>
+                    <span className="text-[10px] text-[#666] font-mono">transferpathway.com/dashboard</span>
                   </div>
                 </div>
                 {/* Demo content */}
@@ -278,11 +278,11 @@ export default function LandingPage() {
                 {" "}community college students
               </h2>
               <p className="text-lg text-card/90 leading-relaxed max-w-lg">
-                TransferPath simplifies the transfer process 
+                TransferPathway simplifies the transfer process 
                 by providing you with an interactive, customizable course roadmap tailored 
                 to your specific target universities and majors. By tracking 
                 critical milestones like IGETC requirements and utilizing articulation 
-                data, TransferPath eliminates the stress from course planning 
+                data, TransferPathway eliminates the stress from course planning 
                 and ensures you stay on track for a successful transfer.
               </p>
             </div>
@@ -335,7 +335,7 @@ export default function LandingPage() {
                 one course you didn&apos;t realize was a prerequisite until the
                 semester had already started. It&apos;s discovering, too late,
                 that the university changed its articulation agreement, pushing
-                your transfer date back an entire year. TransferPath exists so
+                your transfer date back an entire year. TransferPathway exists so
                 your hard work never goes to waste.
               </p>
               <a
@@ -366,7 +366,7 @@ export default function LandingPage() {
           </h2>
           <p className="text-lg text-foreground/70 mb-10 max-w-xl mx-auto font-medium text-pretty">
             Join a community of students who&apos;ve successfully transferred using
-            TransferPath.
+            TransferPathway.
           </p>
           <a
             href="/onboarding"
@@ -375,7 +375,7 @@ export default function LandingPage() {
             Get started today
           </a>
           <p className="text-xs text-foreground/50 mt-6 font-semibold tracking-wider">
-            TransferPath does not guarantee admission, but assists in the course
+            TransferPathway does not guarantee admission, but assists in the course
             planning
           </p>
         </div>
@@ -394,7 +394,7 @@ export default function LandingPage() {
               <a href="#" className="hover:text-[#82A7A6] transition-colors">Twitter</a> */}
             </div>
             <p className="text-sm font-medium text-muted-foreground text-center md:text-right">
-              &copy; 2026 TransferPath. All rights reserved.
+              &copy; 2026 TransferPathway. All rights reserved.
             </p>
           </div>
         </div>

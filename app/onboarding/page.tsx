@@ -63,7 +63,7 @@ export default function OnboardingPage() {
             onClick={() => router.push("/")}
             className="text-xl font-bold text-black dark:text-white tracking-tight cursor-pointer"
           >
-            Transfer<span className="text-[#82A7A6]">Path</span>
+            Transfer<span className="text-[#82A7A6]">Pathway</span>
           </h1>
 
           <div className="flex items-center gap-6">

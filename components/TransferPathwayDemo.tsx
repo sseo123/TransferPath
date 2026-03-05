@@ -263,7 +263,7 @@ function DashboardView({
       <aside className="flex w-[170px] shrink-0 flex-col border-r border-border bg-card">
         <div className="flex items-center justify-between px-3 pt-3 pb-2.5 border-b border-border">
           <span className="text-[13px] font-bold text-foreground">
-            Transfer<span style={{ color: TEAL }}>Path</span>
+            Transfer<span style={{ color: TEAL }}>Pathway</span>
           </span>
           <button className="flex h-5 w-5 items-center justify-center rounded border border-border text-muted-foreground">
             <ChevronRight className="h-2.5 w-2.5 rotate-180" />

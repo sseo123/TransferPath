@@ -117,7 +117,7 @@ export default function CounselorViewPDF({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.title}>Transfer Plan – Counselor View</Text>
+        <Text style={styles.title}>TransferPathway – Counselor View</Text>
         <Text style={styles.subtitle}>
           Generated for {fullName}
         </Text>
