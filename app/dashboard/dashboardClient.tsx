@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { Semester, PlannedCourse, SyncTask } from "@/lib/planner/types";
 import PlanEditor from "./planEditor";
 import { markSemesterComplete, unmarkSemesterComplete, syncUserData, } from "./actions";
-import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Printer } from "lucide-react";
+import { ChevronDown, ChevronRight, GraduationCap, CheckSquare, Square, Plus, PenIcon, Printer, Calendar, TrendingUp, Target, Building2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { calculateTotalUnits } from "@/lib/planner/utils";
 import { DVC_CATALOG } from "@/data/cc/dvc";
 import CourseItem from "@/components/CourseItem";
+
 
 
 interface DashboardClientProps {
@@ -496,70 +497,69 @@ export default function DashboardClient({
         </header>
         {/* Summary Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
           {/* Expected Completion Card */}
           <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <span className="text-orange-600 text-xl">📅</span>
+              <p className="text-muted-foreground text-sm font-medium">Expected Completion:</p>
+              <div className="w-9 h-9 rounded-xl bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center flex-shrink-0">
+                <Calendar size={18} className="text-orange-500" />
               </div>
-              {/* Dynamic Semester Name */}
-              <span className="text-2xl font-bold text-foreground">
+            </div>
+            <div className="flex-1 flex items-center justify-center py-2">
+              <span className="text-2xl font-bold text-foreground text-center">
                 {completionSemester}
               </span>
             </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">
-                Expected Completion
-              </p>
-            </div>
+            <div />
           </div>
 
           {/* Progress Card */}
           <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <span className="text-blue-600 text-xl">📈</span>
+              <p className="text-muted-foreground text-sm font-medium">Progress:</p>
+              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center flex-shrink-0">
+                <TrendingUp size={18} className="text-blue-500" />
               </div>
+            </div>
+            <div className="flex-1 flex items-center justify-center py-2">
               <span className="text-2xl font-bold text-foreground">
                 {progressPercentage}%
               </span>
             </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">Progress</p>
-            </div>
+            <div />
           </div>
 
           {/* Total Units Card */}
           <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <span className="text-teal-600 text-xl">🎯</span>
+              <p className="text-muted-foreground text-sm font-medium">Total Units:</p>
+              <div className="w-9 h-9 rounded-xl bg-teal-50 dark:bg-teal-950/30 flex items-center justify-center flex-shrink-0">
+                <Target size={18} className="text-teal-500" />
               </div>
-              {/* Dynamic Unit Total */}
+            </div>
+            <div className="flex-1 flex items-center justify-center py-2">
               <span className="text-2xl font-bold text-foreground">
                 {totalUnits}
               </span>
             </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">Total Units</p>
-            </div>
+            <div />
           </div>
 
-          {/* Quote Card */}
+          {/* Current College Card */}
           <div className="bg-card rounded-3xl border border-border p-6 shadow-sm flex flex-col justify-between min-h-[160px]">
             <div className="flex justify-between items-start">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center">
-                <span className="text-blue-600 text-xl">🏫</span>
+              <p className="text-muted-foreground text-sm font-medium">Your Current College:</p>
+              <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center flex-shrink-0">
+                <Building2 size={18} className="text-indigo-500" />
               </div>
-              <span className="text-2xl font-bold text-foreground">
+            </div>
+            <div className="flex-1 flex items-center justify-center py-2">
+              <span className="text-2xl font-bold text-foreground text-center">
                 {dbUser.currentCollege || "Community College"}
               </span>
             </div>
-            <div>
-              <p className="text-muted-foreground text-sm font-medium">
-                Your Current College
-              </p>
-            </div>
+            <div />
           </div>
         </div>
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">

@@ -51,7 +51,7 @@ export const DVC_CATALOG: CollegeCourse[] = [
   { localCode: "BUS-109", canonicalId: CANONICAL_COURSES.INTRO_BUSINESS, title: "Introduction to Business", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "BUS-240", canonicalId: CANONICAL_COURSES.BUSINESS_STATS, title: "Business Statistics", units: 3, offerings: ["fall", "spring", "summer"], prerequisites: []  },
   { localCode: "BUSAC-186", canonicalId: CANONICAL_COURSES.FINANCIAL_ACCOUNTING, title: "Financial Accounting", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: []  },
-  { localCode: "BUSAC-187", canonicalId: CANONICAL_COURSES.FINANCIAL_ACCOUNTING, title: "Managerial Accounting", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.FINANCIAL_ACCOUNTING]  },
+  { localCode: "BUSAC-187", canonicalId: CANONICAL_COURSES.MANAGERIAL_ACCOUNTING, title: "Managerial Accounting", units: 4, offerings: ["fall", "spring", "summer"], prerequisites: [CANONICAL_COURSES.FINANCIAL_ACCOUNTING]  },
 
 
   //Econ
