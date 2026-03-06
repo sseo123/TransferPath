@@ -92,10 +92,10 @@ export async function signup(prevState: SignupState, formData: FormData) {
     : new Date().getFullYear();
 
   // Validate year is reasonable
-  const currentYear = new Date().getFullYear();
-  if (startYear < currentYear - 5 || startYear > currentYear + 10) {
-    return { error: "Invalid start year" };
-  }
+  // const currentYear = new Date().getFullYear();
+  // if (startYear < currentYear - 1000 || startYear > currentYear + 1000 || isNaN(startYear)) {
+  //   return { error: `Invalid start year: parsed '${startYear}' from '${startYearString}', current: ${currentYear}` };
+  // }
 
   const { env } = await getCloudflareContext({ async: true });
   const cfEnv = env as Env;
