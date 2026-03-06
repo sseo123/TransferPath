@@ -147,7 +147,7 @@ export default function LandingPage() {
 
           {/* THE DEMO — big, front-and-center */}
           <div
-            className={`relative transition-all duration-1000 delay-300 ${
+            className={`relative transition-all duration-1000 delay-300 hidden md:block ${
               heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-16"
             }`}
           >
