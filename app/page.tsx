@@ -361,7 +361,7 @@ export default function LandingPage() {
           style={{ backgroundColor: "#B8D4D3" }}
         >
           <h2 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-5 text-balance">
-            Start planning your transfer today
+            Start planning your transfer pathway today
           </h2>
           <p className="text-lg text-foreground/70 mb-10 max-w-xl mx-auto font-medium text-pretty">
             Join a community of students who&apos;ve successfully transferred using
