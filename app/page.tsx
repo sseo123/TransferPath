@@ -48,7 +48,7 @@ function Logo() {
   return (
     <Link href="/" className="flex items-center gap-2.5 group select-none">
       <span className="text-lg font-bold text-foreground tracking-tight">
-        Transfer<span className="text-[#82A7A6]">Path</span>
+        Transfer<span className="text-[#82A7A6]">Pathway</span>
       </span>
     </Link>
   );
@@ -321,8 +321,7 @@ export default function LandingPage() {
               }`}
             >
               <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground leading-[1.08] text-balance">
-                See if Transfer<span className="text-[#82A7A6]">Path</span> is
-                for you
+                Can Transfer<span className="text-[#82A7A6]">Pathway</span> help you?
               </h3>
             </div>
             <div

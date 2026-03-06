@@ -6,20 +6,14 @@ import {
   CheckCircle2, ChevronDown, ChevronRight,
   GraduationCap, LayoutDashboard, BookOpen, Pencil,
   CalendarDays, Printer, Plus, CheckSquare, Square,
-  Save, Trash2,
+  Save, Trash2, Calendar, TrendingUp, Target, Building2
 } from "lucide-react";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const TEAL = "#82A7A6";
 
-const CAL_DAYS = [
-  [null, null, null, null, null, null,    1],
-  [   2,    3,    4,    5,    6,    7,    8],
-  [   9,   10,   11,   12,   13,   14,   15],
-  [  16,   17,   18,   19,   20,   21,   22],
-  [  23,   24,   25,   26,   27,   28, null],
-];
+// Dynamic calendar calculation removed static CAL_DAYS
 
 const IGETC_AREAS = [
   "English Communication",
@@ -257,6 +251,33 @@ function DashboardView({
     fallCourses.reduce((s, c) => s + c.units, 0) +
     springCourses.reduce((s, c) => s + c.units, 0);
 
+  // Dynamic calendar logic
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth();
+  const today = now.getDate();
+  const monthName = now.toLocaleString("default", { month: "long" });
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  const calRows: (number | null)[][] = [];
+  let dayCounter = 1;
+  for (let i = 0; i < 6; i++) {
+    const row: (number | null)[] = [];
+    for (let j = 0; j < 7; j++) {
+      if (i === 0 && j < firstDay) {
+        row.push(null);
+      } else if (dayCounter > daysInMonth) {
+        row.push(null);
+      } else {
+        row.push(dayCounter);
+        dayCounter++;
+      }
+    }
+    calRows.push(row);
+    if (dayCounter > daysInMonth) break;
+  }
+
   return (
     <div className="flex h-full w-full overflow-hidden text-sm">
       {/* Sidebar */}
@@ -284,7 +305,7 @@ function DashboardView({
         {/* Mini calendar */}
         <div className="mx-2 mt-3 rounded-xl border border-border p-2.5">
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-foreground">February 2026</span>
+            <span className="text-[10px] font-bold text-foreground">{monthName} {currentYear}</span>
             <div className="flex gap-0.5 items-center">
               <button className="text-muted-foreground text-[9px]">{"<"}</button>
               <button className="text-muted-foreground text-[9px]">{">"}</button>
@@ -295,14 +316,14 @@ function DashboardView({
             {["S","M","T","W","T","F","S"].map((d, i) => (
               <div key={i} className="text-center text-[8px] font-semibold text-muted-foreground pb-0.5">{d}</div>
             ))}
-            {CAL_DAYS.map((week, wi) =>
+            {calRows.map((week, wi) =>
               week.map((day, di) => (
                 <div
                   key={`${wi}-${di}`}
                   className={`flex h-4 w-4 items-center justify-center rounded-full text-[8px] mx-auto font-medium ${
-                    day === 26 ? "text-card font-bold" : day ? "text-foreground" : ""
+                    day === today ? "text-card font-bold" : day ? "text-foreground" : ""
                   }`}
-                  style={day === 26 ? { backgroundColor: TEAL } : {}}
+                  style={day === today ? { backgroundColor: TEAL } : {}}
                 >
                   {day ?? ""}
                 </div>
@@ -348,18 +369,50 @@ function DashboardView({
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-1.5 px-4 py-2.5">
+        <div className="grid grid-cols-4 gap-2 px-4 py-3">
           {[
-            { label: "Expected Completion",  value: "Spring 2027" },
-            { label: "Progress",             value: "0%" },
-            { label: "Total Units",          value: showCourses ? `${totalUnits}` : "0" },
-            { label: "Your Current College", value: "Diablo Valley College" },
+            { 
+              label: "Expected Completion:", 
+              value: "Spring 2027", 
+              icon: Calendar, 
+              color: "text-orange-500", 
+              bgColor: "bg-orange-50 dark:bg-orange-950/30" 
+            },
+            { 
+              label: "Progress:", 
+              value: "0%", 
+              icon: TrendingUp, 
+              color: "text-blue-500", 
+              bgColor: "bg-blue-50 dark:bg-blue-950/30" 
+            },
+            { 
+              label: "Total Units:", 
+              value: showCourses ? `${totalUnits}` : "0", 
+              icon: Target, 
+              color: "text-teal-500", 
+              bgColor: "bg-teal-50 dark:bg-teal-950/30" 
+            },
+            { 
+              label: "Your Current College:", 
+              value: "Diablo Valley College", 
+              icon: Building2, 
+              color: "text-indigo-500", 
+              bgColor: "bg-indigo-50 dark:bg-indigo-950/30" 
+            },
           ].map((card, i) => (
-            <div key={i} className="rounded-xl border border-border bg-card p-2.5 shadow-sm">
-              <p className={`font-extrabold text-foreground leading-tight mt-0.5 ${i === 0 || i === 3 ? "text-[11px]" : "text-base"}`}>
-                {card.value}
-              </p>
-              <p className="mt-0.5 text-[8px] text-muted-foreground">{card.label}</p>
+            <div key={i} className="bg-card rounded-2xl border border-border p-2.5 shadow-sm flex flex-col justify-between min-h-[80px]">
+              <div className="flex justify-between items-start">
+                <p className="text-muted-foreground text-[8px] font-medium">{card.label}</p>
+                <div className={`w-5 h-5 rounded-lg ${card.bgColor} flex items-center justify-center flex-shrink-0`}>
+                  <card.icon size={10} className={card.color} />
+                </div>
+              </div>
+              <div className="flex-1 flex items-center justify-center py-0.5">
+                <span className={`font-bold text-foreground text-center ${i === 3 ? "text-[10px]" : "text-sm"}`}>
+                  {card.value}
+                </span>
+              </div>
+              <div />
             </div>
           ))}
         </div>

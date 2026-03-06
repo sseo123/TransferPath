@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: {
-    default: 'TransferPathway — Transfer Planning for Community College Students',
+    default: 'TransferPathway — You should be spending your time studying, not planning. Let TransferPathway save you the work.',
     template: '%s | TransferPathway',
   },
   description: 'Plan your community college to UC transfer with an interactive, customizable course roadmap. Track IGETC requirements, compare universities, and stay on track.',
@@ -14,7 +14,7 @@ export const metadata = {
   openGraph: {
     title: 'TransferPathway — Transfer Planning Made Simple',
     description: 'Plan your community college to UC transfer with an interactive, customizable course roadmap.',
-    url: 'https://yourdomain.com', //put the actual domain once you get the website
+    url: 'https://transferpathway.com',
     siteName: 'TransferPathway',
     type: 'website',
   },
