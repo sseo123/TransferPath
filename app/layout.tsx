@@ -1,6 +1,9 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
+import Link from 'next/link';
+import Image from 'next/image';
 import { ThemeProvider } from '@/components/ThemeProvider';
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,6 +14,9 @@ export const metadata = {
   },
   description: 'Plan your community college to UC transfer with an interactive, customizable course roadmap. Track IGETC requirements, compare universities, and stay on track.',
   keywords: ['transfer planning', 'community college', 'UC transfer', 'IGETC', 'articulation'],
+  icons: {
+    icon: '/logo.png',
+  },
   openGraph: {
     title: 'TransferPathway — Transfer Planning Made Simple',
     description: 'Plan your community college to UC transfer with an interactive, customizable course roadmap.',
@@ -25,6 +31,24 @@ export const metadata = {
   },
 };
 
+function Logo() {
+  return (
+    <Link href="/" className="flex items-center gap-3 group select-none">
+      <div className="relative h-8 w-8 transition-transform duration-300 group-hover:scale-110">
+        <Image
+          src="/logo.png"
+          alt="TransferPathway Logo"
+          fill
+          className="object-contain"
+          priority
+        />
+      </div>
+      <span className="text-lg font-bold text-foreground tracking-tight">
+        Transfer<span className="text-[#82A7A6]">Pathway</span>
+      </span>
+    </Link>
+  );
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

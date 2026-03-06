@@ -39,8 +39,8 @@ export default function DashboardSidebar({
       >
         {!isCollapsed && (
           <h1 className="text-xl font-black text-foreground tracking-tight whitespace-nowrap px-2">
-            Transfer<span className="text-primary">Pathway</span>
-          </h1>
+              Transfer<span className="text-primary">Pathway</span>
+            </h1>
         )}
 
         <div className="flex items-center gap-2">
