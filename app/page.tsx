@@ -385,7 +385,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-3">
             <span className="text-lg font-bold text-foreground text-center md:text-left">
-              Transfer<span className="text-[#82A7A6]">Path</span>
+              Transfer<span className="text-[#82A7A6]">Pathway</span>
             </span>
             <div className="flex justify-center gap-8 text-sm font-semibold text-muted-foreground">
               {/* <a href="https://discord.gg/BvuSNBep" className="hover:text-[#82A7A6] transition-colors">Discord</a> */}
