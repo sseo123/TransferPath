@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { saveOnboardingData } from "./actions";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
-export default function OnboardingPage() {
+function OnboardingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const fromGoogle = searchParams.get("from") === "google";
@@ -241,5 +241,21 @@ export default function OnboardingPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function OnboardingFallback() {
+  return (
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[var(--background)] flex flex-col items-center justify-center">
+      <p className="text-slate-500 dark:text-slate-400">Loading...</p>
+    </div>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={<OnboardingFallback />}>
+      <OnboardingPageContent />
+    </Suspense>
   );
 }
