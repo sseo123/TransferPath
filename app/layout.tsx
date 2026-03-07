@@ -15,17 +15,20 @@ export const metadata = {
   icons: {
     icon: '/logo.png',
   },
+  metadataBase: new URL('https://transferpathway.com'),
   openGraph: {
     title: 'TransferPathway — Transfer Planning Made Simple',
     description: 'Plan your community college to UC transfer with an interactive, customizable course roadmap.',
     url: 'https://transferpathway.com',
     siteName: 'TransferPathway',
     type: 'website',
+    images: ['/logo.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'TransferPathway',
     description: 'Plan your community college to UC transfer',
+    images: ['/logo.png'],
   },
 };
 
