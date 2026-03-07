@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Save, Trash2, Info } from "lucide-react";
+import { Save, Trash2, Info, HelpCircle } from "lucide-react";
 import { Semester, PlannedCourse, Season } from "@/lib/planner/types";
 import { checkPrerequisites } from "@/lib/planner/validator";
 import { calculateTotalUnits, getUnitLimit } from "@/lib/planner/utils";
@@ -214,6 +214,134 @@ function reorderCourseInContainer(
   }
 }
 
+function HelpModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-card rounded-3xl w-full max-w-2xl shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in duration-200 cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-4 sm:p-8 border-b border-border flex justify-between items-center bg-secondary/50">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <HelpCircle size={24} className="text-primary" />
+            </div>
+            <div>
+              <h2 className="text-xl sm:text-2xl font-black text-foreground">Plan Editor Help</h2>
+              <p className="text-muted-foreground text-[10px] sm:text-sm">Learn how to customize your journey</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
+            <Trash2 size={24} className="rotate-0" />
+          </button>
+        </div>
+
+        <div className="p-4 sm:p-8 space-y-6 sm:space-y-8 overflow-y-auto max-h-[70vh]">
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">1</span>
+              Customizing Your Plan
+            </h3>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              You can <strong className="text-foreground">drag and drop</strong> courses to any semester to build your schedule. 
+              Want to move a course? Just click and hold, then drag it to its new semester. 
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">2</span>
+              Recommended vs. Required
+            </h3>
+            <div className="pl-8 space-y-4">
+              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                <p className="text-muted-foreground leading-relaxed">
+                  <span className="text-primary font-bold uppercase text-[10px] tracking-widest block mb-1">Strongly Recommended</span>
+                  These courses aren&apos;t strictly needed for your major, but they are highly encouraged. Taking them can significantly <strong className="text-foreground">increase your admission chances</strong> for competitive majors at top universities.
+                </p>
+              </div>
+              <div className="p-4 rounded-2xl bg-secondary/50 border border-border">
+                <p className="text-muted-foreground leading-relaxed">
+                  <span className="text-primary font-bold uppercase text-[10px] tracking-widest block mb-1">Required</span>
+                  These are the essential courses you MUST take to be eligible for transfer to your target universities.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">3</span>
+              Required Courses Box
+            </h3>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              Required courses are courses that are required/strongly recommended for your major. If you 
+              delete a semester, all courses in the deleted semester will appear in the required courses box.   
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">4</span>
+              Completed Courses Box
+            </h3>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              If you&apos;ve already completed a course, or have credit (AP, IB, CLEP, etc.), move it to the <strong className="text-foreground">Completed Courses</strong> box.
+              This acts as a pre-requisite for the courses that follow it.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">5</span>
+              Delete/Add Courses
+            </h3>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              You can delete a course by dragging it to the <strong className="text-foreground">Required Courses</strong> box, then clicking the red trash icon
+            </p>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              You can add a course by clicking the &quot;Add Custom Course&quot; button.
+            </p>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">6</span>
+              Disclaimer
+            </h3>
+            <p className="text-muted-foreground leading-relaxed pl-8">
+              TransferPathway is not a substitute for official university or college policies. Always refer to the official catalogs and websites of 
+              your target universities for the most accurate and up-to-date information. In addition, depending on your community college, courses may have seasonal offerings,
+              which means that despite being planned, some courses may not be available in that semester.
+            </p>
+          </section>
+
+        </div>
+
+        <div className="p-4 sm:p-8 bg-secondary/30 flex justify-end">
+          <button
+            onClick={onClose}
+            className="px-6 py-2.5 sm:px-8 sm:py-3 bg-primary text-primary-foreground font-bold rounded-xl shadow-lg hover:shadow-xl transition-all active:scale-95 text-sm sm:text-base"
+          >
+            Got it!
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CreateCourseModal({
   isOpen,
   onClose,
@@ -261,19 +389,25 @@ function CreateCourseModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
-      <div className="bg-card rounded-3xl w-full max-w-lg shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in duration-200">
-        <div className="p-8 border-b border-border flex justify-between items-center bg-secondary/50">
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm cursor-pointer"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-card rounded-3xl w-full max-w-lg shadow-2xl border border-border overflow-hidden animate-in fade-in zoom-in duration-200 cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-4 sm:p-8 border-b border-border flex justify-between items-center bg-secondary/50">
           <div>
             <h2 className="text-2xl font-black text-foreground">Add Custom Course</h2>
             <p className="text-muted-foreground text-sm mt-1">Courses not found in the DVC catalog</p>
           </div>
           <button onClick={onClose} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
-            <Trash2 size={24} className="rotate-45" />
+            <Trash2 size={24} className="rotate-0" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-6">
           <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3">
             <Info size={20} className="text-amber-500 shrink-0 mt-0.5" />
             <p className="text-xs text-amber-500 font-medium leading-relaxed">
@@ -560,7 +694,7 @@ function Sidebar({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[400px] w-65 bg-card rounded-3xl border-2 p-5 transition-all ${
+      className={`flex flex-col h-fit min-h-[300px] lg:min-h-[400px] w-full lg:w-65 bg-card rounded-3xl border-2 p-4 sm:p-5 transition-all ${
         isOver ? "border-primary ring-4 ring-primary/10" : "border-border"
       }`}
     >
@@ -610,7 +744,7 @@ function CompletedCoursesBox({
   return (
     <div
       ref={setNodeRef}
-      className={`flex flex-col h-fit min-h-[400px] w-65 bg-card rounded-3xl border-2 p-5 transition-all mt-4 ${
+      className={`flex flex-col h-fit min-h-[300px] lg:min-h-[400px] w-full lg:w-65 bg-card rounded-3xl border-2 p-4 sm:p-5 transition-all mt-0 lg:mt-4 ${
         isOver ? "border-primary ring-4 ring-primary/10" : "border-border"
       }`}
     >
@@ -662,6 +796,7 @@ export default function PlanEditor({
   );
   const [customCourses, setCustomCourses] = useState<PlannedCourse[]>(initialCustomCourses);
   const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const [activeCourse, setActiveCourse] = useState<PlannedCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -975,12 +1110,23 @@ export default function PlanEditor({
         {/* HEADER FIX: Added flex-wrap and items-start for small screens */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 bg-card p-6 rounded-2xl border border-border shadow-sm">
           <div>
-            <h1 className="text-2xl font-black text-foreground">
-              Course Planning
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-black text-foreground">
+                Course Planning
+              </h1>
+              <button 
+                onClick={() => setShowHelpModal(true)}
+                className="p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-lg transition-all"
+                title="Help"
+              >
+                <HelpCircle size={22} />
+              </button>
+            </div>
             <p className="text-muted-foreground text-sm">
-              Draft your plan. Changes only save when you click &quot;Save
+              Customize your plan! Changes only save when you click &quot;Save
               Changes&quot;.
+              <br />
+              For more info, click the question mark icon.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 w-full sm:w-auto">
@@ -1077,6 +1223,10 @@ export default function PlanEditor({
         onClose={() => setShowCreateCourseModal(false)}
         onCreate={handleCreateCourse}
         targetUniversities={targetUniversities}
+      />
+      <HelpModal
+        isOpen={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
       />
     </DndContext>
   );

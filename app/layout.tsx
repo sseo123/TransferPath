@@ -1,7 +1,5 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
-import Link from 'next/link';
-import Image from 'next/image';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 
@@ -31,24 +29,6 @@ export const metadata = {
   },
 };
 
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center gap-3 group select-none">
-      <div className="relative h-8 w-8 transition-transform duration-300 group-hover:scale-110">
-        <Image
-          src="/logo.png"
-          alt="TransferPathway Logo"
-          fill
-          className="object-contain"
-          priority
-        />
-      </div>
-      <span className="text-lg font-bold text-foreground tracking-tight">
-        Transfer<span className="text-[#82A7A6]">Pathway</span>
-      </span>
-    </Link>
-  );
-}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

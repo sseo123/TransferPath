@@ -204,7 +204,7 @@ export default function UniversitiesClient({
             <div className="flex gap-3">
               <button
                 onClick={() => setIsAddTargetOpen(true)}
-                className="px-6 py-2 bg-[#82A7A6] hover:bg-[#6B8A89] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95"
+                className="px-6 py-2 bg-[#82A7A6] hover:bg-[#6B8A89] text-white text-sm font-bold rounded-xl shadow-sm transition-all active:scale-95 whitespace-nowrap"
               >
                 + Add University
               </button>

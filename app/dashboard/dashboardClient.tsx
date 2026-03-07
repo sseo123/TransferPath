@@ -57,15 +57,15 @@ function SemesterAccordionItem({
       {/* Header */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between py-5 px-8 cursor-pointer hover:bg-muted/50 transition-colors"
+        className="flex items-center justify-between py-4 px-4 sm:py-5 sm:px-8 cursor-pointer hover:bg-muted/50 transition-colors"
       >
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3 sm:gap-6">
           <button className="text-muted-foreground">
-            {isOpen ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
+            {isOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
           </button>
 
           <h2
-            className={`text-lg font-semibold flex items-center gap-3 ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}
+            className={`text-base sm:text-lg font-semibold flex items-center gap-2 sm:gap-3 ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}
           >
             {semester.name}
             <span className="text-border">·</span>
@@ -141,11 +141,11 @@ function CollapsibleSection({
     <div className={`bg-card rounded-3xl border shadow-sm overflow-hidden ${variant === "warning" ? "border-amber-200" : "border-border"}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between p-6 transition-colors ${bgClass} ${textClass}`}
+        className={`w-full flex items-center justify-between p-4 sm:p-6 transition-colors ${bgClass} ${textClass}`}
       >
-        <div className="flex items-center gap-3 flex-1">
-          {Icon && <Icon size={24} className={variant === "warning" ? "text-amber-900/80" : "text-primary-foreground/80"} />}
-          <span className="font-bold text-xl tracking-tight">{title}</span>
+        <div className="flex items-center gap-2 sm:gap-3 flex-1">
+          {Icon && <Icon size={20} className={`${variant === "warning" ? "text-amber-900/80" : "text-primary-foreground/80"} sm:w-6 sm:h-6`} />}
+          <span className="font-bold text-lg sm:text-xl tracking-tight text-left">{title}</span>
         </div>
 
         <div className="flex items-center gap-4">
@@ -161,7 +161,7 @@ function CollapsibleSection({
       </button>
 
       {isOpen && (
-        <div className="p-6 pt-5 border-t border-border/50 space-y-3">
+        <div className="p-4 sm:p-6 pt-5 border-t border-border/50 space-y-3">
           {children}
         </div>
       )}
@@ -446,20 +446,20 @@ export default function DashboardClient({
           }}
         />
       )}
-      <div className="max-w-8xl mx-auto p-8 font-sans text-foreground">
-        <header className="mb-12 border-b border-border pb-8">
-          <div className="flex justify-between items-start mb-6">
+      <div className="max-w-8xl mx-auto p-4 sm:p-8 font-sans text-foreground">
+        <header className="mb-8 sm:mb-12 border-b border-border pb-6 sm:pb-8">
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-6 mb-6">
             <div>
-              <h1 className="text-4xl font-black text-foreground tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight">
                 Welcome, {dbUser.firstName}!
               </h1>
-              <div className="flex items-center gap-2 mt-2">
-                <p className="text-muted-foreground text-lg font-medium">
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <p className="text-muted-foreground text-base sm:text-lg font-medium">
                   Here is your TransferPathway
                 </p>
                 {isHydrated && (
                   <span
-                    className={`text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300 ${
+                    className={`text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full transition-all duration-300 ${
                       isSyncing
                         ? "bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse"
                         : "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
@@ -470,26 +470,33 @@ export default function DashboardClient({
                 )}
               </div>
             </div>
-
-            <div className="flex items-center gap-4">
+ 
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold bg-primary text-primary-foreground rounded-xl shadow-sm transition-all hover:bg-primary/90 hover:scale-105 active:scale-95"
+              >
+                <PenIcon size={16} className="sm:w-4.5 sm:h-4.5" />
+                Edit Plan
+              </button>
               <button
                 onClick={handleCounselorViewPDF}
                 disabled={isGeneratingPDF}
-                className="flex items-center gap-2 px-4 py-3 text-sm font-bold bg-card border border-border text-foreground rounded-xl shadow-sm transition-all hover:bg-muted hover:scale-105 active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
+                className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold bg-card border border-border text-foreground rounded-xl shadow-sm transition-all hover:bg-muted hover:scale-105 active:scale-95 disabled:opacity-70 disabled:pointer-events-none"
               >
-                <Printer size={18} />
+                <Printer size={16} className="sm:w-4.5 sm:h-4.5" />
                 {isGeneratingPDF ? "Generating…" : "Counselor View"}
               </button>
               <button
                 onClick={handleTopRightAction}
-                className={`px-4 py-3 text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl ${
+                className={`w-full sm:w-auto px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all hover:scale-105 active:scale-95 hover:shadow-xl whitespace-nowrap ${
                   hasTargets
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground"
                     : "bg-primary hover:bg-primary/90 text-primary-foreground"
                 }`}
               >
                 {hasTargets
-                  ? "+ Add Another University"
+                  ? "+ Add University"
                   : "+ Add Universities to Start"}
               </button>
             </div>
@@ -562,15 +569,15 @@ export default function DashboardClient({
             <div />
           </div>
         </div>
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-9 bg-primary rounded-[32px] p-8 border border-border shadow-inner">
-            <div className="flex justify-between items-center mb-8 px-2">
-              <h2 className="text-3xl font-bold text-primary-foreground">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-6 sm:gap-8">
+          <div className="lg:col-span-9 bg-primary rounded-[24px] sm:rounded-[32px] p-4 sm:p-8 border border-border shadow-inner">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8 px-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-primary-foreground">
                 Your Strategic Timeline
               </h2>
               <button
                 onClick={handleAction}
-                className={`flex items-center gap-2 px-4 py-3 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold ${
+                className={`flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3 border transition-all hover:scale-102 active:scale-95 hover:shadow-l rounded-xl font-semibold w-full sm:w-auto ${
                   hasTargets
                     ? "bg-primary hover:bg-primary/90 text-primary-foreground border-primary-foreground/20"
                     : "bg-primary hover:bg-primary/90 text-primary-foreground border-primary-foreground/20"
@@ -618,13 +625,13 @@ export default function DashboardClient({
                   ))}
                   <button
                     onClick={() => setIsEditing(true)}
-                    className="w-full flex flex-col items-center justify-center p-8 border-2 border-dashed border-border/50 rounded-[24px] bg-card hover:bg-muted hover:border-primary/50 transition-all group mt-4"
+                    className="w-full flex flex-col items-center justify-center p-6 sm:p-8 border-2 border-dashed border-border/50 rounded-[20px] sm:rounded-[24px] bg-card hover:bg-muted hover:border-primary/50 transition-all group mt-4"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-secondary rounded-xl flex items-center justify-center group-hover:bg-background transition-colors">
-                        <Plus size={24} className="text-muted-foreground" />
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-secondary rounded-xl flex items-center justify-center group-hover:bg-background transition-colors">
+                        <Plus size={20} className="text-muted-foreground sm:w-6 sm:h-6" />
                       </div>
-                      <span className="text-lg font-bold text-muted-foreground">
+                      <span className="text-base sm:text-lg font-bold text-muted-foreground">
                         Add Semester
                       </span>
                     </div>

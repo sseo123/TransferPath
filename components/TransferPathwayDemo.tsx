@@ -359,11 +359,28 @@ function DashboardView({
             </div>
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
+            <motion.button 
+              ref={editButtonRef}
+              animate={editHighlight ? {
+                scale: [1, 1.08, 1],
+                boxShadow: [
+                  "0 0 0 0px rgba(255,255,255,0)",
+                  "0 0 0 4px rgba(130,167,166,0.4)",
+                  "0 0 0 0px rgba(255,255,255,0)",
+                ],
+              } : {}}
+              transition={editHighlight ? { duration: 0.8, repeat: 2 } : {}}
+              onClick={onEditClick}
+              className="flex items-center gap-1 rounded-lg px-2 py-1 text-[9px] font-bold text-card shadow-sm transition-all" 
+              style={{ backgroundColor: TEAL }}
+            >
+              <Pencil className="h-2.5 w-2.5" /> Edit Plan
+            </motion.button>
             <button className="flex items-center gap-1 rounded-lg border border-border bg-card px-2 py-1 text-[9px] font-semibold text-foreground shadow-sm">
               <Printer className="h-2.5 w-2.5" /> Counselor View
             </button>
             <button className="flex items-center gap-1 rounded-lg px-2 py-1 text-[9px] font-bold text-card shadow-sm" style={{ backgroundColor: TEAL }}>
-              <Plus className="h-2.5 w-2.5" /> Add Another University
+              <Plus className="h-2.5 w-2.5" /> Add University
             </button>
           </div>
         </div>
@@ -423,22 +440,12 @@ function DashboardView({
           <div className="flex flex-1 flex-col rounded-2xl overflow-hidden" style={{ backgroundColor: TEAL }}>
             <div className="flex items-center justify-between px-3 pt-2.5 pb-1.5">
               <h2 className="text-[12px] font-bold text-card">Your Strategic Timeline</h2>
-              <motion.button
-                ref={editButtonRef}
-                animate={editHighlight ? {
-                  scale: [1, 1.08, 1],
-                  boxShadow: [
-                    "0 0 0 0px rgba(255,255,255,0)",
-                    "0 0 0 4px rgba(255,255,255,0.4)",
-                    "0 0 0 0px rgba(255,255,255,0)",
-                  ],
-                } : {}}
-                transition={editHighlight ? { duration: 0.8, repeat: 2 } : {}}
+              <button
                 onClick={onEditClick}
                 className="flex items-center gap-1 rounded-lg border border-card/30 bg-card/10 px-2 py-0.5 text-[9px] font-semibold text-card"
               >
                 <Pencil className="h-2.5 w-2.5" /> Edit Plan
-              </motion.button>
+              </button>
             </div>
             <p className="px-3 pb-1.5 text-[9px] text-card/80">
               Always feel free to double-check your course articulations on{" "}

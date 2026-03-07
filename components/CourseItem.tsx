@@ -36,11 +36,11 @@ export default function CourseItem({
 
   if (variant === "row") {
     return (
-      <div className="group flex items-center justify-between p-6 hover:bg-muted/50 transition-[background-color] duration-200 cursor-pointer">
+      <div className="group flex items-center justify-between p-4 sm:p-6 hover:bg-muted/50 transition-[background-color] duration-200 cursor-pointer">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
-              <span className={`text-lg font-bold leading-tight ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}>
+              <span className={`text-base sm:text-lg font-bold leading-tight ${isCompleted ? "line-through text-muted-foreground" : "text-foreground"}`}>
                 {course.localCode}
               </span>
               {isCustom && (
@@ -93,13 +93,13 @@ export default function CourseItem({
             )}
           </div>
 
-          <span className={`font-medium ${isCompleted ? "line-through text-muted-foreground" : "text-muted-foreground"}`}>
+          <span className={`text-sm sm:text-base font-medium ${isCompleted ? "line-through text-muted-foreground" : "text-muted-foreground"}`}>
             {course.title}
           </span>
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="px-3 py-1 text-[12px] font-bold uppercase tracking-wider rounded-full text-muted-foreground">
+          <span className="px-2 py-1 sm:px-3 sm:py-1 text-[10px] sm:text-[12px] font-bold uppercase tracking-wider rounded-full text-muted-foreground">
             {course.units} Units
           </span>
         </div>
@@ -110,7 +110,7 @@ export default function CourseItem({
   // Card Variant (default - used in PlanEditor)
   return (
     <div
-      className={`p-4 border-2 rounded-2xl shadow-sm transition-[box-shadow,transform] duration-200 group relative ${
+      className={`p-3 sm:p-4 border-2 rounded-2xl shadow-sm transition-[box-shadow,transform] duration-200 group relative ${
         isOverlay ? "cursor-grabbing shadow-xl scale-105 z-50" : "cursor-grab"
       } ${
         isSidebar
@@ -171,7 +171,7 @@ export default function CourseItem({
           </span>
         </div>
       </div>
-      <h4 className="font-bold text-foreground text-sm leading-tight pr-4">
+      <h4 className="font-bold text-foreground text-xs sm:text-sm leading-tight pr-4">
         {course.title}
       </h4>
       {!isCustom && !isValid && !isSidebar && missing.length > 0 && (
