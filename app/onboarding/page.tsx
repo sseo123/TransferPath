@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { saveOnboardingData } from "./actions";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromGoogle = searchParams.get("from") === "google";
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -87,6 +89,11 @@ export default function OnboardingPage() {
 
       <main className="flex-1 flex flex-col items-center justify-center pt-32 pb-32 px-6">
         <div className="w-full max-w-[500px] bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-10 shadow-sm">
+          {fromGoogle && (
+            <p className="text-center text-slate-600 dark:text-slate-400 text-sm mb-6 pb-4 border-b border-gray-100 dark:border-slate-700">
+              Complete the steps below to create your account.
+            </p>
+          )}
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
               <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white">

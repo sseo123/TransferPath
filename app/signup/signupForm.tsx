@@ -149,7 +149,7 @@ export default function SignupForm({ onboardingData }: SignupFormProps) {
       </div>
 
       <Link
-        href="/login/google"
+        href="/login/google?intent=signup"
         className="w-full mt-6 flex items-center justify-center gap-3 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 py-3.5 rounded-xl font-bold text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-600 transition-all active:scale-[0.98]"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">

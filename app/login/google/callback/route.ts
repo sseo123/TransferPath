@@ -7,6 +7,7 @@ import { userTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { ArcticFetchError } from "arctic";
+import { getOnboardingData, clearOnboardingData } from "@/app/onboarding/actions";
 
 export async function GET(request: Request): Promise<Response> {
 	const url = new URL(request.url);
@@ -21,6 +22,10 @@ export async function GET(request: Request): Promise<Response> {
 			status: 400
 		});
 	}
+
+	// Read and clear intent cookie so it is only used once
+	const oauthIntent = cookieStore.get("google_oauth_intent")?.value ?? null;
+	cookieStore.delete("google_oauth_intent");
 
 	try {
 		const tokens = await google.validateAuthorizationCode(code, codeVerifier);
@@ -84,23 +89,44 @@ export async function GET(request: Request): Promise<Response> {
 			});
 		}
 
-		const userId = generateIdFromEntropySize(10);
-		await db.insert(userTable).values({
-			id: userId,
-			username: googleUser.email,
-			googleId: googleUser.sub,
-			firstName: googleUser.given_name,
-			lastName: googleUser.family_name
-		});
+		// User does not exist: create account only if intent=signup; otherwise redirect to onboarding
+		if (oauthIntent === "signup") {
+			const onboardingData = await getOnboardingData();
+			const userId = generateIdFromEntropySize(10);
+			await db.insert(userTable).values({
+				id: userId,
+				username: googleUser.email,
+				googleId: googleUser.sub,
+				firstName: googleUser.given_name,
+				lastName: googleUser.family_name,
+				...(onboardingData && {
+					currentCollege: onboardingData.college,
+					major: onboardingData.major,
+					targetUni: onboardingData.dreamUni,
+					startSeason: onboardingData.startSeason,
+					startYear: onboardingData.startYear
+				})
+			});
 
-		const lucia = await getLucia();
-		const session = await lucia.createSession(userId, {});
-		const sessionCookie = lucia.createSessionCookie(session.id);
-		cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			if (onboardingData) await clearOnboardingData();
+
+			const lucia = await getLucia();
+			const session = await lucia.createSession(userId, {});
+			const sessionCookie = lucia.createSessionCookie(session.id);
+			cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+			return new Response(null, {
+				status: 302,
+				headers: {
+					Location: "/dashboard"
+				}
+			});
+		}
+
+		// intent=signin or missing: redirect to onboarding
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: "/dashboard"
+				Location: "/onboarding?from=google"
 			}
 		});
 	} catch (e) {
