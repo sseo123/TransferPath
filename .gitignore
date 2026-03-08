@@ -16,6 +16,10 @@
 # next.js
 /.next/
 /out/
+.open-next/
+
+# cursor
+.cursor/
 
 # production
 /build

@@ -47,6 +47,7 @@ import { UCI_CSE_REQUIREMENTS } from "@/data/colleges/uci/uci_cse";
 import { UCI_APMATH_REQUIREMENTS } from "@/data/colleges/uci/uci_apmath";
 import { UCI_DS_REQUIREMENTS } from "@/data/colleges/uci/uci_ds";
 import { UCI_MATH_REQUIREMENTS } from "@/data/colleges/uci/uci_math";
+import { UCI_AE_REQUIREMENTS } from "@/data/colleges/uci/uci_ae";
 
 
 //UCD
@@ -74,8 +75,14 @@ import { UCSB_CHEMENG_REQUIREMENTS } from "@/data/colleges/ucsb/ucsb_chemeng";
 
 //UCR
 import { UCR_CS_REQUIREMENTS } from "@/data/colleges/ucr/ucr_cs";
+
+
+
 //UCM
 import { UCM_CS_ENG_REQUIREMENTS } from "@/data/colleges/ucm/ucm_cs_eng";
+import { UCM_AE_REQUIREMENTS } from "@/data/colleges/ucm/ucm_ae";
+
+
 //UCSC
 import { UCSC_CS_REQUIREMENTS } from "@/data/colleges/ucsc/ucsc_cs";
 
@@ -256,6 +263,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
   "UC Irvine": {
     displayName: "UC Irvine",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCI_AE_REQUIREMENTS,
+        universityCode: "UCI",
+      },
       "Applied and Computational Mathematics": {
         displayName: "Applied and Computational Mathematics",
         requirements: UCI_APMATH_REQUIREMENTS,
@@ -411,6 +423,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
     "UC Merced": {
     displayName: "UC Merced",
     majors: {
+      "Aerospace Engineering": {
+        displayName: "Aerospace Engineering",
+        requirements: UCM_AE_REQUIREMENTS,
+        universityCode: "UCM",
+      },
       "Computer Science and Engineering": {
         displayName: "Computer Science and Engineering",
         requirements: UCM_CS_ENG_REQUIREMENTS,
