@@ -23,6 +23,7 @@ import { UCLA_MECHE_REQUIREMENTS } from "@/data/colleges/ucla/ucla_meche";
 import { UCLA_STATS_DS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_stats_ds";
 import { UCLA_APMATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_apmath";
 import { UCLA_MATH_REQUIREMENTS } from "@/data/colleges/ucla/ucla_math";
+import { UCLA_BUSINESS_REQUIREMENTS } from "@/data/colleges/ucla/ucla_business";
 // import { UCLA_TEST_REQUIREMENTS } from "@/data/colleges/ucla/ucla_test";
 
 
@@ -171,6 +172,11 @@ const REGISTRY: Record<string, UniversityEntry> = {
       "Applied Mathematics": {
         displayName: "Applied Mathematics",
         requirements: UCLA_APMATH_REQUIREMENTS,
+        universityCode: "UCLA",
+      },
+      "Business Economics": {
+        displayName: "Business Economics",
+        requirements: UCLA_BUSINESS_REQUIREMENTS,
         universityCode: "UCLA",
       },
       "Computer Engineering": {
